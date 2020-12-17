@@ -11,7 +11,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	@make clean
-	@$(CC) $(FLAGS) $(DEBUG_FLAGS) $(OBJ) -o $(NAME)
+	@$(CC) $(FLAGS) $(DEBUG_FLAGS) $(OBJ) -o ../$(NAME)
 $(OBJ): | obj
 obj: 
 	@mkdir $@

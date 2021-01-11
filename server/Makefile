@@ -1,6 +1,6 @@
 CC = clang
 
-NAME = u_server
+NAME = uchat_server
 INC = inc/*.h
 SRC := $(wildcard src/*.c)
 OBJ := $(addprefix obj/, $(notdir $(SRC:%.c=%.o)))

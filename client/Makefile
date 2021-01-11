@@ -1,6 +1,6 @@
 CC = clang
 
-NAME = client
+NAME = u_client
 INC = inc/*.h
 SRC := $(wildcard src/*.c)
 OBJ := $(addprefix obj/, $(notdir $(SRC:%.c=%.o)))

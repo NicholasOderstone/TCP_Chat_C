@@ -1,14 +1,14 @@
 #include "../inc/header.h"
 
 int main(int argc, char **argv){
-	if(argc != 2){
-		printf("Usage: %s <port>\n", argv[0]);
+	if(argc != 3){
+		printf("Usage: %s <ip> <port>\n", argv[0]);
 		return EXIT_FAILURE;
 	}
 	/* Server settings */
 	server_info_t server; /* Server info*/
-	server.ipv4 = "10.11.12.3";
-	server.port = atoi(argv[1]);
+	server.ipv4 = argv[1];
+	server.port = atoi(argv[2]);
 	server.listenfd = 0;
 	server.cli_count = 0;
 	pthread_mutex_init(&server.clients_mutex, NULL);

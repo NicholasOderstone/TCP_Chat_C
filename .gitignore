@@ -1,2 +1,4 @@
 *.o
 obj
+u_server
+u_client

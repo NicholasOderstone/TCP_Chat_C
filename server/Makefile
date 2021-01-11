@@ -21,5 +21,5 @@ clean:
 	@rm -rf *.o
 uninstall: clean
 	@rm -rf ./obj
-	@rm -rf $(NAME)
+	@rm -rf ../$(NAME)
 reinstall: uninstall all

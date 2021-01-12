@@ -1,27 +1,27 @@
 #include "../inc/module_one.h"
 
 void to_msg_q(char *data) {
-    struct msg_q *temp;
-    temp = (struct msg_q*)malloc(sizeof(struct msg_q));
+    struct msg_q_elem *temp;
+    temp = (struct msg_q_elem*)malloc(sizeof(struct msg_q_elem));
     temp->data = strdup(data);
     temp->link = NULL;
 
-    if (msg_rear == NULL)
-        msg_front = msg_rear = temp;
+    if (message_q.rear == NULL)
+        message_q.front = message_q.rear = temp;
     else {
-        msg_rear->link = temp;
-        msg_rear = temp;
+        message_q.rear->link = temp;
+        message_q.rear = temp;
     }
     printf("Element inserted in msg_q: %s\n", data);
 }
 
 void display()
 {
-    struct msg_q *temp;
-    temp = msg_front;
+    struct msg_q_elem *temp;
+    temp = message_q.front;
     int cnt = 0;
 
-    if (msg_front == NULL)
+    if (message_q.front == NULL)
         printf("Queue underflow\n");
     else {
         printf("The elements of the stack are:\n");
@@ -34,5 +34,5 @@ void display()
 }
 
 char *take_fst_msg_in_q() {
-    return msg_front->data;
+    return message_q.front->data;
 }

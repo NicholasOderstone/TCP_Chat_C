@@ -12,15 +12,30 @@ struct command {
     char *params;
 };
 
-struct msg_q {
+
+struct msg_q_elem {
     char *data;
     struct msg_q *link;
-}   *msg_front, *msg_rear;
+};
 
-struct cmd_q {
+struct msg_q
+{
+    struct msg_q_elem *front;
+    struct msg_q_elem *rear;
+} message_q;
+
+
+struct cmd_q_elem {
     struct command data;
     struct cmd_q *link;
-}   *cmd_front, *cmd_rear;
+};
+
+struct cmd_q
+{
+    struct cmd_q_elem *front;
+    struct cmd_q_elem *rear;
+} command_q;
+
 
 void to_msg_q(char *data); // Function used to insert the element into the queue
 void to_cmd_q(struct command data);

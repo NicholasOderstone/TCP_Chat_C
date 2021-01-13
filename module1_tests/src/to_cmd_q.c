@@ -1,17 +1,18 @@
 #include "../inc/module_one.h"
 
 void to_cmd_q(struct command data) {
-    struct cmd_q_elem *temp;
-    temp = (struct cmd_q_elem *)malloc(sizeof(struct cmd_q_elem));
+    struct cmd_q *temp;
+    temp = (struct cmd_q *)malloc(sizeof(struct cmd_q));
     temp->data.command = strdup(data.command);
     temp->data.params = strdup(data.params);
     temp->link = NULL;
 
-    if (command_q.rear == NULL)
-        command_q.front = command_q.rear = temp;
+    if (cmd_rear == NULL)
+        cmd_front = cmd_rear = temp;
     else {
-        command_q.rear->link = temp;
-        command_q.rear = temp;
+        cmd_rear->link = temp;
+        cmd_rear = temp;
     }
-    printf("Element inserted in cmd_q: %s\n", data.command);
+    printf("Element inserted in cmd_q: command = %s", data.command);
+    printf("; params = %s\n\n", data.params);
 }

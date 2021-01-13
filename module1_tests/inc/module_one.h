@@ -6,48 +6,33 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
+#include <pthread.h>
+
+pthread_mutex_t lock;
 
 struct command {
     char *command;
     char *params;
 };
 
-
-struct msg_q_elem {
+struct msg_q {
     char *data;
     struct msg_q *link;
-};
+}   *msg_front, *msg_rear;
 
-struct msg_q
-{
-    struct msg_q_elem *front;
-    struct msg_q_elem *rear;
-} message_q;
-
-
-struct cmd_q_elem {
+struct cmd_q {
     struct command data;
     struct cmd_q *link;
-};
-
-struct cmd_q
-{
-    struct cmd_q_elem *front;
-    struct cmd_q_elem *rear;
-} command_q;
+}   *cmd_front, *cmd_rear;
 
 
-void to_msg_q(char *data); // Function used to insert the element into the queue
-void to_cmd_q(struct command data);
-void move_msg_q(); // Function used to delete the elememt from the queue
-void display(); // Function used to display all the elements in the queue according to FIFO rule
+void to_msg_q(char *data); // Insert the message into the message queue
+void to_cmd_q(struct command data); // Insert the command into the command queue
+void move_msg_q(); // Delete the first elememt from the message queue
 
 char *take_fst_msg_in_q();
 char *mx_file_to_str(const char *filename);
 char *mx_strnew(const int size);
-
-void read_msg(void);
-void make_cmd(void);
 
 struct command msg_to_cmd(char *msg);
 

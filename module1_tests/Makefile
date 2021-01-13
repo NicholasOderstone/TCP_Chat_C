@@ -1,5 +1,5 @@
 CC = clang
-CFLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic
+CFLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic -lpthread
 NAME = mod_one
 OBJS = OBJ = $(addprefix obj/, $(notdir $(SRC:%.c=%.o)))
 INCS = inc/*.h

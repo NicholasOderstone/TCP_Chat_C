@@ -1,29 +1,58 @@
 #include "../inc/module_one.h"
 
-int main() {
-	read_msg();
-	make_cmd();
-	return 0;
-}
-
 // change to recv() from socket
-void read_msg() {
+void *read_msg() {
+	pthread_mutex_lock(&lock);
 	char *str = mx_file_to_str("text");
-	char sep[10] = "\n";
+	char sep[1] = "\n";
 	char *temp_str;
 
 	temp_str = strtok(str,sep);
 	while (temp_str != NULL)
 	{
-	   to_msg_q(temp_str);
-	   temp_str = strtok(NULL, sep);
+		to_msg_q(temp_str);
+		pthread_mutex_unlock(&lock);
+		temp_str = strtok(NULL, sep);
 	}
+	return NULL;
 }
 
-void make_cmd() {
+void *make_cmd() {
+	pthread_mutex_lock(&lock);
+	while(msg_front->link) {
+		char *fst_msg = strdup(take_fst_msg_in_q());
+		move_msg_q();
+		struct command cmd = msg_to_cmd(fst_msg);
+		to_cmd_q(cmd);
+		free(fst_msg);
+	}
 	char *fst_msg = strdup(take_fst_msg_in_q());
 	move_msg_q();
 	struct command cmd = msg_to_cmd(fst_msg);
 	to_cmd_q(cmd);
 	free(fst_msg);
+	pthread_mutex_unlock(&lock);
+	return NULL;
+}
+
+
+int main() {
+	pthread_t th_read_msg;
+	pthread_t th_make_cmd;
+
+    if (pthread_mutex_init(&lock, NULL) != 0)
+    {
+        printf("Mutex initialization failed.\n");
+        return 1;
+    }
+
+    printf("Before Thread\n");
+    pthread_create(&th_read_msg, NULL, read_msg, NULL);
+	pthread_create(&th_make_cmd, NULL, make_cmd, NULL);
+
+	pthread_join(th_read_msg, NULL);
+	pthread_join(th_make_cmd, NULL);
+    printf("After Thread\n");
+    return 0;
+	//while (msg_front->link)
 }

@@ -2,7 +2,6 @@
 
 // change to recv() from socket
 void *read_msg() {
-	pthread_mutex_lock(&lock);
 	char *str = mx_file_to_str("text");
 	char sep[1] = "\n";
 	char *temp_str;
@@ -11,27 +10,27 @@ void *read_msg() {
 	while (temp_str != NULL)
 	{
 		to_msg_q(temp_str);
-		pthread_mutex_unlock(&lock);
+		sleep(1);
 		temp_str = strtok(NULL, sep);
 	}
 	return NULL;
 }
 
 void *make_cmd() {
-	pthread_mutex_lock(&lock);
-	while(msg_front->link) {
-		char *fst_msg = strdup(take_fst_msg_in_q());
-		move_msg_q();
-		struct command cmd = msg_to_cmd(fst_msg);
-		to_cmd_q(cmd);
-		free(fst_msg);
+	while(1) {
+		if (msg_front != NULL)
+		{
+			char *fst_msg = strdup(take_fst_msg_in_q());
+			move_msg_q();
+
+			struct command cmd = msg_to_cmd(fst_msg);
+			to_cmd_q(cmd);
+			free(fst_msg);
+		}
+		else
+			msg_rear = NULL;
 	}
-	char *fst_msg = strdup(take_fst_msg_in_q());
-	move_msg_q();
-	struct command cmd = msg_to_cmd(fst_msg);
-	to_cmd_q(cmd);
-	free(fst_msg);
-	pthread_mutex_unlock(&lock);
+
 	return NULL;
 }
 
@@ -45,6 +44,8 @@ int main() {
         printf("Mutex initialization failed.\n");
         return 1;
     }
+	msg_front = NULL;
+	msg_rear = NULL;
 
     printf("Before Thread\n");
     pthread_create(&th_read_msg, NULL, read_msg, NULL);

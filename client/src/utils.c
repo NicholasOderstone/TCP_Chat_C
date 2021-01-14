@@ -17,7 +17,7 @@ void str_trim_lf (char* arr, int length) {
 
 void catch_ctrl_c_and_exit(int sig) {
     if (sig == 2) {
-      
+
     }
     ctrl_c_and_exit_flag = 1;
 }

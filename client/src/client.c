@@ -8,18 +8,17 @@ int main(int argc, char **argv){
 
 	char *ip = argv[1];
 	int port = atoi(argv[2]);
-
 	client_t client;
-	/* Socket settings*/
+	pthread_t send_msg_thread;
+	pthread_t recv_msg_thread;
+
+	// Socket settings
 	client.sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	client.address.sin_family = AF_INET;
 	client.address.sin_addr.s_addr = inet_addr(ip);
 	client.address.sin_port = htons(port);
 	pthread_mutex_init(&client.mutex, NULL);
 
-	signal(SIGINT, catch_ctrl_c_and_exit);
-
-	/* Name */
 	while (1) {
 		printf("Please enter your name: ");
 		fgets(client.name, 32, stdin);
@@ -36,7 +35,7 @@ int main(int argc, char **argv){
  	// Connect to Server
   	int err = connect(client.sockfd, (struct sockaddr *)&client.address, sizeof(client.address));
   	if (err == -1) {
-		printf("ERROR: connect\n");
+		perror("ERROR: connect");
 		return EXIT_FAILURE;
 	}
 
@@ -48,26 +47,24 @@ int main(int argc, char **argv){
 	client_t *buff_client = (client_t *)malloc(sizeof(client_t));
 	buff_client = &client;
 
-	pthread_t send_msg_thread;
-  if(pthread_create(&send_msg_thread, NULL, send_msg_handler, (void*)buff_client) != 0){
-		printf("ERROR: pthread\n");
-    return EXIT_FAILURE;
+	if(pthread_create(&send_msg_thread, NULL, send_msg_handler, (void*)buff_client) != 0){
+		perror("ERROR: pthread");
+    	return EXIT_FAILURE;
 	}
 
-	pthread_t recv_msg_thread;
-  if(pthread_create(&recv_msg_thread, NULL, recv_msg_handler, (void*)buff_client) != 0){
-		printf("ERROR: pthread\n");
+	if(pthread_create(&recv_msg_thread, NULL, recv_msg_handler, (void*)buff_client) != 0){
+		perror("ERROR: pthread");
 		return EXIT_FAILURE;
 	}
 
-	while (1){
-		if(ctrl_c_and_exit_flag){
+	while(1) {
+		if(ctrl_c_and_exit_flag) {
 			printf("\nBye\n");
 			break;
-    }
+    	}
 	}
-	free(buff_client);
+	pthread_mutex_destroy(&client.mutex);
 	close(client.sockfd);
-
+	exit(0);
 	return EXIT_SUCCESS;
 }

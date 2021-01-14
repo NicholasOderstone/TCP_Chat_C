@@ -7,17 +7,31 @@ void to_msg_q(char *data) {
     temp->data = strdup(data);
     temp->link = NULL;
 
+    struct msg_q *current = msg_front;
+
     pthread_mutex_lock(&lock);
-    if (msg_rear == NULL) {
-        msg_front = msg_rear = temp;
+    if (msg_front == NULL) {
+        current = msg_front = temp;
+    }
+    else {
+        while (current->link != NULL) {
+        current = current->link;
+        }
+        current->link = temp;
+        current = current->link;
+    }
+    /*
+    if (msg_front == NULL) {
+        msg_front = temp;
     }
     else {
         msg_rear->link = temp;
         msg_rear = temp;
     }
+    */
     pthread_mutex_unlock(&lock);
 
-    printf("%d: msg_q: %s\n", counter, data);
+    printf("%d: msg_q: %s\n", counter, current->data);
     counter++;
 }
 

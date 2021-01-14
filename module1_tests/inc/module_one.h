@@ -15,16 +15,16 @@ struct command {
     char *params;
 };
 
+
 struct msg_q {
     char *data;
     struct msg_q *link;
-}   *msg_front, *msg_rear;
+} *msg_front;
 
 struct cmd_q {
     struct command data;
     struct cmd_q *link;
-}   *cmd_front, *cmd_rear;
-
+} *cmd_front;
 
 void to_msg_q(char *data); // Insert the message into the message queue
 void to_cmd_q(struct command data); // Insert the command into the command queue

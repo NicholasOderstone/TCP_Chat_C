@@ -10,7 +10,7 @@ void to_cmd_q(struct command data) {
 
     struct cmd_q *current = cmd_front;
     if (current == NULL) {
-        current = temp;
+        current = cmd_front = temp;
     }
     else {
         while (current->link != NULL) {
@@ -18,15 +18,9 @@ void to_cmd_q(struct command data) {
         }
         current->link = temp;
     }
-/*
-    if (cmd_rear == NULL)
-        cmd_front = cmd_rear = temp;
-    else {
-        cmd_rear->link = temp;
-        cmd_rear = temp;
-    }
-    */
+    pthread_mutex_lock(&print_lock);
     printf("\t%d: cmd_q: command = %s", counter, data.command);
     printf("; params = %s\n", data.params);
+    pthread_mutex_unlock(&print_lock);
     counter++;
 }

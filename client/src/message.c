@@ -14,7 +14,7 @@ void *send_msg_handler(void *arg) {
 			break;
     } else {
       pthread_mutex_lock(&client->mutex);
-      sprintf(buffer, "%s: %s\n", client->name, message);
+      snprintf(buffer, BUFFER_SZ, "%s: %s\n", client->name, message);
       send(client->sockfd, buffer, strlen(buffer), 0);
       pthread_mutex_unlock(&client->mutex);
     }

@@ -14,6 +14,7 @@
 	#include <sys/types.h>
 	#include <signal.h>
 	#include <ctype.h>
+	#include <string.h>
 //////////////////////////
 
 // DEFINES
@@ -32,10 +33,32 @@
 
 		pthread_mutex_t mutex;
 	} client_t;
+
+	struct command {
+	    char *command;
+	    char *params;
+	};
+
+	typedef struct {
+		client_t *client;
+		char message[LENGTH];
+	} msg_t;
+	
+	struct msg_q {
+	    char *data;
+	    struct msg_q *link;
+	} *msg_front;
+
+	struct cmd_q {
+	    struct command data;
+	    struct cmd_q *link;
+	} *cmd_front;
+
 //////////////////////////
 
-// GLOBAL VARIABLES sorry...
+// GLOBAL VARIABLES
 	volatile sig_atomic_t ctrl_c_and_exit_flag;
+	pthread_mutex_t lock;
 //////////////////////////
 
 // FUNCTIONS
@@ -52,6 +75,20 @@
 	int validate_number(char *str);
 	int validate_ip(char *ip);
 	int validate_port(char *port);
+	// Insert the message into the message queue
+	void to_msg_q(char *data);
+	// Insert the command into the command queue
+	void to_cmd_q(struct command data);
+	// Delete the first elememt from the message queue
+	void move_msg_q();
+
+	void *read_msg(void *p);
+	void *make_cmd();
+	char *take_fst_msg_in_q();
+	char *mx_file_to_str(const char *filename);
+	char *mx_strnew(const int size);
+
+	struct command msg_to_cmd(char *msg);
 //////////////////////////
 
 #endif

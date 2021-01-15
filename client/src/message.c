@@ -36,17 +36,34 @@ void *send_msg_handler(void *arg) {
 
 void *recv_msg_handler(void *arg) {
 	client_t *client = (client_t *)arg;
-	char message[LENGTH];
+	msg_t *message = (msg_t *)malloc(sizeof(msg_t));
+	message->client = client;
 
 	while (1) {
 		if(ctrl_c_and_exit_flag) {
 			break;
 		}
 
-		int receive = recv(client->sockfd, message, LENGTH, 0);
+		int receive = recv(message->client->sockfd, message->message, LENGTH, 0);
 		if (receive > 0) {
-		  printf("%s", message);
-		  str_overwrite_stdout();
+			printf("msg recieved\n");
+
+			/*pthread_t th_read_msg;
+			pthread_t th_make_cmd;
+
+			if (pthread_mutex_init(&lock, NULL) != 0)
+			{
+			  printf("Mutex initialization failed.\n");
+			  return NULL;
+			}
+			msg_front = NULL;
+			printf("Before Thread\n");
+			pthread_create(&th_read_msg, NULL, read_msg, (void *)message);
+			pthread_create(&th_make_cmd, NULL, make_cmd, NULL);
+
+			//pthread_join(th_read_msg, NULL);
+			//pthread_join(th_make_cmd, NULL);
+			printf("After Thread\n");*/
 		}
 		else if (receive == 0) {
 				break;
@@ -55,9 +72,9 @@ void *recv_msg_handler(void *arg) {
 			printf("Server disconnected\n");
 			break;
 		}
-		memset(message, 0, sizeof(message));
+		memset(message->message, 0, sizeof(message->message));
 	}
-	
+
 	int ret_val = 1;
 	printf("\nRecv message thread terminated\n");
     pthread_exit(&ret_val);

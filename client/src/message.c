@@ -15,7 +15,7 @@ void *send_msg_handler(void *arg) {
 		str_trim_lf(message, LENGTH);
 
 		if (strcmp(message, "exit") == 0) {
-			catch_ctrl_c_and_exit(2);
+			catch_ctrl_c_and_exit();
 		}
 		else {
 		  pthread_mutex_lock(&client->mutex);

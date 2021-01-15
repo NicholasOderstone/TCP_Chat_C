@@ -20,18 +20,12 @@ void to_msg_q(char *data) {
         current->link = temp;
         current = current->link;
     }
-    /*
-    if (msg_front == NULL) {
-        msg_front = temp;
-    }
-    else {
-        msg_rear->link = temp;
-        msg_rear = temp;
-    }
-    */
-    pthread_mutex_unlock(&lock);
-
+    //pthread_mutex_lock(&print_lock);
     printf("%d: msg_q: %s\n", counter, current->data);
+    //pthread_mutex_unlock(&print_lock);
+    pthread_mutex_unlock(&lock);
+    
+    
     counter++;
 }
 

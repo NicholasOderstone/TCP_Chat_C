@@ -24,6 +24,7 @@ void *send_msg_handler(void *arg) {
 		  pthread_mutex_unlock(&client->mutex);
 		}
 
+
 		bzero(message, LENGTH);
 		bzero(buffer, LENGTH + 32);
 	}

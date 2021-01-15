@@ -49,9 +49,7 @@ void *recv_msg_handler(void *arg) {
 		int receive = recv(message->client->sockfd, msg_buf, LENGTH, 0);
 		if (receive > 0) {
 			message->message = strdup(msg_buf);
-			printf("%s", message->message);
-		 	str_overwrite_stdout();
-			/*pthread_t th_read_msg;
+			pthread_t th_read_msg;
 			pthread_t th_make_cmd;
 
 			if (pthread_mutex_init(&lock, NULL) != 0)
@@ -66,7 +64,7 @@ void *recv_msg_handler(void *arg) {
 
 			//pthread_join(th_read_msg, NULL);
 			//pthread_join(th_make_cmd, NULL);
-			printf("After Thread\n");*/
+			printf("After Thread\n");
 		}
 		else if (receive == 0) {
 				break;

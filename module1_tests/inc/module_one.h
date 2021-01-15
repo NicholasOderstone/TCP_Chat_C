@@ -9,6 +9,7 @@
 #include <pthread.h>
 
 pthread_mutex_t lock;
+pthread_mutex_t print_lock;
 
 struct command {
     char *command;

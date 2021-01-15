@@ -2,12 +2,12 @@
 
 char *mx_file_to_str(const char *filename) {
     int file;
-    int i = 0;
     char buf;
     char *result = NULL;
 
     if((file = open(filename, O_RDONLY))!= -1)
     {
+        int i = 0;
         while (read(file, &buf, 1))
             i++;
         close(file);

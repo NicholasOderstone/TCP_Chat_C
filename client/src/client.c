@@ -1,58 +1,11 @@
 #include "../inc/header.h"
 
-int validate_number(char *str) {
-   while (*str) {
-      if(!isdigit(*str)){ //if the character is not a number, return false
-         return 0;
-      }
-      str++; //point to next character
-   }
-   return 1;
-}
-int validate_ip(char *ip) { //check whether the IP is valid or not
-   int num, dots = 0;
-   char *ptr;
-   if (ip == NULL)
-      return 0;
-      ptr = strtok(ip, "."); //cut the string using dor delimiter
-      if (ptr == NULL)
-         return 0;
-   while (ptr) {
-      if (!validate_number(ptr)) //check whether the sub string is holding only number or not
-         
-         return 0;
-         num = atoi(ptr); //convert substring to number
-         if (num >= 0 && num <= 255) {
-            ptr = strtok(NULL, "."); //cut the next part of the string
-            if (ptr != NULL)
-               dots++; //increase the dot count
-         } else {
-            return 0;
-		 }
-    }
-    if (dots != 3) { //if the number of dots are not 3, return false
-       return 0;
-	}
-      return 1;
-}
-
-int validate_port(char *port) {
-	int port_len = strlen(port);
-	if (port_len > 5 || port_len < 3) {
-		return 0;
-	}
-	if (!validate_number(port)) {
-		return 0;
-	}
-	return 1;
-}
-
 int main(int argc, char **argv){
 	if (argc != 3) {
 		printf("Usage: %s <ipv4> <port>\n", argv[0]);
 		return EXIT_FAILURE;
 	}
-	
+
 	char *ip = argv[1];
 	char *port = argv[2];
 	while(!validate_ip(argv[1])) {
@@ -66,7 +19,7 @@ int main(int argc, char **argv){
 		scanf("%s", port);
 		printf("\n\r");
 	}
-	
+
 	client_t client;
 	// Socket settings
 	client.sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -80,8 +33,7 @@ int main(int argc, char **argv){
 	printf("Name must be less than 32 and more than 2 characters.\n");
 	while (1) {
 		printf("Please enter your name: ");
-		//fgets(client.name, 32, stdin);
-		scanf("%31s", client.name);
+		fgets(client.name, 32, stdin);
 		str_trim_lf(client.name, strlen(client.name));
 		if (strlen(client.name) < 2){
 			printf("Name must be less than 32 and more than 2 characters.\n");

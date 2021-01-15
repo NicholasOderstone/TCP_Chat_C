@@ -13,6 +13,7 @@
 	#include <pthread.h>
 	#include <sys/types.h>
 	#include <signal.h>
+	#include <ctype.h>
 //////////////////////////
 
 // DEFINES
@@ -48,6 +49,9 @@
 	void *send_msg_handler(void *arg);
 	// Handle recieving messages
 	void *recv_msg_handler(void *arg);
+	int validate_number(char *str);
+	int validate_ip(char *ip);
+	int validate_port(char *port);
 //////////////////////////
 
 #endif

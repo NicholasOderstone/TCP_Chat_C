@@ -31,9 +31,7 @@ void *send_msg_handler(void *arg) {
 	}
 
 	int ret_val = 1;
-	printf("\x1B[34m");
 	printf("1. Send message thread terminated\n");
-	printf("\x1B[0m");
 	pthread_exit(&ret_val);
 	return NULL;
 }
@@ -61,9 +59,7 @@ void *recv_msg_handler(void *arg) {
 	}
 
 	int ret_val = 1;
-	printf("\x1B[34m");
 	printf("2. Recv message thread terminated\n");
-	printf("\x1B[0m");
     pthread_exit(&ret_val);
   	return NULL;
 }

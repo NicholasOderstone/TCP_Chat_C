@@ -15,15 +15,13 @@ void *read_msg(void *arg) {
 				break;
 		}
 		else {
-			printf("Server disconnected\n");
+			printf("! Server disconnected !\n");
 			break;
 		}
 		memset(msg_buf, 0, sizeof(msg_buf));
 	}
 	int ret_val = 1;
-	printf("\x1B[34m");
 	printf("3. Read message thread terminated\n");
-	printf("\x1B[0m");
 	pthread_exit(&ret_val);
 	return NULL;
 }
@@ -43,9 +41,7 @@ void *make_cmd() {
 		}
 	}
 	int ret_val = 1;
-	printf("\x1B[34m");
 	printf("4. Make command thread terminated\n");
-	printf("\x1B[0m");
 	pthread_exit(&ret_val);
 	return NULL;
 }

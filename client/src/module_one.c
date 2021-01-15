@@ -15,7 +15,7 @@ void *read_msg(void *arg) {
 				break;
 		}
 		else {
-			printf("! Server disconnected !\n");
+			printf("-- Server disconnected --\n");
 			break;
 		}
 		memset(msg_buf, 0, sizeof(msg_buf));

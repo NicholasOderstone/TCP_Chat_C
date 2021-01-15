@@ -18,7 +18,9 @@ void to_cmd_q(struct command data) {
         current->link = temp;
     }
 
-    printf("\tnow in cmd_q: command = %s", data.command);
-    printf("; params = %s\n", data.params);
+    //printf("\tnow in cmd_q: command = %s", data.command);
+    //printf("; params = %s\n", data.params);
+    printf("cmd: %s", data.command);
+    printf("; params: %s", data.params);
     str_overwrite_stdout();
 }

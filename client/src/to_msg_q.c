@@ -19,9 +19,9 @@ void to_msg_q(char *data) {
         current->link = temp;
         current = current->link;
     }
-    
-    printf("now in msg_q: %s", current->data);
-    str_overwrite_stdout();
+
+    //printf("now in msg_q: %s", current->data);
+    //str_overwrite_stdout();
     pthread_mutex_unlock(&lock);
 }
 

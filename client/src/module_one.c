@@ -1,24 +1,38 @@
 #include "../inc/header.h"
 
-void *read_msg(void *p) {
-	msg_t *arg = (msg_t *)p;
-	char *msg = arg->message;
-	//client_t *client = arg->client;
+void *read_msg(void *arg) {
+	client_t *client = (client_t *)arg;
+	char msg_buf[LENGTH];
+
 	while (1)
 	{
-		sleep(1);
-		to_msg_q(msg);
-		printf("%s", msg);
-		str_overwrite_stdout();
+		int receive = recv(client->sockfd, msg_buf, LENGTH, 0);
+		if (receive > 0) {
+			if (msg_buf[0] != 0)
+				to_msg_q(msg_buf);
+		}
+		else if (receive == 0) {
+				break;
+		}
+		else {
+			printf("Server disconnected\n");
+			break;
+		}
+		memset(msg_buf, 0, sizeof(msg_buf));
 	}
 	int ret_val = 1;
-	printf("\nRead message thread terminated\n");
+	printf("\x1B[34m");
+	printf("3. Read message thread terminated\n");
+	printf("\x1B[0m");
 	pthread_exit(&ret_val);
 	return NULL;
 }
 
 void *make_cmd() {
 	while(1) {
+		if(ctrl_c_and_exit_flag) {
+			break;
+		}
 		if (msg_front != NULL)
 		{
 			char *fst_msg = strdup(take_fst_msg_in_q());
@@ -29,7 +43,9 @@ void *make_cmd() {
 		}
 	}
 	int ret_val = 1;
-	printf("\nMake command thread terminated\n");
+	printf("\x1B[34m");
+	printf("4. Make command thread terminated\n");
+	printf("\x1B[0m");
 	pthread_exit(&ret_val);
 	return NULL;
 }

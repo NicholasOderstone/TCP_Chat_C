@@ -71,9 +71,9 @@ int main(int argc, char **argv){
 		return EXIT_FAILURE;
 	}
 
-	while (1) {
+	while(1) {
 		if (ctrl_c_and_exit_flag) {
-			printf("\nBye\n");
+			printf("Bye!\n");
 			break;
 		}
 	}

@@ -28,9 +28,9 @@ void *handle_client(void *arg){
 	if(recv(client->sockfd, name, 32, 0) <= 0 || strlen(name) <  2 || strlen(name) >= 32-1){
 		printf("Didn't enter the name.\n");
 		leave_flag = 1;
-	} else{
+	} else {
 		strcpy(client->name, name);
-		sprintf(buff_out, "%s has joined\n", client->name);
+		sprintf(buff_out, "<JOIN> <%s>\n", client->name);
 		printf("%s", buff_out);
 		send_message(buff_out, client->uid, serv_inf);
 	}
@@ -48,10 +48,10 @@ void *handle_client(void *arg){
 				send_message(buff_out, client->uid, serv_inf);
 
 				str_trim_lf(buff_out, strlen(buff_out));
-				printf("%s -> %s\n", buff_out, client->name);
+				printf("<SEND> <%s> <%s>\n", client->name, buff_out);
 			}
 		} else if (receive == 0 || strcmp(buff_out, "exit") == 0){
-			sprintf(buff_out, "%s has left\n", client->name);
+			sprintf(buff_out, "<LEAVE> <%s>\n", client->name);
 			printf("%s", buff_out);
 			send_message(buff_out, client->uid, serv_inf);
 			leave_flag = 1;

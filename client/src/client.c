@@ -28,16 +28,12 @@ int main(int argc, char **argv){
 	client.address.sin_port = htons(atoi(port));
 	pthread_mutex_init(&client.mutex, NULL);
 
-	signal(SIGINT, catch_ctrl_c_and_exit);
-
 	// Name
 	printf("Name must be less than 32 and more than 2 characters.\n");
 	while (1) {
 		printf("Please enter your name: ");
-		//fgets(client.name, 32, stdin);
-		scanf("%31s", client.name);
+		fgets(client.name, 32, stdin);
 		str_trim_lf(client.name, strlen(client.name));
-		printf("Your name: \"%s\"\n", client.name);
 		if (strlen(client.name) < 2){
 			printf("Name must be less than 32 and more than 2 characters.\n");
 		}

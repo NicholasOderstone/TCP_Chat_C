@@ -41,9 +41,9 @@
 
 	typedef struct {
 		client_t *client;
-		char message[LENGTH];
+		char *message;
 	} msg_t;
-	
+
 	struct msg_q {
 	    char *data;
 	    struct msg_q *link;

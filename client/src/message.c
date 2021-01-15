@@ -38,16 +38,18 @@ void *recv_msg_handler(void *arg) {
 	client_t *client = (client_t *)arg;
 	msg_t *message = (msg_t *)malloc(sizeof(msg_t));
 	message->client = client;
+	char msg_buf[LENGTH];
 
 	while (1) {
 		if(ctrl_c_and_exit_flag) {
 			break;
 		}
 
-		int receive = recv(message->client->sockfd, message->message, LENGTH, 0);
+		int receive = recv(message->client->sockfd, msg_buf, LENGTH, 0);
 		if (receive > 0) {
-			printf("msg recieved\n");
-
+			message->message = strdup(msg_buf);
+			printf("%s", message->message);
+		 	str_overwrite_stdout();
 			/*pthread_t th_read_msg;
 			pthread_t th_make_cmd;
 
@@ -72,7 +74,7 @@ void *recv_msg_handler(void *arg) {
 			printf("Server disconnected\n");
 			break;
 		}
-		memset(message->message, 0, sizeof(message->message));
+		memset(msg_buf, 0, sizeof(msg_buf));
 	}
 
 	int ret_val = 1;

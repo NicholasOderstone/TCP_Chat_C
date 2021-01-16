@@ -22,6 +22,7 @@
 	#define MAX_CLIENTS 100
 	#define BUFFER_SZ 2048
 	#define LENGTH 2048
+	#define NAME_SZ 32
 //////////////////////////
 
 // STRUCTURES
@@ -30,8 +31,9 @@
 		struct sockaddr_in address; // Stores ip (sin_addr.s_addr), port (sin_port) and ip format (sin_family = AF_INET)
 		int sockfd;
 		int uid;
-		char name[32];
+		char name[NAME_SZ];
 
+		int is_connected;
 		pthread_mutex_t mutex;
 	} client_t;
 

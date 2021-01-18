@@ -9,7 +9,9 @@ void *read_msg(void *arg) {
 		int receive = recv(client->sockfd, msg_buf, LENGTH, 0);
 		if (receive > 0) {
 			if (msg_buf[0] != 0)
+			{
 				to_msg_q(msg_buf);
+			}
 		}
 		else if (receive == 0) {
 				break;

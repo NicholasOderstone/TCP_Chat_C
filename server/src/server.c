@@ -18,7 +18,6 @@ int main(int argc, char **argv){
 		server.clients[i] = NULL;
 	}
 	
-
 	int option = 1;
 	int connfd = 0;
   	struct sockaddr_in cli_addr;

@@ -14,6 +14,9 @@
     #include <sys/types.h>
     #include <signal.h>
     #include <netdb.h>
+
+    /* MODULE_ONE */
+    #include <fcntl.h>
 //////////////////////////
 
 /* DEFINES */
@@ -31,6 +34,7 @@
         int sockfd;
         int uid;
         char name[32];
+        int leave_flag;
     } client_t; 
 
     /* Handles all neccessary info about server*/
@@ -53,7 +57,31 @@
     typedef struct {
         server_info_t *serv_inf; /* Server info*/
         int uid; /* uid of client which connection is handled in this thread*/ 
+        client_t *client;
     } buff_t; 
+
+
+    /* MODULE_ONE */
+    pthread_mutex_t lock;
+    int leave_flag;
+
+    struct command {
+        char *command;
+        char *params;
+    };
+
+    struct msg_q {
+        char *data;
+        struct msg_q *link;
+    } *msg_front;
+
+    struct cmd_q {
+        struct command data;
+        struct cmd_q *link;
+    } *cmd_front;
+
+    
+
 
 //////////////////////////
 
@@ -73,6 +101,23 @@
     void send_message(char *s, int uid, server_info_t *serv_inf);
     /* Handle all communication with the client */
     void *handle_client(void *arg);
+
+    /* MODULE_ONE */
+    void to_msg_q(char *data); // Insert the message into the message queue
+    void to_cmd_q(struct command data); // Insert the command into the command queue
+    void move_msg_q(); // Delete the first elememt from the message queue
+    void move_cmd_q(); // Delete the first elememt from the command queue
+
+    char *take_fst_msg_in_q();
+    struct command take_fst_cmd_in_q();
+    char *mx_strnew(const int size);
+
+    struct command msg_to_cmd(char *msg);
+    void *read_msg(void *arg);
+
+
+    /* COMMANDS */
+
 
 //////////////////////////
 

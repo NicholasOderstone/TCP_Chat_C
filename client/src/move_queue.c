@@ -10,3 +10,14 @@ void move_msg_q() {
     pthread_mutex_unlock(&lock);
     free(temp);
 }
+
+void move_cmd_q() {
+    struct cmd_q *temp;
+    temp = cmd_front;
+    pthread_mutex_lock(&lock);
+    if (cmd_front != NULL) {
+        cmd_front = cmd_front->link;
+    }
+    pthread_mutex_unlock(&lock);
+    free(temp);
+}

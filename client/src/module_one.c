@@ -35,7 +35,7 @@ void *make_cmd() {
 		{
 			char *fst_msg = strdup(take_fst_msg_in_q());
 			move_msg_q();
-			struct command cmd = msg_to_cmd(fst_msg);
+			command cmd = msg_to_cmd(fst_msg);
 			to_cmd_q(cmd);
 			free(fst_msg);
 		}

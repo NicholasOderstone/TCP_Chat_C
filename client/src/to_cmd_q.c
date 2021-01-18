@@ -1,6 +1,6 @@
 #include "../inc/header.h"
 
-void to_cmd_q(struct command data) {
+void to_cmd_q(command data) {
     struct cmd_q *temp;
     temp = (struct cmd_q *)malloc(sizeof(struct cmd_q));
     temp->data.command = strdup(data.command);
@@ -23,4 +23,8 @@ void to_cmd_q(struct command data) {
     printf("cmd: %s", data.command);
     printf("; params: %s", data.params);
     str_overwrite_stdout();
+}
+
+command take_fst_cmd_in_q() {
+    return cmd_front->data;
 }

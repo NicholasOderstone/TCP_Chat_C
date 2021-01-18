@@ -20,6 +20,7 @@
 	#define MAX_CLIENTS 100
 	#define BUFFER_SZ 2048
 	#define LENGTH 2048
+	#define AMOUNT_OF_CMD 11
 //////////////////////////
 
 // STRUCTURES
@@ -33,10 +34,15 @@
 		pthread_mutex_t mutex;
 	} client_t;
 
-	struct command {
+	typedef struct {
 	    char *command;
 	    char *params;
-	};
+	} command;
+
+	typedef struct {
+	    char *name;
+	    void (*func)(char *params);
+	} cmd_func;
 
 	typedef struct {
 		client_t *client;
@@ -49,15 +55,17 @@
 	} *msg_front;
 
 	struct cmd_q {
-	    struct command data;
+	    command data;
 	    struct cmd_q *link;
 	} *cmd_front;
+
 
 //////////////////////////
 
 // GLOBAL VARIABLES
 	int ctrl_c_and_exit_flag;
 	pthread_mutex_t lock;
+	cmd_func arr_cmd_func[AMOUNT_OF_CMD];
 //////////////////////////
 
 // FUNCTIONS
@@ -77,16 +85,30 @@
 	// Insert the message into the message queue
 	void to_msg_q(char *data);
 	// Insert the command into the command queue
-	void to_cmd_q(struct command data);
+	void to_cmd_q(command data);
 	// Delete the first elememt from the message queue
 	void move_msg_q();
+	void move_cmd_q();
 
 	void *read_msg(void *p);
 	void *make_cmd();
+	void *process_cmd();
 	char *take_fst_msg_in_q();
+	command take_fst_cmd_in_q();
 	char *mx_strnew(const int size);
 
-	struct command msg_to_cmd(char *msg);
+	void send_cmd(command cmd, client_t *client);
+	command msg_to_cmd(char *msg);
+	char *cmd_to_msg(command cmd);
+
+	void init_funcs(void);
+
+	char *param_1(char *params);
+	char *param_2(char *params);
+	char *param_3(char *params);
+	char *param_4(char *params);
+	char *param_5(char *params);
+
 //////////////////////////
 
 #endif

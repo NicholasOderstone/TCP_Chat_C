@@ -3,13 +3,11 @@
 void *send_msg_handler(void *arg) {
 	client_t *client = (client_t *)arg;
   	char message[LENGTH];
-	char buffer[LENGTH + 32];
 
 	while(1) {
 		if(ctrl_c_and_exit_flag) {
 			break;
 		}
-
 		str_overwrite_stdout();
 		fgets(message, LENGTH, stdin);
 		str_trim_lf(message, LENGTH);
@@ -19,15 +17,11 @@ void *send_msg_handler(void *arg) {
 		}
 		else {
 		  pthread_mutex_lock(&client->mutex);
-		  //snprintf(buffer, BUFFER_SZ, "%s: %s\n", client->name, message);
-		  snprintf(buffer, BUFFER_SZ, "%s\n", message);
-		  send(client->sockfd, buffer, strlen(buffer), 0);
+		  command cmd = msg_to_cmd(message);
+		  send_cmd(cmd, client);
 		  pthread_mutex_unlock(&client->mutex);
 		}
-
-
 		bzero(message, LENGTH);
-		bzero(buffer, LENGTH + 32);
 	}
 
 	int ret_val = 1;
@@ -41,6 +35,7 @@ void *recv_msg_handler(void *arg) {
 
 	pthread_t th_read_msg;
 	pthread_t th_make_cmd;
+	pthread_t th_process_cmd;
 
 	if (pthread_mutex_init(&lock, NULL) != 0)
 	{
@@ -51,6 +46,7 @@ void *recv_msg_handler(void *arg) {
 	msg_front = NULL;
 	pthread_create(&th_read_msg, NULL, read_msg, (void *)client);
 	pthread_create(&th_make_cmd, NULL, make_cmd, NULL);
+	pthread_create(&th_process_cmd, NULL, process_cmd, NULL);
 
 	while (1) {
 		if(ctrl_c_and_exit_flag) {

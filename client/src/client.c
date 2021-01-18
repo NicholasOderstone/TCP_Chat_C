@@ -50,7 +50,8 @@ int main(int argc, char **argv){
 		return EXIT_FAILURE;
 	}
 
-
+	init_funcs();
+	
 	// Send name
 	send(client.sockfd, client.name, 32, 0);
 

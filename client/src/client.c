@@ -21,41 +21,18 @@ int main(int argc, char **argv){
 	}
 
 	client_t client;
-	// Socket settings
-	client.sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	client.address.sin_family = AF_INET;
-	client.address.sin_addr.s_addr = inet_addr(ip);
-	client.address.sin_port = htons(atoi(port));
-	pthread_mutex_init(&client.mutex, NULL);
+	init_client(&client, ip, port);
+	init_funcs();
+	
+	// Connect to Server
+	pthread_t server_connection_handler;
 
-	// Name
-
-	printf("Name must be less than 32 and more than 2 characters.\n");
-	while (1) {
-		printf("Please enter your name: ");
-		fgets(client.name, 32, stdin);
-		str_trim_lf(client.name, strlen(client.name));
-		if (strlen(client.name) < 2){
-			printf("Name must be less than 32 and more than 2 characters.\n");
-		}
-		else {
-			break;
-		}
-	}
-
- 	// Connect to Server
-  	int err = connect(client.sockfd, (struct sockaddr *)&client.address, sizeof(client.address));
-  	if (err == -1) {
-		printf("ERROR: connect\n");
+	if(pthread_create(&server_connection_handler, NULL, connect_to_server, (void*)&client) != 0){
+		perror("ERROR: pthread\n");
 		return EXIT_FAILURE;
 	}
 
-	init_funcs();
-	
-	// Send name
-	send(client.sockfd, client.name, 32, 0);
-
-	printf("=== WELCOME TO THE CHATROOM ===\n");
+	while (client.is_connected == 0) {}
 
 	client_t *buff_client = (client_t *)malloc(sizeof(client_t));
 	buff_client = &client;

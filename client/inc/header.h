@@ -20,6 +20,7 @@
 	#define MAX_CLIENTS 100
 	#define BUFFER_SZ 2048
 	#define LENGTH 2048
+	#define NAME_SZ 32
 	#define AMOUNT_OF_CMD 11
 //////////////////////////
 
@@ -31,6 +32,7 @@
 		int uid;
 		char name[32];
 
+		int is_connected;
 		pthread_mutex_t mutex;
 	} client_t;
 
@@ -89,6 +91,12 @@
 	// Delete the first elememt from the message queue
 	void move_msg_q();
 	void move_cmd_q();
+	// Input client name (with correctness check)
+	void get_client_name(char *name);
+	// Init client info and settings
+	void init_client(client_t *client, char *ip, char *port);
+
+	void *connect_to_server(void *cnct_inf);
 
 	void *read_msg(void *p);
 	void *make_cmd();

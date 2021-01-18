@@ -8,7 +8,7 @@ void *process_cmd() {
 		if (cmd_front != NULL)
 		{
 			//command fst_cmd = take_fst_cmd_in_q();
-			move_cmd_q();
+			//move_cmd_q();
 			for (int j = 0; j < AMOUNT_OF_CMD; j++) {
 				//if (strcmp(fst_cmd.command, arr_cmd_func[j].name) == 0) {
 					printf("--- %s ---\n", arr_cmd_func[j].name);

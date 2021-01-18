@@ -23,7 +23,7 @@ int main(int argc, char **argv){
 	client_t client;
 	init_client(&client, ip, port);
 	init_funcs();
-	
+
 	// Connect to Server
 	pthread_t server_connection_handler;
 
@@ -48,6 +48,12 @@ int main(int argc, char **argv){
 		perror("ERROR: pthread\n");
 		return EXIT_FAILURE;
 	}
+
+	/*pthread_t th_process_cmd;
+	if(pthread_create(&th_process_cmd, NULL, process_cmd, NULL); != 0){
+		perror("ERROR: pthread\n");
+		return EXIT_FAILURE;
+	}*/
 
 	while(1) {
 		if (ctrl_c_and_exit_flag) {

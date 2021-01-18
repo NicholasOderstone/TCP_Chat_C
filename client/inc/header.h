@@ -25,7 +25,7 @@
 //////////////////////////
 
 // STRUCTURES
-// Handles all neccesary info about client
+	// Handles all neccesary info about client
 	typedef struct{
 		struct sockaddr_in address; // Stores ip (sin_addr.s_addr), port (sin_port) and ip format (sin_family = AF_INET)
 		int sockfd;
@@ -71,46 +71,61 @@
 //////////////////////////
 
 // FUNCTIONS
-	// add "> " at the beginning of the new line
+	// Add "> " at the beginning of the new line
 	void str_overwrite_stdout();
-	// trim \n
+	// Trim \n
 	void str_trim_lf (char* arr, int length);
 	// Checks whether client left using CTRL+C
 	void catch_ctrl_c_and_exit(void);
-	// Handle sending messages
-	void *send_msg_handler(void *arg);
-	// Handle recieving messages
-	void *recv_msg_handler(void *arg);
+	// Validate functions
 	int validate_number(char *str);
 	int validate_ip(char *ip);
 	int validate_port(char *port);
-	// Insert the message into the message queue
-	void to_msg_q(char *data);
-	// Insert the command into the command queue
-	void to_cmd_q(command data);
-	// Delete the first elememt from the message queue
-	void move_msg_q();
-	void move_cmd_q();
 	// Input client name (with correctness check)
 	void get_client_name(char *name);
 	// Init client info and settings
 	void init_client(client_t *client, char *ip, char *port);
-
-	void *connect_to_server(void *cnct_inf);
-
-	void *read_msg(void *p);
-	void *make_cmd();
-	void *process_cmd();
-	char *take_fst_msg_in_q();
-	command take_fst_cmd_in_q();
+	// Init command functions
+	void init_funcs(void);
 	char *mx_strnew(const int size);
 
+	// --- Thread functions ---
+
+	// Handles sending messages
+	void *send_msg_handler(void *arg);
+	// Handles recieving messages
+	void *recv_msg_handler(void *arg);
+	// Handles reconnect
+	void *connect_to_server(void *cnct_inf);
+	// Handles reading messages
+	void *read_msg(void *p);
+	// Handles making command from message
+	void *make_cmd();
+	// Handles processing recieved commands
+	void *process_cmd();
+
+	// --- Queue functions ---
+
+	// Inserts the message into the message queue
+	void to_msg_q(char *data);
+	// Inserts the command into the command queue
+	void to_cmd_q(command data);
+	// Deletes the first elememt from the message queue
+	void move_msg_q();
+	// Deletes the first elememt from the command queue
+	void move_cmd_q();
+	// Takes first message from msg_q
+	char *take_fst_msg_in_q();
+	// Takes first command from cmd_q
+	command take_fst_cmd_in_q();
+
+
 	void send_cmd(command cmd, client_t *client);
+
+	// --- Utility functions ---
+
 	command msg_to_cmd(char *msg);
 	char *cmd_to_msg(command cmd);
-
-	void init_funcs(void);
-
 	char *param_1(char *params);
 	char *param_2(char *params);
 	char *param_3(char *params);

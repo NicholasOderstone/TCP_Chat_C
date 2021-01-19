@@ -1,22 +1,22 @@
 #include "../inc/header.h"
 
-void move_msg_q() {
+void move_msg_q(struct msg_q **msg_q_front) {
     struct msg_q *temp;
-    temp = msg_front;
+    temp = *msg_q_front;
     pthread_mutex_lock(&lock);
-    if (msg_front != NULL) {
-        msg_front = msg_front->link;
+    if (*msg_q_front != NULL) {
+        *msg_q_front = temp->link;
     }
     pthread_mutex_unlock(&lock);
     free(temp);
 }
 
-void move_cmd_q() {
+void move_cmd_q(struct cmd_q **cmd_q_front) {
     struct cmd_q *temp;
-    temp = cmd_front;
+    temp = *cmd_q_front;
     pthread_mutex_lock(&lock);
-    if (cmd_front != NULL) {
-        cmd_front = cmd_front->link;
+    if (*cmd_q_front != NULL) {
+        *cmd_q_front = temp->link;
     }
     pthread_mutex_unlock(&lock);
     free(temp);

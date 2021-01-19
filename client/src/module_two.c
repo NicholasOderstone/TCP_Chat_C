@@ -1,19 +1,20 @@
 #include "../inc/header.h"
 
-void *process_cmd() {
+void *process_cmd(void *arg) {
+	struct process_cmd_info_s *Info = (struct process_cmd_info_s *)arg;
 	while(1) {
 		if(ctrl_c_and_exit_flag) {
 			break;
 		}
-		if (cmd_front != NULL)
+		if (*Info->cmd_q_front != NULL)
 		{
-			//command fst_cmd = take_fst_cmd_in_q();
-			//move_cmd_q();
+			command fst_cmd = take_fst_cmd_in_q(Info->cmd_q_front);
+			move_cmd_q(Info->cmd_q_front);
 			for (int j = 0; j < AMOUNT_OF_CMD; j++) {
-				//if (strcmp(fst_cmd.command, arr_cmd_func[j].name) == 0) {
+				if (strcmp(fst_cmd.command, arr_cmd_func[j].name) == 0) {
 					printf("--- %s ---\n", arr_cmd_func[j].name);
-					//arr_cmd_func[j].func(fst_cmd.params);
-				//}
+					arr_cmd_func[j].func(fst_cmd.params);
+				}
 			}
 		}
 	}

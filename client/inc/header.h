@@ -54,12 +54,38 @@
 	struct msg_q {
 	    char *data;
 	    struct msg_q *link;
-	} *msg_front;
+	};
 
 	struct cmd_q {
 	    command data;
 	    struct cmd_q *link;
-	} *cmd_front;
+	};
+
+	struct send_msg_info_s {
+		client_t *client;
+	};
+
+	struct recv_msg_info_s {
+		client_t *client;
+		struct msg_q **msg_q_front;
+		struct cmd_q **cmd_q_front;
+	};
+
+	struct process_cmd_info_s {
+		client_t *client;
+		struct cmd_q **cmd_q_front;
+	};
+
+	struct read_msg_info_s {
+		client_t *client;
+		struct msg_q **msg_q_front;
+	};
+
+	struct make_cmd_info_s {
+		struct msg_q **msg_q_front;
+		struct cmd_q **cmd_q_front;
+	};
+
 
 
 //////////////////////////
@@ -100,24 +126,24 @@
 	// Handles reading messages
 	void *read_msg(void *p);
 	// Handles making command from message
-	void *make_cmd();
+	void *make_cmd(void *arg);
 	// Handles processing recieved commands
-	void *process_cmd();
+	void *process_cmd(void *arg);
 
 	// --- Queue functions ---
 
 	// Inserts the message into the message queue
-	void to_msg_q(char *data);
+	void to_msg_q(char *data, struct msg_q **msg_q_front);
 	// Inserts the command into the command queue
-	void to_cmd_q(command data);
+	void to_cmd_q(command data, struct cmd_q **cmd_q_front);
 	// Deletes the first elememt from the message queue
-	void move_msg_q();
+	void move_msg_q(struct msg_q **msg_q_front);
 	// Deletes the first elememt from the command queue
-	void move_cmd_q();
+	void move_cmd_q(struct cmd_q **cmd_q_front);
 	// Takes first message from msg_q
-	char *take_fst_msg_in_q();
+	char *take_fst_msg_in_q(struct msg_q **msg_q_front);
 	// Takes first command from cmd_q
-	command take_fst_cmd_in_q();
+	command take_fst_cmd_in_q(struct cmd_q **cmd_q_front);
 
 
 	void send_cmd(command cmd, client_t *client);

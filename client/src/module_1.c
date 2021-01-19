@@ -45,13 +45,11 @@ void *make_cmd(void *arg) {
 	  printf("Mutex initialization failed.\n");
 	  return NULL;
 	}
-	sleep(8);
 	while(1) {
 		if (Info->client->exit == 1) {
 			break;
 		}
 		else if (*Info->msg_q_front != NULL) {
-			sleep(2);
 			char *fst_msg = strdup(take_fst_msg_in_q(Info->msg_q_front));
 			move_msg_q(Info->msg_q_front, Info->lock);
 			command cmd = msg_to_cmd(fst_msg);

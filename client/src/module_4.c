@@ -3,7 +3,7 @@
 void *process_cmd(void *arg) {
 	struct process_cmd_info_s *Info = (struct process_cmd_info_s *)arg;
 	while(1) {
-		if(ctrl_c_and_exit_flag) {
+		if (Info->client->exit == 1) {
 			break;
 		}
 		if (*Info->cmd_q_front != NULL)
@@ -11,9 +11,9 @@ void *process_cmd(void *arg) {
 			command fst_cmd = take_fst_cmd_in_q(Info->cmd_q_front);
 			move_cmd_q(Info->cmd_q_front);
 			for (int j = 0; j < AMOUNT_OF_CMD; j++) {
-				if (strcmp(fst_cmd.command, arr_cmd_func[j].name) == 0) {
-					printf("--- %s ---\n", arr_cmd_func[j].name);
-					arr_cmd_func[j].func(fst_cmd.params);
+				if (strcmp(fst_cmd.command, Info->arr_cmd_func[j].name) == 0) {
+					printf("--- %s ---\n", Info->arr_cmd_func[j].name);
+					Info->arr_cmd_func[j].func(fst_cmd.params);
 				}
 			}
 		}

@@ -2,10 +2,8 @@
 
 command msg_to_cmd(char *msg) {
     command cmd;
-    pthread_mutex_lock(&lock);
     char *start_cmd = strchr(msg, '<');
     char *end_cmd = strchr(msg, '>');
-    pthread_mutex_unlock(&lock);
     int length_cmd;
     if (start_cmd && end_cmd)
         length_cmd = strlen(start_cmd) - strlen(end_cmd) + 1;

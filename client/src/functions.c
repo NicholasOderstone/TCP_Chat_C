@@ -61,7 +61,7 @@ void f_new_chnl(char *params) {
     printf("NEW CHANNEL: success.\n\tChannel created: %s\n", p_chnlname);
 }
 
-void init_funcs() {
+void init_funcs(cmd_func arr_cmd_func[]) {
     char *arr_func_names[AMOUNT_OF_CMD] = { "<LOGIN>", "<REGISTER>", "<USER_INFO>",
                                 "<CHANGE_NAME>", "<CHANGE_PASS>", "<SEARCH_USER>",
                                 "<ADD_CONTACT>", "<DEL_CONTACT>", "<BLOCK_USER>",

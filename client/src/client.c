@@ -1,6 +1,9 @@
 #include "../inc/header.h"
 
 int main(int argc, char **argv){
+
+// --- Checking IP & Port No ---
+
 	if (argc != 3) {
 		printf("Usage: %s <ipv4> <port>\n", argv[0]);
 		return EXIT_FAILURE;
@@ -20,11 +23,13 @@ int main(int argc, char **argv){
 		printf("\n\r");
 	}
 
+// --- Init client ---
+
 	client_t client;
 	init_client(&client, ip, port);
-	init_funcs();
 
-	// Connect to Server
+// --- Connect to Server ---
+
 	pthread_t server_connection_handler;
 	if(pthread_create(&server_connection_handler, NULL, connect_to_server, (void*)&client) != 0){
 		perror("ERROR: pthread\n");
@@ -33,14 +38,12 @@ int main(int argc, char **argv){
 
 	while (client.is_connected == 0) {}
 
-	//client_t *buff_client = (client_t *)malloc(sizeof(client_t));
-	//buff_client = &client;
+// --- Message and command queue threads ---
 
 	struct msg_q *msg_q_front = NULL;
 	struct cmd_q *cmd_q_front = NULL;
-	printf("INIT msg_q_front addr: %p\n", (void *)msg_q_front);
-	printf("INIT cmd_q_front addr: %p\n", (void *)cmd_q_front);
 
+	// -- MODULE 3 --
 	struct send_msg_info_s *send_msg_info = (struct send_msg_info_s *)malloc(sizeof(struct send_msg_info_s));
 	send_msg_info->client = &client;
 
@@ -50,8 +53,7 @@ int main(int argc, char **argv){
 	return EXIT_FAILURE;
 	}
 
-
-
+	// -- MODULE 1 --
 	struct recv_msg_info_s *recv_msg_info = (struct recv_msg_info_s *)malloc(sizeof(struct recv_msg_info_s));
 	recv_msg_info->client = &client;
 	recv_msg_info->msg_q_front = &msg_q_front;
@@ -63,10 +65,11 @@ int main(int argc, char **argv){
 		return EXIT_FAILURE;
 	}
 
-
+	// -- MODULE 4 --
 	struct process_cmd_info_s *process_cmd_info = (struct process_cmd_info_s *)malloc(sizeof(struct process_cmd_info_s));
 	process_cmd_info->client = &client;
 	process_cmd_info->cmd_q_front = &cmd_q_front;
+	init_funcs(process_cmd_info->arr_cmd_func);
 
 	pthread_t th_process_cmd;
 	if(pthread_create(&th_process_cmd, NULL, process_cmd, (void*)process_cmd_info) != 0){
@@ -74,14 +77,21 @@ int main(int argc, char **argv){
 		return EXIT_FAILURE;
 	}
 
+// --- Checking for client exit ---
+
 	while(1) {
-		if (ctrl_c_and_exit_flag) {
+		if (client.exit == 1) {
 			printf("Bye!\n");
 			break;
 		}
 	}
-	pthread_mutex_destroy(&client.mutex);
 	close(client.sockfd);
+	pthread_join(send_msg_thread, NULL);
+	pthread_join(recv_msg_thread, NULL);
+	pthread_join(th_process_cmd, NULL);
+
+	pthread_mutex_destroy(&client.mutex);
+
 	exit(0);
 	return EXIT_SUCCESS;
 }

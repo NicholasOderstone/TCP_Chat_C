@@ -34,7 +34,6 @@
         int sockfd;
         int uid;
         char name[32];
-        int leave_flag;
     } client_t; 
 
     /* Handles all neccessary info about server*/
@@ -62,8 +61,8 @@
 
 
     /* MODULE_ONE */
-    pthread_mutex_t lock;
-    int leave_flag;
+    pthread_mutex_t cmd_lock;
+    pthread_mutex_t msg_lock;
 
     struct command {
         char *command;
@@ -73,12 +72,22 @@
     struct msg_q {
         char *data;
         struct msg_q *link;
-    } *msg_front;
+    };
 
     struct cmd_q {
         struct command data;
         struct cmd_q *link;
-    } *cmd_front;
+    };
+
+	struct read_msg_info_s {
+		client_t *client;
+		struct msg_q **msg_q_front;
+	};
+
+	struct make_cmd_info_s {
+		struct msg_q **msg_q_front;
+		struct cmd_q **cmd_q_front;
+	};
 
     
 
@@ -103,21 +112,18 @@
     void *handle_client(void *arg);
 
     /* MODULE_ONE */
-    void to_msg_q(char *data); // Insert the message into the message queue
-    void to_cmd_q(struct command data); // Insert the command into the command queue
-    void move_msg_q(); // Delete the first elememt from the message queue
-    void move_cmd_q(); // Delete the first elememt from the command queue
+    void to_msg_q(char *data, struct msg_q **msg_q_front); // Insert the message into the message queue
+    void to_cmd_q(struct command data, struct cmd_q **cmd_q_front); // Insert the command into the command queue
+    void move_msg_q(struct msg_q **msg_q_front); // Delete the first elememt from the message queue
+    void move_cmd_q(struct cmd_q **cmd_q_front); // Delete the first elememt from the command queue
 
-    char *take_fst_msg_in_q();
-    struct command take_fst_cmd_in_q();
-    char *mx_strnew(const int size);
+    char *take_fst_msg_in_q(struct msg_q **msg_q_front); //Return the first message of the queue
+    struct command take_fst_cmd_in_q(struct cmd_q **cmd_q_front); //Return the first command of the queue
+    char *mx_strnew(const int size); // Make new string
 
-    struct command msg_to_cmd(char *msg);
-    void *read_msg(void *arg);
-
-
-    /* COMMANDS */
-
+    struct command msg_to_cmd(char *msg); //Convert message to command
+    void *read_msg(void *arg); // Read data from socket and move to message queue
+    void *make_cmd(void *arg);
 
 //////////////////////////
 

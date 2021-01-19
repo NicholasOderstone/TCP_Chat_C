@@ -1,18 +1,23 @@
 #include "../inc/header.h"
 
 void *handle_client(void *arg){
-	char buff_out[BUFFER_SZ];
-
 	buff_t *inf = (buff_t *)arg;
 	server_info_t *serv_inf = inf->serv_inf;
 
 	pthread_t th_read_msg;
 	pthread_t th_make_cmd;
-	if (pthread_mutex_init(&lock, NULL) != 0)
+	if (pthread_mutex_init(&cmd_lock, NULL) != 0)
     {
         printf("Mutex initialization failed.\n");
         return NULL;
     }
+		if (pthread_mutex_init(&msg_lock, NULL) != 0)
+    {
+        printf("Mutex initialization failed.\n");
+        return NULL;
+    }
+	struct msg_q *msg_q_front = NULL;
+	struct cmd_q *cmd_q_front = NULL;
 
 	int cid = -1; /* Client place in clients array*/
 	for (int i = 0; i < MAX_CLIENTS; i++) {
@@ -30,7 +35,6 @@ void *handle_client(void *arg){
 	}
 
 	client_t *client = serv_inf->clients[cid];
-
 /*
 	if(recv(client->sockfd, name, 32, 0) <= 0 || strlen(name) <  2 || strlen(name) >= 32-1){
 		printf("Didn't enter the name.\n");
@@ -41,44 +45,26 @@ void *handle_client(void *arg){
 		send_message(buff_out, client->uid, serv_inf);
 	}
 */
-	bzero(buff_out, BUFFER_SZ);
+	struct read_msg_info_s *read_msg_info = (struct read_msg_info_s *)malloc(sizeof(struct read_msg_info_s));
+	read_msg_info->client = client;
+	read_msg_info->msg_q_front = &msg_q_front;
+	pthread_create(&th_read_msg, NULL, read_msg, (void *)read_msg_info);
 
-	pthread_create(&th_read_msg, NULL, read_msg, (void *)client);
-	pthread_create(&th_make_cmd, NULL, make_cmd, (void *)inf);
-	/*while(1){
-		if (leave_flag) {
-			break;
-		}
 
-		int receive = recv(client->sockfd, buff_out, BUFFER_SZ, 0);
-		if (receive > 0){
-			if(strlen(buff_out) > 0){
-				send_message(buff_out, client->uid, serv_inf);
+	struct make_cmd_info_s *make_cmd_info = (struct make_cmd_info_s *)malloc(sizeof(struct make_cmd_info_s));
+	make_cmd_info->cmd_q_front = &cmd_q_front;
+	make_cmd_info->msg_q_front = &msg_q_front;
+	pthread_create(&th_make_cmd, NULL, make_cmd, (void *)make_cmd_info);
+	//pthread_join или leave_flag в струкстуру client
+	pthread_join(th_read_msg, NULL);
+	pthread_join(th_make_cmd, NULL);
 
-				str_trim_lf(buff_out, strlen(buff_out));
-				printf("<SEND> <%s> %s\n", client->name, buff_out);
-			}
-		} else if (receive == 0 || strcmp(buff_out, "exit") == 0){
-			sprintf(buff_out, "<LEAVE> <%s>\n", client->name);
-			printf("%s", buff_out);
-			send_message(buff_out, client->uid, serv_inf);
-			leave_flag = 1;
-		} else {
-			printf("ERROR: -1\n");
-			leave_flag = 1;
-		}
-
-		bzero(buff_out, BUFFER_SZ);
-	}*/
-	while(1) {
-
-	}
 	/* Delete client from queue and yield thread */
-
 	close(client->sockfd);
 	client_remove(client->uid, serv_inf);
 	free(client);
-
+	free(read_msg_info);
+	free(make_cmd_info);
 	pthread_detach(pthread_self());
 
 	return NULL;

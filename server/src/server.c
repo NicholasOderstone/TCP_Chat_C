@@ -48,7 +48,7 @@ int main(int argc, char **argv){
 	if (listen(server.listenfd, 10) < 0) {
 		perror("ERROR: Socket listening failed");
 		return EXIT_FAILURE;
-		}
+	}
 
 	printf("=== WELCOME TO THE CHATROOM ===\n");
 

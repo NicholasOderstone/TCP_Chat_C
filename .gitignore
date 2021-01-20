@@ -1,5 +1,0 @@
-*.o
-obj
-uchat
-uchat_server
-.DS_Store

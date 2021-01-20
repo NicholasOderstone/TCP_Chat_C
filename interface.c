@@ -67,7 +67,7 @@ void open_main_page()
     GtkTextBuffer *buffer;
     GtkButton *send_b;
 
-    gtk_widget_destroy(window);
+    gtk_widget_hide(window);
 
     builder = gtk_builder_new();
 

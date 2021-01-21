@@ -35,7 +35,7 @@ void f_send(char *params, buff_t *Info) {
 	for(int i=0; i<MAX_CLIENTS; ++i){
 		if(Info->serv_inf->clients[i]){
 			if(Info->serv_inf->clients[i]->uid != Info->uid){
-				send_cmd(cmd, Info->client);
+				send_cmd(cmd, Info->serv_inf->clients[i]);
 			}
 		}
 	}

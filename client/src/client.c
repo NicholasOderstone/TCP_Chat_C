@@ -1,6 +1,10 @@
 #include "../inc/header.h"
 
-
+void func_ipport() {
+    char *p_ipv4 = strdup(ipv_str);
+    char *p_port = strdup(port_str);
+    printf("CONNECT TO SERVER: success.\n\tipv4: %s\n\tport: %s\n", p_ipv4, p_port);
+}
 
 int main(int argc, char **argv) {
 
@@ -44,6 +48,7 @@ int main(int argc, char **argv) {
     //g_signal_connect(login_b, "clicked", G_CALLBACK(open_main_page), NULL);
     connect_b = gtk_builder_get_object (builder, "connect_b");
     g_signal_connect(connect_b, "clicked", G_CALLBACK(open_login_page), NULL);
+	g_signal_connect(connect_b, "clicked", G_CALLBACK(func_ipport), NULL);
 
     g_object_unref(builder);
 

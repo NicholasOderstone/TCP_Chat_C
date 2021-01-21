@@ -19,11 +19,7 @@ void func_login() {
     printf("LOGIN: success.\n\tLogin: %s\n\tPassword: %s\n", p_login, p_pass);
 }
 
-void func_ipport() {
-    char *p_ipv4 = strdup(ipv_str);
-    char *p_port = strdup(port_str);
-    printf("CONNECT TO SERVER: success.\n\tipv4: %s\n\tport: %s\n", p_ipv4, p_port);
-}
+
 void open_login_page()
 {
     GObject *signup_p;

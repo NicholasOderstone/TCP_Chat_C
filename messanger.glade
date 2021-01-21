@@ -70,7 +70,6 @@
   <object class="GtkWindow" id="login_window">
     <property name="can-focus">False</property>
     <signal name="destroy" handler="destroy" swapped="no"/>
-    <signal name="destroy" handler="on_window_main_destroy" swapped="no"/>
     <child>
       <object class="GtkFixed" id="fix">
         <property name="visible">True</property>
@@ -156,7 +155,6 @@
   <object class="GtkWindow" id="main_window">
     <property name="can-focus">False</property>
     <signal name="destroy" handler="destroy" swapped="no"/>
-    <signal name="destroy" handler="on_window_main_destroy" swapped="no"/>
     <child>
       <object class="GtkFixed">
         <property name="visible">True</property>
@@ -245,7 +243,6 @@
   <object class="GtkWindow" id="signup_window">
     <property name="can-focus">False</property>
     <signal name="destroy" handler="destroy" swapped="no"/>
-    <signal name="destroy" handler="on_window_main_destroy" swapped="no"/>
     <child>
       <object class="GtkFixed">
         <property name="visible">True</property>

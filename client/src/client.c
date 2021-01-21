@@ -1,10 +1,6 @@
 #include "../inc/header.h"
 
-void func_login() {
-    char *p_login = strdup(username_str);
-    char *p_pass = strdup(passoword_str);
-    printf("LOGIN: success.\n\tLogin: %s\n\tPassword: %s\n", p_login, p_pass);
-}
+
 
 int main(int argc, char **argv) {
 
@@ -108,12 +104,15 @@ int main(int argc, char **argv) {
 
 // --- Checking for client exit ---
 
-	while(1) {
-		if (client.exit == 1) {
-			printf("Bye!\n");
-			break;
-		}
-	}
+    while(1) {
+        if (destroy() == TRUE) {
+            client.exit = 1;
+        }
+        if (client.exit == 1) {
+            printf("Bye!\n");
+            break;
+        }
+    }
 	close(client.sockfd);
 	pthread_join(send_msg_thread, NULL);
 	pthread_join(recv_msg_thread, NULL);

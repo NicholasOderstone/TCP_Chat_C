@@ -1,35 +1,7 @@
 #ifndef HEADER_H
 #define HEADER_H
 
-#include <gtk/gtk.h>
-  #include <stdlib.h>
-  #include <string.h>
-
 //////////////////////////
-
-// DEFINES
-
-//////////////////////////
-
-// STRUCTURES
-
-//////////////////////////
-
-// GLOBAL VARIABLES
-  GtkBuilder      *builder;
-  gboolean destroy (GtkWidget *widget);
-  GtkWidget       *window;
-  char username_str [32], passoword_str[32], message_str[2048];
-
-//////////////////////////
-
-// FUNCTIONS
-  void open_signup_page();
-  void open_login_page();
-  void open_main_page();
-  void username_changed();
-  void password_changed();
- // void send_message(GtkButton *send_b, GtkTextBuffer *buffer);
 
 // INCLUDES
 	#include <sys/socket.h>
@@ -43,6 +15,7 @@
 	#include <pthread.h>
 	#include <sys/types.h>
 	#include <ctype.h>
+    #include "interface.h"
 
 //////////////////////////
 
@@ -51,7 +24,7 @@
 	#define BUFFER_SZ 2048
 	#define LENGTH 2048
 	#define NAME_SZ 32
-	#define AMOUNT_OF_CMD 11
+	#define AMOUNT_OF_CMD 10
 //////////////////////////
 
 // STRUCTURES

@@ -10,19 +10,19 @@ void open_signup_page()
     gtk_builder_connect_signals(builder, NULL);
     login_p = gtk_builder_get_object (builder, "login_p");
     g_signal_connect(login_p, "clicked", G_CALLBACK(open_login_page), NULL);
-    g_signal_connect(login_p, "clicked", G_CALLBACK(func_login), NULL);
     gtk_widget_show(window);
 }
+
 void func_login() {
     char *p_login = strdup(username_str);
     char *p_pass = strdup(passoword_str);
     printf("LOGIN: success.\n\tLogin: %s\n\tPassword: %s\n", p_login, p_pass);
 }
 
-
 void open_login_page()
 {
     GObject *signup_p;
+    GObject *login_b;
     GObject *login;
     GObject *password;
     gtk_widget_hide(window);
@@ -31,7 +31,9 @@ void open_login_page()
     window = GTK_WIDGET(gtk_builder_get_object(builder, "login_window"));
     gtk_builder_connect_signals(builder, NULL);
     signup_p = gtk_builder_get_object (builder, "signup_p");
+    login_b = gtk_builder_get_object (builder, "login_b");
     g_signal_connect(signup_p, "clicked", G_CALLBACK(open_signup_page), NULL);
+    g_signal_connect(login_b, "clicked", G_CALLBACK(func_login), NULL);
     login = gtk_builder_get_object(builder, "login");
     password = gtk_builder_get_object(builder, "password");
     gtk_widget_show(window);

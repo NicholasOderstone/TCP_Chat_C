@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
     g_object_unref(builder);
 
     gtk_widget_show(window);
-    gtk_main();
+    //gtk_main_iteration();
 
 	client_t client;
 	init_client(&client, ip, port);
@@ -67,6 +67,8 @@ int main(int argc, char **argv) {
 	}
 
 	while (client.is_connected == 0) {}
+
+    gtk_main();
 
 // --- Message and command queue threads ---
 

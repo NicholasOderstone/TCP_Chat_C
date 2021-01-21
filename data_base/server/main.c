@@ -80,7 +80,7 @@ char* getAllChats(){
     sqlite3_close(db);
     
 
-    return rez;
+    return "rez";
 }
 
 char* getOneUser(int id, char* rez){

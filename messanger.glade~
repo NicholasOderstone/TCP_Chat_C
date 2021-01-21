@@ -2,59 +2,65 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
-  <object class="GtkDialog">
+  <object class="GtkWindow" id="connect_window">
     <property name="can-focus">False</property>
-    <property name="type-hint">dialog</property>
-    <child internal-child="vbox">
-      <object class="GtkBox">
+    <signal name="destroy" handler="destroy" swapped="no"/>
+    <child>
+      <object class="GtkFixed">
+        <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox">
+        <child>
+          <object class="GtkLabel">
+            <property name="width-request">200</property>
+            <property name="height-request">50</property>
+            <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="layout-style">end</property>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
+            <property name="label" translatable="yes">Connection to the  server</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
+            <property name="x">132</property>
+            <property name="y">11</property>
           </packing>
         </child>
         <child>
-          <object class="GtkFrame">
+          <object class="GtkEntry" id="ipv_field">
+            <property name="width-request">100</property>
+            <property name="height-request">40</property>
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="label-xalign">0</property>
-            <property name="shadow-type">none</property>
-            <child>
-              <object class="GtkAlignment">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="left-padding">12</property>
-                <child>
-                  <placeholder/>
-                </child>
-              </object>
-            </child>
-            <child type="label">
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="label" translatable="yes">__glade_unnamed_22</property>
-              </object>
-            </child>
+            <property name="can-focus">True</property>
+            <property name="placeholder-text" translatable="yes">ipv4</property>
+            <signal name="changed" handler="ipv_changed" swapped="no"/>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="x">157</property>
+            <property name="y">57</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkEntry" id="port_field">
+            <property name="width-request">100</property>
+            <property name="height-request">40</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="placeholder-text" translatable="yes">port</property>
+          </object>
+          <packing>
+            <property name="x">157</property>
+            <property name="y">126</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="connect_b">
+            <property name="label" translatable="yes">connect</property>
+            <property name="width-request">100</property>
+            <property name="height-request">40</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="x">196</property>
+            <property name="y">198</property>
           </packing>
         </child>
       </object>
@@ -62,6 +68,7 @@
   </object>
   <object class="GtkWindow" id="login_window">
     <property name="can-focus">False</property>
+    <signal name="destroy" handler="destroy" swapped="no"/>
     <signal name="destroy" handler="on_window_main_destroy" swapped="no"/>
     <child>
       <object class="GtkFixed" id="fix">
@@ -147,6 +154,7 @@
   <object class="GtkTextBuffer" id="message_text_buffer"/>
   <object class="GtkWindow" id="main_window">
     <property name="can-focus">False</property>
+    <signal name="destroy" handler="destroy" swapped="no"/>
     <signal name="destroy" handler="on_window_main_destroy" swapped="no"/>
     <child>
       <object class="GtkFixed">
@@ -211,18 +219,19 @@
         </child>
         <child>
           <object class="GtkButton" id="send_buttom">
-            <property name="label">gtk-go-up</property>
             <property name="related-action"/>
             <property name="width-request">60</property>
             <property name="height-request">34</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
-            <property name="use-stock">True</property>
             <property name="xalign">0.5</property>
             <property name="yalign">0.5</property>
             <property name="always-show-image">True</property>
             <signal name="clicked" handler="send_message" swapped="no"/>
+            <child>
+              <placeholder/>
+            </child>
           </object>
           <packing>
             <property name="x">393</property>
@@ -234,6 +243,8 @@
   </object>
   <object class="GtkWindow" id="signup_window">
     <property name="can-focus">False</property>
+    <signal name="destroy" handler="destroy" swapped="no"/>
+    <signal name="destroy" handler="on_window_main_destroy" swapped="no"/>
     <child>
       <object class="GtkFixed">
         <property name="visible">True</property>

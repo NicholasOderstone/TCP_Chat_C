@@ -30,32 +30,29 @@ int main(int argc, char **argv) {
 
 // --- Init client ---
 
-	GObject *signup_p;
-	GObject *login_b;
-	GObject *login;
-	GObject *password;
-	gtk_init(&argc, &argv);
+    //GObject *signup_p;
+    //GObject *login_b;
+    GObject *connect_b;
+    gtk_init(&argc, &argv);
 
-	builder = gtk_builder_new();
-	gtk_builder_add_from_file (builder, "messanger.glade", NULL);
+    builder = gtk_builder_new();
+    gtk_builder_add_from_file (builder, "messanger.glade", NULL);
 
-	window = GTK_WIDGET(gtk_builder_get_object(builder, "login_window"));
-	gtk_builder_connect_signals(builder, NULL);
+    window = GTK_WIDGET(gtk_builder_get_object(builder, "connect_window"));
+    gtk_builder_connect_signals(builder, NULL);
 
-	signup_p = gtk_builder_get_object (builder, "signup_p");
-	g_signal_connect(signup_p, "clicked", G_CALLBACK(open_signup_page), NULL);
+    //signup_p = gtk_builder_get_object (builder, "signup_p");
+    //g_signal_connect(signup_p, "clicked", G_CALLBACK(open_signup_page), NULL);
 
-	login_b = gtk_builder_get_object (builder, "login_b");
-	g_signal_connect(login_b, "clicked", G_CALLBACK(open_main_page), NULL);
-	g_signal_connect(login_b, "clicked", G_CALLBACK(func_login), NULL);
+    //login_b = gtk_builder_get_object (builder, "login_b");
+    //g_signal_connect(login_b, "clicked", G_CALLBACK(open_main_page), NULL);
+    connect_b = gtk_builder_get_object (builder, "connect_b");
+    g_signal_connect(connect_b, "clicked", G_CALLBACK(open_login_page), NULL);
 
-	login = gtk_builder_get_object(builder, "login");
+    g_object_unref(builder);
 
-	password = gtk_builder_get_object(builder, "password");
-	g_object_unref(builder);
-
-	gtk_widget_show(window);
-	gtk_main();
+    gtk_widget_show(window);
+    gtk_main();
 
 	client_t client;
 	init_client(&client, ip, port);

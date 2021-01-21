@@ -18,9 +18,10 @@
 
 // GLOBAL VARIABLES
     GtkBuilder      *builder;
-    gboolean destroy (GtkWidget *widget);
+    gboolean destroy ();
     GtkWidget       *window;
-    char username_str[32], passoword_str[32], message_str[2048];
+    char username_str [32], passoword_str[32], message_str[2048], port_str[5],
+                ipv_str[13];
 
 //////////////////////////
 

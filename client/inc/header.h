@@ -159,6 +159,8 @@
 	char *param_4(char *params);
 	char *param_5(char *params);
 
+	void make_exit_one(void);
+
 //////////////////////////
 
 #endif

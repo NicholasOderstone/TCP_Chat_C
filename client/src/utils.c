@@ -71,6 +71,7 @@ void init_client(client_t *client, char *ip, char *port) {
 	client->address.sin_port = htons(atoi(port));
 	client->is_connected = 0;
 	pthread_mutex_init(&client->mutex, NULL);
-    get_client_name(client->name);
+    //get_client_name(client->name);
+    strcpy(client->name, username_str);
     client->exit = 0;
 }

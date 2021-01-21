@@ -14,17 +14,15 @@
     #include <sys/types.h>
     #include <signal.h>
     #include <netdb.h>
-
-    /* MODULE_ONE */
     #include <fcntl.h>
-//////////////////////////
 
 /* DEFINES */
     #define MAX_CLIENTS 100
     #define BUFFER_SZ 2048
     #define LENGTH 2048
+    #define NAME_SZ 32
+    #define AMOUNT_OF_CMD 2
 
-//////////////////////////
 
 /* STRUCTURES */
 
@@ -34,6 +32,7 @@
         int sockfd;
         int uid;
         char name[32];
+        int exit_flag;
     } client_t; 
 
     /* Handles all neccessary info about server*/
@@ -60,35 +59,39 @@
     } buff_t; 
 
 
-    /* MODULE_ONE */
-    pthread_mutex_t cmd_lock;
-    pthread_mutex_t msg_lock;
+    pthread_mutex_t cmd_lock; //Mutex for commands
 
+    //Structure for commands
     struct command {
         char *command;
         char *params;
     };
 
-    struct msg_q {
-        char *data;
-        struct msg_q *link;
-    };
-
+    //A queue for commands 
     struct cmd_q {
         struct command data;
         struct cmd_q *link;
     };
 
+    //Structure to pass client and message queue for read_msg Thread
 	struct read_msg_info_s {
 		client_t *client;
-		struct msg_q **msg_q_front;
+		//struct msg_q **msg_q_front;
+        struct cmd_q **cmd_q_front;
 	};
 
-	struct make_cmd_info_s {
-		struct msg_q **msg_q_front;
+    //Structure that stores cmd function name and pointer to this function
+    typedef struct {
+	    char *name;
+	    void (*func)(char *params, buff_t *serv_inf);
+	} cmd_func;
+
+    //Structure to pass command queue and array of pointers to functions
+    struct process_cmd_info_s {
 		struct cmd_q **cmd_q_front;
+		cmd_func arr_cmd_func[AMOUNT_OF_CMD];
+        buff_t *buff_m;
 	};
-
     
 
 
@@ -96,35 +99,74 @@
 
 /* FUNCTIONS */
 
-    /* add "> " at the beginning of the new line*/
-    void str_overwrite_stdout();
-    /* trim /n*/
-    void str_trim_lf (char* arr, int length); 
-    /* Print client ipv4 address*/ 
-    void print_client_addr(struct sockaddr_in addr);
+    /* ORIGINAL FUNCTIONS */
+
     /* Add client to the clients array*/
     void client_add(client_t *cl, server_info_t *serv_inf);
     /* Remove client from the clients array*/
     void client_remove(int uid, server_info_t *serv_inf);
     /* Send message *s to all clients exept sender */
     void send_message(char *s, int uid, server_info_t *serv_inf);
+
+
+    // --- Thread functions ---
+
     /* Handle all communication with the client */
     void *handle_client(void *arg);
+    /* Read data from socket and move to message queue */
+    void *read_msg(void *arg);
+    // Handles processing recieved commands
+	void *process_cmd(void *arg);
 
-    /* MODULE_ONE */
-    void to_msg_q(char *data, struct msg_q **msg_q_front); // Insert the message into the message queue
-    void to_cmd_q(struct command data, struct cmd_q **cmd_q_front); // Insert the command into the command queue
-    void move_msg_q(struct msg_q **msg_q_front); // Delete the first elememt from the message queue
-    void move_cmd_q(struct cmd_q **cmd_q_front); // Delete the first elememt from the command queue
 
-    char *take_fst_msg_in_q(struct msg_q **msg_q_front); //Return the first message of the queue
-    struct command take_fst_cmd_in_q(struct cmd_q **cmd_q_front); //Return the first command of the queue
-    char *mx_strnew(const int size); // Make new string
 
-    struct command msg_to_cmd(char *msg); //Convert message to command
-    void *read_msg(void *arg); // Read data from socket and move to message queue
-    void *make_cmd(void *arg);
 
-//////////////////////////
+    // --- Queue functions ---
+
+    /* Insert the command into the command queue */
+    void to_cmd_q(struct command data, struct cmd_q **cmd_q_front);
+    /* Delete the first elememt from the command queue */
+    void move_cmd_q(struct cmd_q **cmd_q_front);
+    /* Return the first command of the queue */
+    struct command take_fst_cmd_in_q(struct cmd_q **cmd_q_front);
+
+
+    // --- Utility functions ---
+
+    /* Make new string */
+    char *mx_strnew(const int size);
+    /* add "> " at the beginning of the new line*/
+    void str_overwrite_stdout();
+    /* trim /n*/
+    void str_trim_lf (char* arr, int length); 
+    /* Print client ipv4 address*/ 
+    void print_client_addr(struct sockaddr_in addr);
+
+
+    // --- Functions that interact with messages and commands ---
+
+    /* Convert message to command */
+    struct command msg_to_cmd(char *msg);
+    /* Convert command to message */
+    char *cmd_to_msg(struct command cmd);
+    /* Send command to the client */
+    void send_cmd(struct command cmd, client_t *client);
+
+
+    // --- Functions that interact with command functions ---
+
+    /* Initialize command functions */
+    void initialize_functions();
+    /* Get parametr 1 */
+    char *param_1(char *params);
+    /* Get parametr 2 */
+	char *param_2(char *params);
+    /* Get parametr 3 */
+	char *param_3(char *params);
+    /* Get parametr 4 */
+	char *param_4(char *params);
+    /* Get parametr 5 */
+	char *param_5(char *params);
+
 
 #endif

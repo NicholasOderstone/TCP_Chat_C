@@ -1,33 +1,27 @@
 #include "../inc/header.h"
 
 void *send_msg_handler(void *arg) {
-	client_t *client = (client_t *)arg;
+	struct send_msg_info_s *Info = (struct send_msg_info_s *)arg;
   	char message[LENGTH];
-	char buffer[LENGTH + 32];
 
 	while(1) {
-		if(ctrl_c_and_exit_flag) {
+		if (Info->client->exit == 1) {
 			break;
 		}
-
 		str_overwrite_stdout();
 		fgets(message, LENGTH, stdin);
 		str_trim_lf(message, LENGTH);
 
 		if (strcmp(message, "exit") == 0) {
-			catch_ctrl_c_and_exit();
+			Info->client->exit = 1;
 		}
 		else {
-		  pthread_mutex_lock(&client->mutex);
-		  //snprintf(buffer, BUFFER_SZ, "%s: %s\n", client->name, message);
-		  snprintf(buffer, BUFFER_SZ, "%s\n", message);
-		  send(client->sockfd, buffer, strlen(buffer), 0);
-		  pthread_mutex_unlock(&client->mutex);
+		  pthread_mutex_lock(&Info->client->mutex);
+		  command cmd = msg_to_cmd(message);
+		  send_cmd(cmd, Info->client);
+		  pthread_mutex_unlock(&Info->client->mutex);
 		}
-
-
 		bzero(message, LENGTH);
-		bzero(buffer, LENGTH + 32);
 	}
 
 	int ret_val = 1;
@@ -37,26 +31,30 @@ void *send_msg_handler(void *arg) {
 }
 
 void *recv_msg_handler(void *arg) {
-	client_t *client = (client_t *)arg;
+	struct recv_msg_info_s *Info = (struct recv_msg_info_s *)arg;
+	struct read_msg_info_s *read_msg_info = (struct read_msg_info_s *)malloc(sizeof(struct read_msg_info_s));
+	read_msg_info->client = Info->client;
+	read_msg_info->msg_q_front = Info->msg_q_front;
 
 	pthread_t th_read_msg;
+	pthread_create(&th_read_msg, NULL, read_msg, (void *)read_msg_info);
+
+	struct make_cmd_info_s *make_cmd_info = (struct make_cmd_info_s *)malloc(sizeof(struct make_cmd_info_s));
+	make_cmd_info->client = Info->client;
+	make_cmd_info->cmd_q_front = Info->cmd_q_front;
+	make_cmd_info->msg_q_front = Info->msg_q_front;
+
 	pthread_t th_make_cmd;
-
-	if (pthread_mutex_init(&lock, NULL) != 0)
-	{
-	  printf("Mutex initialization failed.\n");
-	  return NULL;
-	}
-
-	msg_front = NULL;
-	pthread_create(&th_read_msg, NULL, read_msg, (void *)client);
-	pthread_create(&th_make_cmd, NULL, make_cmd, NULL);
+	pthread_create(&th_make_cmd, NULL, make_cmd, (void *)make_cmd_info);
 
 	while (1) {
-		if(ctrl_c_and_exit_flag) {
+		if (Info->client->exit == 1) {
 			break;
 		}
 	}
+
+	pthread_join(th_read_msg, NULL);
+	pthread_join(th_make_cmd, NULL);
 
 	int ret_val = 1;
 	printf("2. Recv message thread terminated\n");

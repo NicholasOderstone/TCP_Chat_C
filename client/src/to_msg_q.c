@@ -1,32 +1,31 @@
 #include "../inc/header.h"
 
-void to_msg_q(char *data) {
+void to_msg_q(char *data, struct msg_q **msg_q_front, pthread_mutex_t msg_lock) {
     struct msg_q *temp;
     temp = (struct msg_q*)malloc(sizeof(struct msg_q));
     temp->data = strdup(data);
     temp->link = NULL;
 
-    struct msg_q *current = msg_front;
-
-    pthread_mutex_lock(&lock);
-    if (msg_front == NULL) {
-        current = msg_front = temp;
+    pthread_mutex_lock(&msg_lock);
+    struct msg_q *current = *msg_q_front;
+    if (*msg_q_front == NULL) {
+        *msg_q_front = temp;
+        current = *msg_q_front;
     }
     else {
         while (current->link != NULL) {
-        current = current->link;
+            current = current->link;
         }
         current->link = temp;
-        current = current->link;
     }
-
-    //printf("now in msg_q: %s", current->data);
-    //str_overwrite_stdout();
-    pthread_mutex_unlock(&lock);
+    printf("now in msg_q: %s", current->data);
+    str_overwrite_stdout();
+    pthread_mutex_unlock(&msg_lock);
 }
 
-char *take_fst_msg_in_q() {
-    if (msg_front == NULL)
+char *take_fst_msg_in_q(struct msg_q **msg_q_front) {
+    if (*msg_q_front == NULL)
         return NULL;
-    return msg_front->data;
+    struct msg_q *temp = *msg_q_front;
+    return temp->data;
 }

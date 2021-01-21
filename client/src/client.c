@@ -1,6 +1,9 @@
 #include "../inc/header.h"
 
 int main(int argc, char **argv){
+
+// --- Checking IP & Port No ---
+
 	if (argc != 3) {
 		printf("Usage: %s <ipv4> <port>\n", argv[0]);
 		return EXIT_FAILURE;
@@ -20,65 +23,75 @@ int main(int argc, char **argv){
 		printf("\n\r");
 	}
 
+// --- Init client ---
+
 	client_t client;
-	// Socket settings
-	client.sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	client.address.sin_family = AF_INET;
-	client.address.sin_addr.s_addr = inet_addr(ip);
-	client.address.sin_port = htons(atoi(port));
-	pthread_mutex_init(&client.mutex, NULL);
+	init_client(&client, ip, port);
 
-	// Name
+// --- Connect to Server ---
 
-	printf("Name must be less than 32 and more than 2 characters.\n");
-	while (1) {
-		printf("Please enter your name: ");
-		fgets(client.name, 32, stdin);
-		str_trim_lf(client.name, strlen(client.name));
-		if (strlen(client.name) < 2){
-			printf("Name must be less than 32 and more than 2 characters.\n");
-		}
-		else {
-			break;
-		}
-	}
-
- 	// Connect to Server
-  	int err = connect(client.sockfd, (struct sockaddr *)&client.address, sizeof(client.address));
-  	if (err == -1) {
-		printf("ERROR: connect\n");
+	pthread_t server_connection_handler;
+	if(pthread_create(&server_connection_handler, NULL, connect_to_server, (void*)&client) != 0){
+		perror("ERROR: pthread\n");
 		return EXIT_FAILURE;
 	}
 
+	while (client.is_connected == 0) {}
 
-	// Send name
-	send(client.sockfd, client.name, 32, 0);
+// --- Message and command queue threads ---
 
-	printf("=== WELCOME TO THE CHATROOM ===\n");
+	struct msg_q *msg_q_front = NULL;
+	struct cmd_q *cmd_q_front = NULL;
 
-	client_t *buff_client = (client_t *)malloc(sizeof(client_t));
-	buff_client = &client;
+	// -- MODULE 3 --
+	struct send_msg_info_s *send_msg_info = (struct send_msg_info_s *)malloc(sizeof(struct send_msg_info_s));
+	send_msg_info->client = &client;
 
 	pthread_t send_msg_thread;
-	if(pthread_create(&send_msg_thread, NULL, send_msg_handler, (void*)buff_client) != 0){
+	if(pthread_create(&send_msg_thread, NULL, send_msg_handler, (void*)send_msg_info) != 0){
 		perror("ERROR: pthread\n");
 	return EXIT_FAILURE;
 	}
 
+	// -- MODULE 1 --
+	struct recv_msg_info_s *recv_msg_info = (struct recv_msg_info_s *)malloc(sizeof(struct recv_msg_info_s));
+	recv_msg_info->client = &client;
+	recv_msg_info->msg_q_front = &msg_q_front;
+	recv_msg_info->cmd_q_front = &cmd_q_front;
+
 	pthread_t recv_msg_thread;
-	if(pthread_create(&recv_msg_thread, NULL, recv_msg_handler, (void*)buff_client) != 0){
+	if(pthread_create(&recv_msg_thread, NULL, recv_msg_handler, (void*)recv_msg_info) != 0){
 		perror("ERROR: pthread\n");
 		return EXIT_FAILURE;
 	}
 
+	// -- MODULE 4 --
+	struct process_cmd_info_s *process_cmd_info = (struct process_cmd_info_s *)malloc(sizeof(struct process_cmd_info_s));
+	process_cmd_info->client = &client;
+	process_cmd_info->cmd_q_front = &cmd_q_front;
+	init_funcs(process_cmd_info->arr_cmd_func);
+
+	pthread_t th_process_cmd;
+	if(pthread_create(&th_process_cmd, NULL, process_cmd, (void*)process_cmd_info) != 0){
+		perror("ERROR: pthread\n");
+		return EXIT_FAILURE;
+	}
+
+// --- Checking for client exit ---
+
 	while(1) {
-		if (ctrl_c_and_exit_flag) {
+		if (client.exit == 1) {
 			printf("Bye!\n");
 			break;
 		}
 	}
-	pthread_mutex_destroy(&client.mutex);
 	close(client.sockfd);
+	pthread_join(send_msg_thread, NULL);
+	pthread_join(recv_msg_thread, NULL);
+	pthread_join(th_process_cmd, NULL);
+
+	pthread_mutex_destroy(&client.mutex);
+
 	exit(0);
 	return EXIT_SUCCESS;
 }

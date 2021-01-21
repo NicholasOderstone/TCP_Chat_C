@@ -397,7 +397,6 @@ void deleteChat(char* id){
     return;
 }
 
-
 void deleteMessage(char* id){
     char sql[500];
     sprintf (sql,"delete from MESSAGES where id = %s;",id);
@@ -436,7 +435,235 @@ void deleteMessage(char* id){
     return;
 }
 
+void insertInBlockList(int user_id, int block_user_id){
+    char sql[500];
+    sprintf (sql,"INSERT INTO BLOCK_LIST (USER_ID, BLOCK_USER_ID) VALUES ('%d','%d');",user_id, block_user_id);
 
+
+    sqlite3 *db;
+    char *err_msg = 0;
+   
+    
+    int rc = sqlite3_open("data.db", &db);
+    
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return;
+    }
+    
+   
+
+    rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+    
+    if (rc != SQLITE_OK ) {
+        
+        fprintf(stderr, "SQL error: %s\n", err_msg);
+        
+        sqlite3_free(err_msg);        
+        sqlite3_close(db);
+        
+        return;
+    } 
+    
+    sqlite3_close(db);
+    
+    return;
+}
+
+void insertInUserInChats(int user_id, int chat_id){
+    char sql[500];
+    sprintf (sql,"INSERT INTO USER_IN_CHAT (USER_ID, CHAT_ID) VALUES ('%d','%d');",user_id, chat_id);
+
+
+    sqlite3 *db;
+    char *err_msg = 0;
+   
+    
+    int rc = sqlite3_open("data.db", &db);
+    
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return;
+    }
+    
+   
+
+    rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+    
+    if (rc != SQLITE_OK ) {
+        
+        fprintf(stderr, "SQL error: %s\n", err_msg);
+        
+        sqlite3_free(err_msg);        
+        sqlite3_close(db);
+        
+        return;
+    } 
+    
+    sqlite3_close(db);
+    
+    return;
+}
+
+char* getUserChats(int id, char* rez){
+   sqlite3 *db;
+    sqlite3_stmt *res;
+    
+    int rc = sqlite3_open("data.db", &db);
+    
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return "-1";
+    }
+    
+    rc = sqlite3_prepare_v2(db, "select group_concat(MyColumn, '') from (select CHAT_ID || ',' as MyColumn  from USER_IN_CHAT WHERE USER_ID = ?);", -1, &res, 0);    
+    sqlite3_bind_int(res, 1, id);
+    
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return "-1";
+    }    
+    
+    rc = sqlite3_step(res);
+    
+     if (rc == SQLITE_ROW) {
+       // printf("%s\n", sqlite3_column_text(res, 0));
+     }
+    sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
+    
+
+    sqlite3_finalize(res);
+    sqlite3_close(db);
+
+    return rez;
+}
+
+char* getBlockList(int id, char* rez){
+   sqlite3 *db;
+    sqlite3_stmt *res;
+    
+    int rc = sqlite3_open("data.db", &db);
+    
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return "-1";
+    }
+    
+    rc = sqlite3_prepare_v2(db, "select group_concat(MyColumn, '') from (select BLOCK_USER_ID || ',' as MyColumn  from BLOCK_LIST WHERE USER_ID = ?);", -1, &res, 0);    
+    sqlite3_bind_int(res, 1, id);
+    
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return "-1";
+    }    
+    
+    rc = sqlite3_step(res);
+    
+     if (rc == SQLITE_ROW) {
+       // printf("%s\n", sqlite3_column_text(res, 0));
+     }
+    sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
+    
+
+    sqlite3_finalize(res);
+    sqlite3_close(db);
+
+    return rez;
+}
+
+void deleteFromBlock(int user_id, int block_user_id){
+    char sql[500];
+    sprintf (sql,"delete from BLOCK_LIST where user_id = %d and block_user_id = %d;",user_id, block_user_id);
+
+
+    sqlite3 *db;
+    char *err_msg = 0;
+   
+    
+    int rc = sqlite3_open("data.db", &db);
+    
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return;
+    }
+    
+   
+
+    rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+    
+    if (rc != SQLITE_OK ) {
+        
+        fprintf(stderr, "SQL error: %s\n", err_msg);
+        
+        sqlite3_free(err_msg);        
+        sqlite3_close(db);
+        
+        return;
+    } 
+    
+    sqlite3_close(db);
+    
+    return;
+}
+
+void deleteFromChat(int user_id, int chat_id){
+    char sql[500];
+    sprintf (sql,"delete from USER_IN_CHAT where user_id = %d and CHAT_ID = %d;",user_id, chat_id);
+
+
+    sqlite3 *db;
+    char *err_msg = 0;
+   
+    
+    int rc = sqlite3_open("data.db", &db);
+    
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return;
+    }
+    
+   
+
+    rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+    
+    if (rc != SQLITE_OK ) {
+        
+        fprintf(stderr, "SQL error: %s\n", err_msg);
+        
+        sqlite3_free(err_msg);        
+        sqlite3_close(db);
+        
+        return;
+    } 
+    
+    sqlite3_close(db);
+    
+    return;
+}
 
 int main(int argc, char* argv[]) {
     char rez[10000];
@@ -461,4 +688,17 @@ int main(int argc, char* argv[]) {
    //deleteChat("7");//work
    //deleteMessage("4");//work
    //updateUser("1", "awd", "AWD", "awd", "awd", "ad"); not working yet:(
+
+    //insertInBlockList(1, 3);//work
+
+    //insertInUserInChats(1, 3);//work
+
+    //getUserChats(1, &rez);//work
+    //getBlockList(1, &rez);//work
+
+    //dopishi delete
+    //deleteFromBlock(1,3);//work
+    //deleteFromChat(1,3);//work
+//printf("%s", rez);
+
 }

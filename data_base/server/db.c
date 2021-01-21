@@ -11,7 +11,7 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
    return 0;
 }
 
-int main(int argc, char* argv[]) {
+void initDB(){
    sqlite3 *db;
    char *zErrMsg = 0;
    int rc;
@@ -115,7 +115,11 @@ sql = "CREATE TABLE IF NOT EXISTS CHATS("  \
       fprintf(stdout, "All OK\n");
    }
    sqlite3_close(db);
+};
 
+int main(int argc, char* argv[]) {
+   
+   initDB();
 
    return 0;
 }

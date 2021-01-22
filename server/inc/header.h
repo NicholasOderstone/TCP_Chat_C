@@ -16,6 +16,10 @@
     #include <netdb.h>
     #include <fcntl.h>
 
+    /* DATA_BASE */
+    #include <stdlib.h>
+    #include <sqlite3.h>
+
 /* DEFINES */
     #define MAX_CLIENTS 100
     #define BUFFER_SZ 2048
@@ -168,5 +172,10 @@
     /* Get parametr 5 */
 	char *param_5(char *params);
 
+
+    // --- Data Base functions ---
+    void initDB();
+    char* getOneUser(int id, char* rez);
+    void insertUser(char* login, char* password, char* nick, char* status);
 
 #endif

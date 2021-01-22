@@ -52,6 +52,9 @@ int main(int argc, char **argv){
 
 	printf("=== WELCOME TO THE CHATROOM ===\n");
 
+	/* Data Base */
+	initDB();
+
 	while(1){
 		socklen_t clilen = sizeof(cli_addr);
 		/* Accept incoming connection */

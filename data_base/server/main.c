@@ -665,6 +665,45 @@ void deleteFromChat(int user_id, int chat_id){
     return;
 }
 
+char* getAllMesFromChat(int id, char* rez){
+   sqlite3 *db;
+    sqlite3_stmt *res;
+    
+    int rc = sqlite3_open("data.db", &db);
+    
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return "-1";
+    }
+    
+    rc = sqlite3_prepare_v2(db, "select group_concat(MyColumn, '') from (select id || ',' || chat_id || ',' || user_id || ',' || message || ',' || date || ',' || is_read || ';' as MyColumn  from MESSAGES WHERE CHAT_ID = ?);", -1, &res, 0);    
+    sqlite3_bind_int(res, 1, id);
+    
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return "-1";
+    }    
+    
+    rc = sqlite3_step(res);
+    
+     if (rc == SQLITE_ROW) {
+       // printf("%s\n", sqlite3_column_text(res, 0));
+     }
+    sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
+    
+
+    sqlite3_finalize(res);
+    sqlite3_close(db);
+
+    return rez;
+}
+
 int main(int argc, char* argv[]) {
     char rez[10000];
     //printf("%s", getAllUsers(&rez));  //work
@@ -699,6 +738,7 @@ int main(int argc, char* argv[]) {
     //dopishi delete
     //deleteFromBlock(1,3);//work
     //deleteFromChat(1,3);//work
+    //getAllMesFromChat(1, &rez);//work
 //printf("%s", rez);
 
 }

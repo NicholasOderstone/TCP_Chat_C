@@ -19,6 +19,7 @@
     /* DATA_BASE */
     #include <stdlib.h>
     #include <sqlite3.h>
+    #include <math.h>
 
 /* DEFINES */
     #define MAX_CLIENTS 100
@@ -145,6 +146,10 @@
     void str_trim_lf (char* arr, int length); 
     /* Print client ipv4 address*/ 
     void print_client_addr(struct sockaddr_in addr);
+    /* CONBERT INT TO CHAR* */
+    char* itoa(int num, char* buffer, int base);
+    /* DELETE EVERYONE FROM DB */
+    void Delete_From_DB();
 
 
     // --- Functions that interact with messages and commands ---
@@ -177,5 +182,8 @@
     void initDB();
     char* getOneUser(int id, char* rez);
     void insertUser(char* login, char* password, char* nick, char* status);
+    int getIdUserByUserName(char* login);
+    char* getAllUsers(char* rez);
+    void deleteUser(char* id);
 
 #endif

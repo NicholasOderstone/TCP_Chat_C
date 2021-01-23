@@ -3,12 +3,18 @@
 void f_login(char *params, buff_t *Info) {
     char buff_out[BUFFER_SZ];
     char *p_login = param_1(params);
-    //char *p_pass = param_2(params);
+    char *p_pass = param_2(params);
     strcpy(Info->client->name, p_login);
     sprintf(buff_out, "<JOIN> <%s>\n", Info->client->name);
 	printf("%s", buff_out);
 
-	//send_message(buff_out, Info->uid, Info->serv_inf);
+	char temp[BUFFER_SZ];
+	insertUser(p_login, p_pass, "NICK", "STATUS");
+	/*getOneUser(getIdUserByUserName(p_login), temp);
+	printf("%s\n", temp);
+	bzero(temp, BUFFER_SZ);
+	getAllUsers(temp);
+	printf("%s", temp);*/
 	struct command cmd;
 	cmd.params = params;
 	cmd.command = "<LOGIN>";
@@ -21,6 +27,14 @@ void f_login(char *params, buff_t *Info) {
 		}
 	}
 	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
+}
+
+void Delete_From_DB(){
+	char temp[BUFFER_SZ];
+	for(int i = 0; i < 100; i++) {
+		deleteUser(itoa(i, temp, 10));
+		bzero(temp, BUFFER_SZ);
+	}
 }
 
 void f_send(char *params, buff_t *Info) {

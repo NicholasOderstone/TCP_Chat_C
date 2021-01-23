@@ -40,11 +40,11 @@ void initDB(){
    
  
   
-   sql = "INSERT INTO USERS (LOGIN,PASSWORD,NICK,STATUS)" \
-         "VALUES ('THEBESTUSER', 'AWD', 'ST_FATHER ', ':)' );";
+   sql = "INSERT INTO USERS (LOGIN,PASSWORD,NICK,STATUS)"/* \
+         "VALUES ('THEBESTUSER', 'AWD', 'ST_FATHER ', ':)' );"*/;
    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-   sql = "INSERT INTO USERS (LOGIN,PASSWORD,NICK,STATUS)" \
-         "VALUES ('fuckeddata_base', 'superPass', 'redMan ', ':(' );";
+   sql = "INSERT INTO USERS (LOGIN,PASSWORD,NICK,STATUS)"/* \
+         "VALUES ('fuckeddata_base', 'superPass', 'redMan ', ':(' );"*/;
    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
    
 
@@ -776,6 +776,87 @@ void deleteFromChat(int user_id, int chat_id){
     
     return;
 }
+
+int getIdUserByUserName(char* login){
+    sqlite3 *db;
+    sqlite3_stmt *res;
+    
+    int rc = sqlite3_open("data.db", &db);
+    
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return -1;
+    }
+    
+    rc = sqlite3_prepare_v2(db, "select id from users where login = ?;", -1, &res, 0);    
+    sqlite3_bind_text(res, 1, login, strlen(login), NULL);
+    
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return -1;
+    }    
+    
+    rc = sqlite3_step(res);
+    
+     if (rc == SQLITE_ROW) {
+        //printf("%s\n", sqlite3_column_text(res, 0));
+     }
+     char rez[10000];
+    sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
+    
+
+    sqlite3_finalize(res);
+    sqlite3_close(db);
+
+    return atoi(rez);
+}
+
+int getIdChatByName(char* chat){
+    sqlite3 *db;
+    sqlite3_stmt *res;
+    
+    int rc = sqlite3_open("data.db", &db);
+    
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return -1;
+    }
+    
+    rc = sqlite3_prepare_v2(db, "select id from chats where name = ?;", -1, &res, 0);    
+    sqlite3_bind_text(res, 1, chat, strlen(chat), NULL);
+    
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return -1;
+    }    
+    
+    rc = sqlite3_step(res);
+    
+     if (rc == SQLITE_ROW) {
+        //printf("%s\n", sqlite3_column_text(res, 0));
+     }
+     char rez[10000];
+    sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
+    
+
+    sqlite3_finalize(res);
+    sqlite3_close(db);
+
+    return atoi(rez);
+}
+
 
 /*int main(int argc, char* argv[]) {
     //char rez[10000];

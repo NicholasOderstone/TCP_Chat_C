@@ -1,6 +1,11 @@
 #ifndef HEADER_H
 #define HEADER_H
 
+//////////////////////////
+// Macroses
+	#define UNUSED(x) (void)(x)
+
+//////////////////////////
 // INCLUDES
 	#include <sys/socket.h>
 	#include <netinet/in.h>
@@ -13,6 +18,7 @@
 	#include <pthread.h>
 	#include <sys/types.h>
 	#include <ctype.h>
+    #include "interface.h"
 
 //////////////////////////
 
@@ -21,7 +27,7 @@
 	#define BUFFER_SZ 2048
 	#define LENGTH 2048
 	#define NAME_SZ 32
-	#define AMOUNT_OF_CMD 11
+	#define AMOUNT_OF_CMD 10
 //////////////////////////
 
 // STRUCTURES
@@ -33,6 +39,7 @@
 		char name[32];
 
 		int is_connected;
+		int exit;
 		pthread_mutex_t mutex;
 	} client_t;
 
@@ -74,26 +81,23 @@
 	struct process_cmd_info_s {
 		client_t *client;
 		struct cmd_q **cmd_q_front;
+		cmd_func arr_cmd_func[AMOUNT_OF_CMD];
 	};
 
 	struct read_msg_info_s {
 		client_t *client;
 		struct msg_q **msg_q_front;
+		pthread_mutex_t lock;
 	};
 
 	struct make_cmd_info_s {
+		client_t *client;
 		struct msg_q **msg_q_front;
 		struct cmd_q **cmd_q_front;
+		pthread_mutex_t lock;
 	};
 
 
-
-//////////////////////////
-
-// GLOBAL VARIABLES
-	int ctrl_c_and_exit_flag;
-	pthread_mutex_t lock;
-	cmd_func arr_cmd_func[AMOUNT_OF_CMD];
 //////////////////////////
 
 // FUNCTIONS
@@ -101,8 +105,6 @@
 	void str_overwrite_stdout();
 	// Trim \n
 	void str_trim_lf (char* arr, int length);
-	// Checks whether client left using CTRL+C
-	void catch_ctrl_c_and_exit(void);
 	// Validate functions
 	int validate_number(char *str);
 	int validate_ip(char *ip);
@@ -112,7 +114,7 @@
 	// Init client info and settings
 	void init_client(client_t *client, char *ip, char *port);
 	// Init command functions
-	void init_funcs(void);
+	void init_funcs(cmd_func arr_cmd_func[]);
 	char *mx_strnew(const int size);
 
 	// --- Thread functions ---
@@ -133,11 +135,11 @@
 	// --- Queue functions ---
 
 	// Inserts the message into the message queue
-	void to_msg_q(char *data, struct msg_q **msg_q_front);
+	void to_msg_q(char *data, struct msg_q **msg_q_front, pthread_mutex_t msg_lock);
 	// Inserts the command into the command queue
-	void to_cmd_q(command data, struct cmd_q **cmd_q_front);
+	void to_cmd_q(command data, struct cmd_q **cmd_q_front, pthread_mutex_t cmd_lock);
 	// Deletes the first elememt from the message queue
-	void move_msg_q(struct msg_q **msg_q_front);
+	void move_msg_q(struct msg_q **msg_q_front, pthread_mutex_t msg_lock);
 	// Deletes the first elememt from the command queue
 	void move_cmd_q(struct cmd_q **cmd_q_front);
 	// Takes first message from msg_q
@@ -147,6 +149,7 @@
 
 
 	void send_cmd(command cmd, client_t *client);
+	void analyse_cmd(command fst_cmd, cmd_func function);
 
 	// --- Utility functions ---
 
@@ -157,6 +160,9 @@
 	char *param_3(char *params);
 	char *param_4(char *params);
 	char *param_5(char *params);
+
+	void *th_connect_to_server();
+
 
 //////////////////////////
 

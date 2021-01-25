@@ -5,7 +5,7 @@ INC = inc/*.h
 SRC := $(wildcard src/*.c)
 OBJ := $(addprefix obj/, $(notdir $(SRC:%.c=%.o)))
 FLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic
-FLAG_SQL = -lsqlite3 
+FLAG_SQL = -lsqlite3
 DEBUG_FLAGS = -fsanitize=address -fno-omit-frame-pointer
 
 
@@ -14,23 +14,23 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	@$(CC) $(FLAGS) $(FLAG_SQL) $(DEBUG_FLAGS) $(OBJ) -o ../$(NAME)
 	@make clean
-	@printf "\r\33[2K$(NAME):\t\t \033[32;1mcreated\033[0m\n"
+	@printf "\r\33[2K$(NAME):\t \033[32;1mcreated\033[0m\n"
 $(OBJ): | obj
-obj: 
+obj:
 	@mkdir $@
-	
-obj/%.o: src/%.c $(INC) 
+
+obj/%.o: src/%.c $(INC)
 ifeq ($< ,src/db.c)
 		@$(CC) $(FLAGS) $(FLAG_SQL) -c $< -o $@
 else
 		@$(CC) $(FLAGS) -c $< -o $@
 endif
-	@printf "\r\33[2K$(NAME):\033[33;1m\t\t compile \033[0m$(<:$(SRC_DIR)/%.c=%)\r"
+	@printf "\r\33[2K$(NAME):\033[33;1m\t compile \033[0m$(<:$(SRC_DIR)/%.c=%)\r"
 clean:
 	@rm -rf obj/*.o
 	@rm -rf ./obj
-	@printf "$(NAME):\t\t \033[31;1mdeleted\033[0m $(OBJ_DIR)\r"
+	@printf "$(NAME):\t \033[31;1mdeleted\033[0m $(OBJ_DIR)\r"
 uninstall: clean
 	@rm -rf ../$(NAME)
-	@printf "$(NAME):\t\t \033[31;1muninstalled\033[0m\n"
+	@printf "$(NAME):\t \033[31;1muninstalled\033[0m\n"
 reinstall: uninstall all

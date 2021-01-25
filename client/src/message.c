@@ -4,7 +4,7 @@ void *send_msg_handler(void *arg) {
 	struct send_msg_info_s *Info = (struct send_msg_info_s *)arg;
   	char message[LENGTH];
 	while(1) {
-		if (is_exit) {
+		if (Info->client->exit == 1) {
 			break;
 		}
 		str_overwrite_stdout();
@@ -45,7 +45,7 @@ void *recv_msg_handler(void *arg) {
 	pthread_create(&th_make_cmd, NULL, make_cmd, (void *)make_cmd_info);
 
 	while (1) {
-		if (is_exit) {
+		if (Info->client->exit == 1) {
 			break;
 		}
 	}

@@ -2,7 +2,7 @@
 
 void *th_connect_to_server(GtkWidget *widget, gpointer data) {
 // --- Init client ---
-UNUSED(widget);
+	UNUSED(widget);
 	client_t *client = (client_t *)data;
 
 // --- Connect to Server ---
@@ -13,14 +13,35 @@ UNUSED(widget);
 		perror("ERROR: pthread\n");
 		return NULL;
 	}*/
-	printf("th_connect_to_server client addr: %p\n", (void *) client);
-	/* Добавить здесь поверку айпи и порта, перед добаволением к клиенту 
+	// Add ip and port check when clicked on "Connect"
+	// If ip or port is incorrect, show message "IP or PORT is incorrect. Try again"(or smth like that)
+	//printf("th_connect_to_server client addr: %p\n", (void *) client);
+
+	/* Добавить здесь поверку айпи и порта, перед добаволением к клиенту
 	* В случае успешной проверки, добавить айпи и порт к инфе о клиенте
 	* Отдельная функция, а не init_client()
 	* В случае провала проверки, вывести предупреждение об этом и предложить ввести данные снова
 	* После этого, попробовать подключиться к серверу по предложенным данным
 	* Если не успешно, то вывести предупреждение об этом и предложить пользователю попробовать еще раз
 	*/
+	/*if (argc != 3) {
+		printf("Usage: %s <ipv4> <port>\n", argv[0]);
+	}
+
+	char *ip = argv[1];
+	char *port = argv[2];
+	while(!validate_ip(argv[1])) {
+		printf("Error! IP is incorrect.\nTry one more time: ");
+		scanf("%s", ip);
+		printf("\n\r");
+	}
+
+	while(!validate_port(port)) {
+		printf("Error! PORT is incorrect.\nTry one more time: ");
+		scanf("%s", port);
+		printf("\n\r");
+	}*/
+
 	init_client(client, ipv_str, port_str);
 	//while(1) {
 	if (client->is_connected == 0) {
@@ -46,7 +67,7 @@ UNUSED(widget);
 	}
 
     while (client->is_connected == 0) {}
-	
+
     printf("client name: %s\n", client->name);
     printf("client is_connected: %d\n", client->is_connected);
     printf("client exit: %d\n", client->exit);

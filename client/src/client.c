@@ -55,15 +55,9 @@ int main(int argc, char **argv) {
 		perror("ERROR: pthread\n");
 		return 1;
 	}
-    printf("Message and command queue threads While(1)\n");
     gtk_main();
-    /*while(1) {
-        if (client.exit == 1)
-            printf("Bye!");
-    }*/
     client.exit = 1;
     printf("Bye!\n");
-    printf("Message and command queue threads after while\n");
 // --- Checking for client exit ---
 
 	close(client.sockfd);

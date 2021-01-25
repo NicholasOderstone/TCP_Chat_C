@@ -35,14 +35,19 @@ void open_signup_page()
     gtk_widget_show(window);
 }
 
-void func_login() {
+void func_login(GtkWidget *widget, gpointer data) {
+    UNUSED(widget);
+	client_t *client = (client_t *)data;
+    send(client->sockfd, "<LOGIN> <name>", strlen("<LOGIN> <name>"), 0);
+    printf("func_login client: %p\n", (void *)client);
     char *p_login = strdup(username_str);
     char *p_pass = strdup(passoword_str);
     printf("LOGIN: success.\n\tLogin: %s\n\tPassword: %s\n", p_login, p_pass);
 }
 
-void open_login_page(gpointer gp_client)
+void open_login_page(GtkWidget *widget, gpointer gp_client)
 {
+	UNUSED(widget);
     GObject *signup_p;
     GObject *login_b;
     GObject *login;
@@ -55,17 +60,17 @@ void open_login_page(gpointer gp_client)
     signup_p = gtk_builder_get_object (builder, "signup_p");
     login_b = gtk_builder_get_object (builder, "login_b");
     g_signal_connect(signup_p, "clicked", G_CALLBACK(open_signup_page), NULL);
-    g_signal_connect(login_b, "clicked", G_CALLBACK(func_login), NULL);
+    g_signal_connect(login_b, "clicked", G_CALLBACK(func_login), gp_client);
     g_signal_connect(login_b, "clicked", G_CALLBACK(open_main_page), gp_client);
     login = gtk_builder_get_object(builder, "login");
     password = gtk_builder_get_object(builder, "password");
     gtk_widget_show(window);
 }
 
-void open_main_page(gpointer gp_client)
+void open_main_page(GtkWidget *widget, gpointer gp_client)
 {
     struct message_struct *message_s = (struct message_struct*)malloc(sizeof(struct message_struct));
-
+    UNUSED(widget);
     GObject *send_b;
     GtkTextIter start;
     GtkWidget *send_b_image = gtk_image_new_from_file ("client/resources/send_b_img.png");
@@ -94,9 +99,14 @@ void message_changed(GtkEntry *e){
     sprintf(message_str, "%s", gtk_entry_get_text(e));
 }
 
-void message_send(gpointer p_client) {
-    client_t *client = (client_t *)p_client;
-    send(client->sockfd, message_str, strlen(message_str), 0);
+void message_send(GtkWidget *widget, gpointer data) {
+    UNUSED(widget);
+    client_t *client = (client_t *)data;
+    char buffer[LENGTH + 32];
+    snprintf(buffer, BUFFER_SZ, "<SEND> %s\n", message_str);
+    send(client->sockfd, buffer, strlen(buffer), 0);
+    //send(client->sockfd, message_str, strlen(message_str), 0);
+    bzero(buffer, LENGTH + 32);
 }
 /*void send_message(GtkWidget *widget, gpointer m) {
     //GtkTextBuffer *mess = GTK_TEXT_BUFFER((GtkTextBuffer *)m);

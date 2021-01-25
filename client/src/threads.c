@@ -12,7 +12,7 @@ void *th_connect_to_server(GtkWidget *widget, gpointer data) {
 		perror("ERROR: pthread\n");
 		return NULL;
 	}
-	
+
 	/* Добавить здесь поверку айпи и порта, перед добаволением к клиенту
 	* В случае успешной проверки, добавить айпи и порт к инфе о клиенте
 	* Отдельная функция, а не init_client()
@@ -22,10 +22,6 @@ void *th_connect_to_server(GtkWidget *widget, gpointer data) {
 	*/
 
     while (client->is_connected == 0) {}
-
-    printf("client name: %s\n", client->name);
-    printf("client is_connected: %d\n", client->is_connected);
-    printf("client exit: %d\n", client->exit);
-
+	
     return NULL;
 }

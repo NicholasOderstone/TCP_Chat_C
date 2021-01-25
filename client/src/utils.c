@@ -19,6 +19,7 @@ void *connect_to_server(void *cnct_inf) {
 	client_t *info = (client_t *)cnct_inf;
 
     init_client(info, ipv_str, port_str);
+    printf("connect_to_server client: %p\n", (void *)info);
 	while(1) {
         if(info->exit == 1) {
 			break;
@@ -41,7 +42,6 @@ void *connect_to_server(void *cnct_inf) {
 				//printf("=== WELCOME TO THE CHATROOM ===\n");
 				info->is_connected = 1;
 			}
-
 		}
 	}
     int ret_val = 1;

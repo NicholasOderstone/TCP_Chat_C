@@ -1,10 +1,15 @@
 #include "../inc/interface.h"
 
-void init_interface(GtkBuilder **p_builder, GtkWidget **p_window) {
+void init_interface(GtkBuilder **p_builder, GtkWidget **p_window,  int *argc, char ***argv, gpointer p_client) {
+    GObject *connect_b;
+    gtk_init(argc, argv);
     *p_builder = gtk_builder_new();
     gtk_builder_add_from_file (*p_builder, "messanger.glade", NULL);
     *p_window = GTK_WIDGET(gtk_builder_get_object(*p_builder, "connect_window"));
     gtk_builder_connect_signals(*p_builder, NULL);
+    init_connect_page(&connect_b, p_builder, p_client);
+    gtk_widget_show(window);
+    gtk_main();
 }
 
 void init_connect_page(GObject **p_connect_b,GtkBuilder **p_builder, gpointer gp_client) {

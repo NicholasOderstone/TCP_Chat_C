@@ -38,7 +38,7 @@ struct message_struct
     void open_main_page();
     void username_changed();
     void password_changed();
-    void send_message(GtkTextBuffer *buffer);
+    void send_message(GtkWidget *widget, gpointer m);
     void message_clear();
 //////////////////////////
 

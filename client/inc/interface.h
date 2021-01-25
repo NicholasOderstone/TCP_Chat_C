@@ -13,7 +13,11 @@
 //////////////////////////
 
 // STRUCTURES
-
+struct message_struct
+{
+    GtkWidget *view ;
+    GtkTextBuffer *buffer;
+} ;
 //////////////////////////
 
 // GLOBAL VARIABLES
@@ -22,7 +26,7 @@
     char username_str [32], passoword_str[32], message_str[2048], port_str[5],
                 ipv_str[16];
     int is_exit;
-
+    GtkEntry *message_entry;
 //////////////////////////
 
 // FUNCTIONS
@@ -35,6 +39,7 @@
     void username_changed();
     void password_changed();
     void send_message(GtkTextBuffer *buffer);
+    void message_clear();
 //////////////////////////
 
 #endif

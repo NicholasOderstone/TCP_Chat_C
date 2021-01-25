@@ -59,9 +59,8 @@ void open_login_page()
 
 void open_main_page()
 {
-    //GObject *signup_p;
-    GtkWidget *view;
-    GtkTextBuffer *buffer;
+    struct message_struct *message_s = (struct message_struct*)malloc(sizeof(struct message_struct));
+
     GObject *send_b;
     GtkWidget *send_b_image = gtk_image_new_from_file ("client/resources/send_b_img.png");
     gtk_widget_hide(window);
@@ -70,18 +69,26 @@ void open_main_page()
     window = GTK_WIDGET(gtk_builder_get_object(builder, "main_window"));
     gtk_builder_connect_signals(builder, NULL);
     gtk_widget_show(window);
-    view = GTK_WIDGET(gtk_builder_get_object(builder, "messages_field"));
-    buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
-    gtk_text_buffer_insert_interactive_at_cursor (buffer, username_str, -1, TRUE);
-    gtk_text_buffer_insert_interactive_at_cursor (buffer, passoword_str, -1, TRUE);
+    message_s->view = GTK_WIDGET(gtk_builder_get_object(builder, "messages_field"));
+    message_s->buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (message_s->view));
+    gtk_text_buffer_insert_interactive_at_cursor (message_s->buffer, username_str, -1, TRUE);
+    gtk_text_buffer_insert_interactive_at_cursor (message_s->buffer, passoword_str, -1, TRUE);
     send_b = gtk_builder_get_object (builder, "send_buttom");
     gtk_button_set_image (GTK_BUTTON (send_b), send_b_image);
-    //send_message(send_b, buffer);
-    g_signal_connect(send_b, "clicked", G_CALLBACK(send_message), NULL);
+    g_signal_connect(send_b, "clicked", G_CALLBACK(send_message), (gpointer)message_s->buffer);
+    g_signal_connect(send_b, "clicked", G_CALLBACK(message_clear), NULL);
+    message_entry = GTK_ENTRY(gtk_builder_get_object(builder, "message_entry"));
+}
+void message_changed(GtkEntry *e){
+    sprintf(message_str, "%s", gtk_entry_get_text(e));
 }
 void send_message(GtkTextBuffer *buffer) {
-    //printf("%s\n", message_str);
-    gtk_text_buffer_insert_interactive_at_cursor (buffer, message_str, -1, TRUE);
+    GtkTextBuffer *mess = GTK_TEXT_BUFFER((GtkTextBuffer *)m);
+    (void)(widget);
+    gtk_text_buffer_insert_interactive_at_cursor (mess, message_str, -1, TRUE);
+}
+void message_clear() {
+    gtk_entry_set_text(GTK_ENTRY(message_entry), "");
 }
 void ipv_changed(GtkEntry *e){
     sprintf(ipv_str,"%s", gtk_entry_get_text(e));
@@ -95,9 +102,7 @@ void username_changed(GtkEntry *e){
 void password_changed(GtkEntry *e){
     sprintf(passoword_str, "%s", gtk_entry_get_text(e));
 }
-void message_changed(GtkEntry *e){
-    sprintf(message_str, "%s", gtk_entry_get_text(e));
-}
+
 
 gboolean destroy() {
         is_exit = 1;

@@ -32,13 +32,13 @@ struct message_struct
 // FUNCTIONS
     gboolean destroy();
     void init_interface();
-    void init_connect_page(GObject **p_connect_b,GtkBuilder **p_builder, gpointer gp_client);
+    void init_connect_page();
     void open_signup_page();
     void open_login_page();
     void open_main_page();
     void username_changed();
     void password_changed();
-    void send_message(GtkWidget *widget, gpointer m);
+    void send_message();
     void message_clear();
 //////////////////////////
 

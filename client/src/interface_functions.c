@@ -86,9 +86,9 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     //gtk_text_buffer_insert_interactive_at_cursor (message_s->buffer, passoword_str, -1, TRUE);
     send_b = gtk_builder_get_object (builder, "send_buttom");
     gtk_button_set_image (GTK_BUTTON (send_b), send_b_image);
-    //g_signal_connect(send_b, "clicked", G_CALLBACK(send_message), (gpointer)message_s->buffer);
-    g_signal_connect(send_b, "clicked", G_CALLBACK(message_clear), NULL);
+    g_signal_connect(send_b, "clicked", G_CALLBACK(send_message), (gpointer)message_s->buffer);
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_send), gp_client);
+    g_signal_connect(send_b, "clicked", G_CALLBACK(message_clear), NULL);
     gtk_text_buffer_get_iter_at_offset(message_s->buffer, &start, 0);
     //gchar *name;
     gtk_text_buffer_create_tag(message_s->buffer, "gray_bg", "background","gray", NULL);
@@ -103,17 +103,19 @@ void message_send(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
     client_t *client = (client_t *)data;
     char buffer[LENGTH + 32];
-    snprintf(buffer, BUFFER_SZ, "<SEND> %s\n", message_str);
+    printf("message_str: %s\n", message_str);
+    snprintf(buffer, BUFFER_SZ, "<SEND> <%s>", message_str);
     send(client->sockfd, buffer, strlen(buffer), 0);
     //send(client->sockfd, message_str, strlen(message_str), 0);
     bzero(buffer, LENGTH + 32);
 }
-/*void send_message(GtkWidget *widget, gpointer m) {
-    //GtkTextBuffer *mess = GTK_TEXT_BUFFER((GtkTextBuffer *)m);
+void send_message(GtkWidget *widget, gpointer m) {
+    UNUSED(widget);
+    GtkTextBuffer *mess = GTK_TEXT_BUFFER((GtkTextBuffer *)m);
     (void)(widget);
-    //gtk_text_buffer_insert_interactive_at_cursor (mess, message_str, -1, TRUE);
-    //gtk_text_buffer_insert_interactive_at_cursor (mess, "\n", -1, TRUE);
-}*/
+    gtk_text_buffer_insert_interactive_at_cursor (mess, message_str, -1, TRUE);
+    gtk_text_buffer_insert_interactive_at_cursor (mess, "\n", -1, TRUE);
+}
 void message_clear() {
     gtk_entry_set_text(GTK_ENTRY(message_entry), "");
 }

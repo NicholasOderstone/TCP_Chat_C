@@ -162,6 +162,7 @@
 	char *param_5(char *params);
 
 	void *th_connect_to_server();
+	void *init_threads(GtkWidget *widget, gpointer data);
 
 
 //////////////////////////

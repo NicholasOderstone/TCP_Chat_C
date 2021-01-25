@@ -82,7 +82,7 @@ void open_main_page()
 void message_changed(GtkEntry *e){
     sprintf(message_str, "%s", gtk_entry_get_text(e));
 }
-void send_message(GtkTextBuffer *buffer) {
+void send_message(GtkWidget *widget, gpointer m) {
     GtkTextBuffer *mess = GTK_TEXT_BUFFER((GtkTextBuffer *)m);
     (void)(widget);
     gtk_text_buffer_insert_interactive_at_cursor (mess, message_str, -1, TRUE);

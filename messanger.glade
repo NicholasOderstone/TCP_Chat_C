@@ -30,6 +30,8 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="max-length">16</property>
+            <property name="secondary-icon-name">error-correct-symbolic</property>
+            <property name="secondary-icon-tooltip-text" translatable="yes">IP is incorrect</property>
             <property name="placeholder-text" translatable="yes">ipv4</property>
             <signal name="changed" handler="ipv_changed" swapped="no"/>
           </object>

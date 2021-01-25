@@ -1,18 +1,19 @@
 #include "../inc/interface.h"
 
-void init_interface(GtkBuilder **p_builder, GtkWidget **p_window,  int *argc, char ***argv, gpointer p_client) {
+void init_interface(GtkBuilder **p_builder,  int *argc, char ***argv, gpointer p_client) {
     GObject *connect_b;
     gtk_init(argc, argv);
     *p_builder = gtk_builder_new();
     gtk_builder_add_from_file (*p_builder, "messanger.glade", NULL);
-    *p_window = GTK_WIDGET(gtk_builder_get_object(*p_builder, "connect_window"));
-    gtk_builder_connect_signals(*p_builder, NULL);
+
     init_connect_page(&connect_b, p_builder, p_client);
-    gtk_widget_show(window);
 }
 
-void init_connect_page(GObject **p_connect_b,GtkBuilder **p_builder, gpointer gp_client) {
+void init_connect_page(GObject **p_connect_b, GtkBuilder **p_builder, gpointer gp_client) {
+    window = GTK_WIDGET(gtk_builder_get_object(*p_builder, "connect_window"));
+    gtk_builder_connect_signals(*p_builder, NULL);
     *p_connect_b = gtk_builder_get_object (*p_builder, "connect_b");
+    gtk_widget_show(window);
 // Add ip and port check when clicked on "Connect"
 // If ip or port is incorrect, show message "IP or PORT is incorrect. Try again"(or smth like that)
     g_signal_connect(*p_connect_b, "clicked", G_CALLBACK(open_login_page), gp_client);

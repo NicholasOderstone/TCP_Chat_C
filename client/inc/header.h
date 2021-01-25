@@ -2,7 +2,10 @@
 #define HEADER_H
 
 //////////////////////////
+// Macroses
+	#define UNUSED(x) (void)(x)
 
+//////////////////////////
 // INCLUDES
 	#include <sys/socket.h>
 	#include <netinet/in.h>
@@ -77,7 +80,6 @@
 
 	struct process_cmd_info_s {
 		client_t *client;
-		int *exit;
 		struct cmd_q **cmd_q_front;
 		cmd_func arr_cmd_func[AMOUNT_OF_CMD];
 	};
@@ -159,7 +161,8 @@
 	char *param_4(char *params);
 	char *param_5(char *params);
 
-	void make_exit_one(void);
+	void *th_connect_to_server();
+
 
 //////////////////////////
 

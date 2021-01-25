@@ -3,9 +3,9 @@
 void *process_cmd(void *arg) {
 	struct process_cmd_info_s *Info = (struct process_cmd_info_s *)arg;
 	while(1) {
-		if (Info->client->exit == 1) {
+		/*if (destroy()) {
 			break;
-		}
+		}*/
 		if (*Info->cmd_q_front != NULL)
 		{
 			command fst_cmd = take_fst_cmd_in_q(Info->cmd_q_front);

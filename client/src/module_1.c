@@ -13,7 +13,7 @@ void *read_msg(void *arg) {
 	while (1) {
 		if (Info->client->is_connected == 1) {
 			int receive = recv(Info->client->sockfd, msg_buf, LENGTH, 0);
-			if (Info->client->exit == 1) {
+			if (is_exit) {
 				break;
 			}
 			if (receive > 0) {
@@ -46,10 +46,10 @@ void *make_cmd(void *arg) {
 	  return NULL;
 	}
 	while(1) {
-		if (Info->client->exit == 1) {
+		if (is_exit) {
 			break;
 		}
-		else if (*Info->msg_q_front != NULL) {
+		if (*Info->msg_q_front != NULL) {
 			char *fst_msg = strdup(take_fst_msg_in_q(Info->msg_q_front));
 			move_msg_q(Info->msg_q_front, Info->lock);
 			command cmd = msg_to_cmd(fst_msg);

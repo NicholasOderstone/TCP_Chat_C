@@ -86,6 +86,7 @@ void send_message(GtkWidget *widget, gpointer m) {
     GtkTextBuffer *mess = GTK_TEXT_BUFFER((GtkTextBuffer *)m);
     (void)(widget);
     gtk_text_buffer_insert_interactive_at_cursor (mess, message_str, -1, TRUE);
+    gtk_text_buffer_insert_interactive_at_cursor (mess, "\n", -1, TRUE);
 }
 void message_clear() {
     gtk_entry_set_text(GTK_ENTRY(message_entry), "");

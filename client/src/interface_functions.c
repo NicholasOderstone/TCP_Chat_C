@@ -67,7 +67,7 @@ void open_main_page(gpointer gp_client)
     struct message_struct *message_s = (struct message_struct*)malloc(sizeof(struct message_struct));
 
     GObject *send_b;
-    //GtkTextIter start, end;
+    GtkTextIter start;
     GtkWidget *send_b_image = gtk_image_new_from_file ("client/resources/send_b_img.png");
     gtk_widget_hide(window);
     builder = gtk_builder_new();
@@ -81,11 +81,13 @@ void open_main_page(gpointer gp_client)
     //gtk_text_buffer_insert_interactive_at_cursor (message_s->buffer, passoword_str, -1, TRUE);
     send_b = gtk_builder_get_object (builder, "send_buttom");
     gtk_button_set_image (GTK_BUTTON (send_b), send_b_image);
-    g_signal_connect(send_b, "clicked", G_CALLBACK(send_message), (gpointer)message_s->buffer);
+    //g_signal_connect(send_b, "clicked", G_CALLBACK(send_message), (gpointer)message_s->buffer);
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_clear), NULL);
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_send), gp_client);
-    //gtk_text_buffer_get_iter_at_offset(buffer, &start, 0);
-    //gtk_text_buffer_insert_with_tags (buffer, &start, "name", -1,)
+    gtk_text_buffer_get_iter_at_offset(message_s->buffer, &start, 0);
+    //gchar *name;
+    gtk_text_buffer_create_tag(message_s->buffer, "gray_bg", "background","gray", NULL);
+    gtk_text_buffer_insert_with_tags_by_name (message_s->buffer, &start, "name", -1, "gray_bg", NULL);
     message_entry = GTK_ENTRY(gtk_builder_get_object(builder, "message_entry"));
 }
 void message_changed(GtkEntry *e){
@@ -96,12 +98,12 @@ void message_send(gpointer p_client) {
     client_t *client = (client_t *)p_client;
     send(client->sockfd, message_str, strlen(message_str), 0);
 }
-void send_message(GtkWidget *widget, gpointer m) {
-    GtkTextBuffer *mess = GTK_TEXT_BUFFER((GtkTextBuffer *)m);
+/*void send_message(GtkWidget *widget, gpointer m) {
+    //GtkTextBuffer *mess = GTK_TEXT_BUFFER((GtkTextBuffer *)m);
     (void)(widget);
-    gtk_text_buffer_insert_interactive_at_cursor (mess, message_str, -1, TRUE);
-    gtk_text_buffer_insert_interactive_at_cursor (mess, "\n", -1, TRUE);
-}
+    //gtk_text_buffer_insert_interactive_at_cursor (mess, message_str, -1, TRUE);
+    //gtk_text_buffer_insert_interactive_at_cursor (mess, "\n", -1, TRUE);
+}*/
 void message_clear() {
     gtk_entry_set_text(GTK_ENTRY(message_entry), "");
 }

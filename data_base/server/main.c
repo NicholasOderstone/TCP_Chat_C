@@ -985,7 +985,7 @@ int main(int argc, char* argv[]) {
 
    //insertUser("1", "2", "3", "4");//work
   //insertChat("New chat", "des0");//work
-   insertMessage("1","2","something tam", "2010 02 13:11:00", "0");//work
+   //insertMessage("1","2","something tam", "2010 02 13:11:00", "0");//work
    
    
    //deleteUser("7"); //work
@@ -1008,8 +1008,8 @@ int main(int argc, char* argv[]) {
     //getUserPassword(1, rez);//work
     //updateNameUser(1, "WOOOOORK");//work
     //updatePasswordUser(1, "NEW Pawssword");//work
-    updateStatusUser(1, "mew se");
-    updateTextMessage(1, "new mess");
+    //updateStatusUser(1, "mew se");
+    //updateTextMessage(1, "new mess");
 printf("%s", rez);
 
 }

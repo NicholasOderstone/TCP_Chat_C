@@ -38,7 +38,7 @@ void open_signup_page()
 void func_login(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
 	client_t *client = (client_t *)data;
-    send(client->sockfd, "<LOGIN> <name>", strlen("<LOGIN> <name>"), 0);
+    send(client->sockfd, "<LOGIN> <name> <pass>", strlen("<LOGIN> <name> <pass>"), 0);
     printf("func_login client: %p\n", (void *)client);
     char *p_login = strdup(username_str);
     char *p_pass = strdup(passoword_str);

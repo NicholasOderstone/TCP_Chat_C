@@ -28,7 +28,7 @@ void f_login(char *params, buff_t *Info) {
 	}
 	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
 }
-/* 
+/*
 void Delete_From_DB(){
 	char temp[BUFFER_SZ];
 	for(int i = 0; i < 100; i++) {

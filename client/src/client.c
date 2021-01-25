@@ -8,8 +8,6 @@ int main(int argc, char **argv) {
     static client_t client;
     client_t *p_client = (client_t *)malloc(sizeof(client_t *));
     p_client = &client;
-    GObject *connect_b;
-    gtk_init(&argc, &argv);
 
     /* По максимуму надо уменьшить мейн и разнести все по функциям
     * Функция, которая инициализирует потоки
@@ -19,10 +17,8 @@ int main(int argc, char **argv) {
     * Это нужно для того, чтобы можно было заниматься отдельно кодом клиента и отдельно интерфейсом,
     * а не ломать одно, чтобы построить другое.
     */
-    init_interface(&builder, &window);
-    init_connect_page(&connect_b, &builder, (gpointer) p_client);
-    gtk_widget_show(window);
-    gtk_main();
+
+    init_interface(&builder, &window, &argc, &argv, (gpointer) p_client);
 
 	exit(0);
 	return EXIT_SUCCESS;

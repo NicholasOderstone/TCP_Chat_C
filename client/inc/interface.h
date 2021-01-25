@@ -31,7 +31,7 @@ struct message_struct
 
 // FUNCTIONS
     gboolean destroy();
-    void init_interface(GtkBuilder **p_builder, GtkWidget **p_window);
+    void init_interface();
     void init_connect_page(GObject **p_connect_b,GtkBuilder **p_builder, gpointer gp_client);
     void open_signup_page();
     void open_login_page();

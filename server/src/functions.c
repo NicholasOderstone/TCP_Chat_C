@@ -3,23 +3,29 @@
 void f_login(char *params, buff_t *Info) {
     char buff_out[BUFFER_SZ];
     char *p_login = param_1(params);
-    //char *p_pass = param_2(params);
-	if(strcmp("(null)", getIdUserByUserName(p_login)) == 0){
-		printf("null123")
+    char *p_pass = param_2(params);
+	insertUser("Andr", p_pass, "NICK", "STATUS");
+	if(getIdUserByUserName(p_login) == 0){
+		//Oшибка: неправильный логин
+		printf("Incorrect user_name\n");
+		return;
 	}
+	getUserPassword(getIdUserByUserName(p_login), buff_out);
+	if(!strcmp(buff_out, p_pass)) {
+		//Ошибка: неправильный пароль
+		printf("Incorrect password\n");
+		return;
+	}
+	bzero(buff_out, BUFFER_SZ);
 
+	//getAllUsers(buff_out);
+	//printf("%s", getAllUsers(buff_out));
+	//bzero(buff_out, BUFFER_SZ);
 
     strcpy(Info->client->name, p_login);
     sprintf(buff_out, "<JOIN> <%s>\n", Info->client->name);
 	printf("%s", buff_out);
 
-	/*char temp[BUFFER_SZ];
-	insertUser(p_login, p_pass, "NICK", "STATUS");
-	getOneUser(getIdUserByUserName(p_login), temp);
-	printf("%s\n", temp);
-	bzero(temp, BUFFER_SZ);
-	getAllUsers(temp);
-	printf("%s", temp);*/
 	struct command cmd;
 	cmd.params = params;
 	cmd.command = "<LOGIN>";

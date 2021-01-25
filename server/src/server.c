@@ -54,8 +54,9 @@ int main(int argc, char **argv){
 
 	/* Data Base */
 	initDB();
-	char temp[BUFFER_SZ];
-	printf("%s", getUserName(25, temp));
+	/*char temp[BUFFER_SZ];
+	printf("%s", getUserName(25, temp));*/
+	//printf("%d", getIdUserByUserName("Playsdfsdfsdfsder1"));
 	while(1){
 		socklen_t clilen = sizeof(cli_addr);
 		/* Accept incoming connection */

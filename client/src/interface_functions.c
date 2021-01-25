@@ -15,7 +15,7 @@ void init_connect_page(GObject **p_connect_b,GtkBuilder **p_builder, gpointer gp
     *p_connect_b = gtk_builder_get_object (*p_builder, "connect_b");
 // Add ip and port check when clicked on "Connect"
 // If ip or port is incorrect, show message "IP or PORT is incorrect. Try again"(or smth like that)
-    g_signal_connect(*p_connect_b, "clicked", G_CALLBACK(open_login_page), NULL);
+    g_signal_connect(*p_connect_b, "clicked", G_CALLBACK(open_login_page), gp_client);
     // printf("main client addr: %p\n", (void *) p_client);
 	g_signal_connect(*p_connect_b, "clicked", G_CALLBACK(th_connect_to_server), gp_client);
     g_object_unref(*p_builder);
@@ -41,7 +41,7 @@ void func_login() {
     printf("LOGIN: success.\n\tLogin: %s\n\tPassword: %s\n", p_login, p_pass);
 }
 
-void open_login_page()
+void open_login_page(gpointer gp_client)
 {
     GObject *signup_p;
     GObject *login_b;
@@ -56,17 +56,18 @@ void open_login_page()
     login_b = gtk_builder_get_object (builder, "login_b");
     g_signal_connect(signup_p, "clicked", G_CALLBACK(open_signup_page), NULL);
     g_signal_connect(login_b, "clicked", G_CALLBACK(func_login), NULL);
+    g_signal_connect(login_b, "clicked", G_CALLBACK(open_main_page), gp_client);
     login = gtk_builder_get_object(builder, "login");
     password = gtk_builder_get_object(builder, "password");
     gtk_widget_show(window);
 }
 
-void open_main_page()
+void open_main_page(gpointer gp_client)
 {
     struct message_struct *message_s = (struct message_struct*)malloc(sizeof(struct message_struct));
 
     GObject *send_b;
-    GtkTextIter start, end;
+    //GtkTextIter start, end;
     GtkWidget *send_b_image = gtk_image_new_from_file ("client/resources/send_b_img.png");
     gtk_widget_hide(window);
     builder = gtk_builder_new();
@@ -82,12 +83,18 @@ void open_main_page()
     gtk_button_set_image (GTK_BUTTON (send_b), send_b_image);
     g_signal_connect(send_b, "clicked", G_CALLBACK(send_message), (gpointer)message_s->buffer);
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_clear), NULL);
-    gtk_text_buffer_get_iter_at_offset(buffer, &start, 0);
-    gtk_text_buffer_insert_with_tags (buffer, &start, "name", -1,)
+    g_signal_connect(send_b, "clicked", G_CALLBACK(message_send), gp_client);
+    //gtk_text_buffer_get_iter_at_offset(buffer, &start, 0);
+    //gtk_text_buffer_insert_with_tags (buffer, &start, "name", -1,)
     message_entry = GTK_ENTRY(gtk_builder_get_object(builder, "message_entry"));
 }
 void message_changed(GtkEntry *e){
     sprintf(message_str, "%s", gtk_entry_get_text(e));
+}
+
+void message_send(gpointer p_client) {
+    client_t *client = (client_t *)p_client;
+    send(client->sockfd, message_str, strlen(message_str), 0);
 }
 void send_message(GtkWidget *widget, gpointer m) {
     GtkTextBuffer *mess = GTK_TEXT_BUFFER((GtkTextBuffer *)m);

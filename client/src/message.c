@@ -2,12 +2,12 @@
 
 void *send_msg_handler(void *arg) {
 	struct send_msg_info_s *Info = (struct send_msg_info_s *)arg;
-  	char message[LENGTH];
+  	//char message[LENGTH];
 	while(1) {
 		if (Info->client->exit == 1) {
 			break;
 		}
-		str_overwrite_stdout();
+		/*str_overwrite_stdout();
 		fgets(message, LENGTH, stdin);
 		str_trim_lf(message, LENGTH);
 		if (strcmp(message, "exit") == 0) {
@@ -19,7 +19,7 @@ void *send_msg_handler(void *arg) {
 		  send_cmd(cmd, Info->client);
 		  pthread_mutex_unlock(&Info->client->mutex);
 		}
-		bzero(message, LENGTH);
+		bzero(message, LENGTH);*/
 	}
 	int ret_val = 1;
 	printf("1. Send message thread terminated\n");

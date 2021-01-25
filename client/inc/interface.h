@@ -40,6 +40,7 @@ struct message_struct
     void password_changed();
     void send_message();
     void message_clear();
+    void message_send();
 //////////////////////////
 
 #endif

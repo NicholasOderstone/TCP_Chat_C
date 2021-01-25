@@ -19,17 +19,11 @@ void *connect_to_server(void *cnct_inf) {
 	client_t *info = (client_t *)cnct_inf;
 
     init_client(info, ipv_str, port_str);
-
-
-    printf("name: %s\n", info->name);
-    printf("is_connected: %d\n", info->is_connected);
-    printf("exit: %d\n", info->exit);
 	while(1) {
         if(info->exit == 1) {
 			break;
 		}
 		if (info->is_connected == 0) {
-            //init_client(info, ipv_str, port_str);
 			close(info->sockfd);
 			info->sockfd = socket(AF_INET, SOCK_STREAM, 0);
 			printf("Trying to connect to server\n");

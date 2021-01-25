@@ -184,6 +184,8 @@
     void insertUser(char* login, char* password, char* nick, char* status);
     int getIdUserByUserName(char* login);
     char* getAllUsers(char* rez);
-    void deleteUser(char* id);
+    void deleteUser(char* id);  
+    char* getUserName(int id, char* rez);
+    char* getUserPassword(int id, char* rez);
 
 #endif

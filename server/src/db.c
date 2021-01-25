@@ -5,8 +5,8 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
    for(i = 0; i<argc; i++) {
       printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
    }
-   NotUsed = NULL;
    printf("\n");
+   NotUsed = NULL;
    return 0;
 }
 
@@ -27,8 +27,6 @@ void initDB(){
    }
    
 
-   
-   
 //USERS
    sql = "CREATE TABLE IF NOT EXISTS USERS("  \
       "ID INTEGER PRIMARY KEY     AUTOINCREMENT," \
@@ -37,34 +35,17 @@ void initDB(){
       "NICK           TEXT    NOT NULL," \
       "STATUS         TEXT );";
   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-   
-
-   sql = "SELECT * from USERS";
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
       
   
-   
-   
 //CHATS
-//fprintf(stdout, "----------------CHATS----------------\n");
 sql = "CREATE TABLE IF NOT EXISTS CHATS("  \
       "ID INTEGER PRIMARY KEY     AUTOINCREMENT," \
       "NAME           TEXT    NOT NULL," \
       "DESCRIPTION         TEXT);";
   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
 
-  
-  sql = "INSERT INTO CHATS (NAME,G_CHAT)" \
-        "VALUES ('NAMECHAT', 0);";
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-   
-   sql = "SELECT * from CHATS";
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
 
-
-   
 //MESSAGES
-  //fprintf(stdout, "----------------MESSAGES----------------\n");
   sql = "CREATE TABLE IF NOT EXISTS MESSAGES("  \
       "ID INTEGER PRIMARY KEY     AUTOINCREMENT," \
       "CHAT_ID             INT     NOT NULL," \
@@ -73,14 +54,6 @@ sql = "CREATE TABLE IF NOT EXISTS CHATS("  \
       "DATE                TEXT    NOT NULL," \
       "IS_READ             INT     NOT NULL );";
   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-  
-  sql = "INSERT INTO MESSAGES (CHAT_ID,USER_ID,MESSAGE,DATE,IS_READ)" \
-        "VALUES (1, 1, 'MESSAGE', '2020 12 30 13:28:40', 0);";
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-   
-   sql = "SELECT * from MESSAGES";
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-   
    
    
 //BLOCK_LIST
@@ -88,7 +61,6 @@ sql = "CREATE TABLE IF NOT EXISTS CHATS("  \
       "USER_ID             INT     NOT NULL," \
       "BLOCK_USER_ID       INT     NOT NULL);";
   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-  
   
   
 //USER_IN_CHAT
@@ -105,14 +77,8 @@ sql = "CREATE TABLE IF NOT EXISTS CHATS("  \
       fprintf(stdout, "All OK\n");
    }
    sqlite3_close(db);
+   
 }
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <sqlite3.h> 
-#include <string.h>
-
-
 
 char* getAllUsers(char* rez){
    sqlite3 *db;

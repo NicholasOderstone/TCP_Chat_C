@@ -26,7 +26,7 @@
     #define BUFFER_SZ 2048
     #define LENGTH 2048
     #define NAME_SZ 32
-    #define AMOUNT_OF_CMD 2
+    #define AMOUNT_OF_CMD 3
 
 
 /* STRUCTURES */

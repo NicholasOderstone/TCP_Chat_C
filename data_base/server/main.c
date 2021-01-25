@@ -43,6 +43,8 @@ char* getAllUsers(char* rez){
     return rez;
 }
 
+
+
 char* getAllChats(){
    char rez[10000];
    sqlite3 *db;
@@ -101,6 +103,87 @@ char* getOneUser(int id, char* rez){
     }
     
     rc = sqlite3_prepare_v2(db, "select group_concat(MyColumn, '') from (select id || ',' || login || ',' || password || ';' as MyColumn  from Users WHERE ID = ?);", -1, &res, 0);    
+    sqlite3_bind_int(res, 1, id);
+    
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return "-1";
+    }    
+    
+    rc = sqlite3_step(res);
+    
+     if (rc == SQLITE_ROW) {
+       // printf("%s\n", sqlite3_column_text(res, 0));
+     }
+    sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
+    
+
+    sqlite3_finalize(res);
+    sqlite3_close(db);
+
+    return rez;
+}
+
+char* getUserName(int id, char* rez){
+   // printf("%d", id);
+    //return "-1";
+   //char rez[10000];
+   sqlite3 *db;
+    sqlite3_stmt *res;
+    
+    int rc = sqlite3_open("data.db", &db);
+    
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return "-1";
+    }
+    
+    rc = sqlite3_prepare_v2(db, "select LOGIN from Users WHERE ID = ?;", -1, &res, 0);    
+    sqlite3_bind_int(res, 1, id);
+    
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return "-1";
+    }    
+    
+    rc = sqlite3_step(res);
+    
+     if (rc == SQLITE_ROW) {
+       // printf("%s\n", sqlite3_column_text(res, 0));
+     }
+    sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
+    
+
+    sqlite3_finalize(res);
+    sqlite3_close(db);
+
+    return rez;
+}
+
+char* getUserPassword(int id, char* rez){
+   sqlite3 *db;
+    sqlite3_stmt *res;
+    
+    int rc = sqlite3_open("data.db", &db);
+    
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return "-1";
+    }
+    
+    rc = sqlite3_prepare_v2(db, "select PASSWORD from Users WHERE ID = ?;", -1, &res, 0);    
     sqlite3_bind_int(res, 1, id);
     
     if (rc != SQLITE_OK) {
@@ -798,7 +881,7 @@ int main(int argc, char* argv[]) {
    //printf("%s", getOneMessage(1, &rez));//work
   //printf("%s", rez);
 
-   //insertUser("1", "2", "3", "4");//work
+   insertUser("1", "2", "3", "4");//work
   //insertChat("New chat", "des0");//work
    //insertMessage("1","2","something tam", "2010 02 13:11:00", "0");//work
    
@@ -821,6 +904,9 @@ int main(int argc, char* argv[]) {
     //getAllMesFromChat(1, &rez);//work
     //printf("%d", getIdUserByUserName("THEBESTUSER"));//work
     //printf("%d", getIdChatByName("New chat"));//work
-//printf("%s", rez);
+    getUserName(1, rez);
+    printf("%s", rez);
+    getUserPassword(1, rez);
+printf("%s", rez);
 
 }

@@ -43,8 +43,6 @@ char* getAllUsers(char* rez){
     return rez;
 }
 
-
-
 char* getAllChats(){
    char rez[10000];
    sqlite3 *db;
@@ -86,9 +84,6 @@ char* getAllChats(){
 }
 
 char* getOneUser(int id, char* rez){
-   // printf("%d", id);
-    //return "-1";
-   //char rez[10000];
    sqlite3 *db;
     sqlite3_stmt *res;
     
@@ -128,9 +123,6 @@ char* getOneUser(int id, char* rez){
 }
 
 char* getUserName(int id, char* rez){
-   // printf("%d", id);
-    //return "-1";
-   //char rez[10000];
    sqlite3 *db;
     sqlite3_stmt *res;
     
@@ -331,7 +323,6 @@ char* getOneChats(int id, char* rez){
 }
 
 char* getOneMessage(int id, char* rez){
-   //char rez[10000];
    sqlite3 *db;
     sqlite3_stmt *res;
     
@@ -370,26 +361,22 @@ char* getOneMessage(int id, char* rez){
     return rez;
 }
 
-void insertUser(char* login, char* password, char* nick, char* status){
-    char sql[500];
-    sprintf (sql,"INSERT INTO USERS (LOGIN, PASSWORD, NICK, STATUS) VALUES ('%s','%s','%s','%s');",login,password,nick,status);
+void updateNameUser(int id, char* name){
+   char sql[500];
+    //sprintf (sql,"update USERS set LOGIN = ? where ID = ? ('%s','%d');", name, id);
+    sprintf (sql,"update USERS set LOGIN = '%s' where ID = '%d'", name, id);
 
 
     sqlite3 *db;
     char *err_msg = 0;
-   
     
     int rc = sqlite3_open("data.db", &db);
     
     if (rc != SQLITE_OK) {
-        
         fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
-        
         return;
     }
-    
-   
 
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     
@@ -404,7 +391,124 @@ void insertUser(char* login, char* password, char* nick, char* status){
     } 
     
     sqlite3_close(db);
+    return;
+}
+
+void updatePasswordUser(int id, char* name){
+   char sql[500];
+    sprintf (sql,"update USERS set PASSWORD = '%s' where ID = '%d'", name, id);
+
+
+    sqlite3 *db;
+    char *err_msg = 0;
     
+    int rc = sqlite3_open("data.db", &db);
+    
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return;
+    }
+
+    rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+    
+    if (rc != SQLITE_OK ) {
+        
+        fprintf(stderr, "SQL error: %s\n", err_msg);
+        
+        sqlite3_free(err_msg);        
+        sqlite3_close(db);
+        
+        return;
+    } 
+    
+    sqlite3_close(db);
+    return;
+}
+
+void updateStatusUser(int id, char* Status){
+   char sql[500];
+    sprintf (sql,"update USERS set STATUS = '%s' where ID = '%d'", Status, id);
+
+
+    sqlite3 *db;
+    char *err_msg = 0;
+    
+    int rc = sqlite3_open("data.db", &db);
+    
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return;
+    }
+
+    rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+    
+    if (rc != SQLITE_OK ) {
+        
+        fprintf(stderr, "SQL error: %s\n", err_msg);
+        
+        sqlite3_free(err_msg);        
+        sqlite3_close(db);
+        
+        return;
+    } 
+    
+    sqlite3_close(db);
+    return;
+}
+
+void updateTextMessage(int id, char* text){
+   char sql[500];
+    sprintf (sql,"update MESSAGES set MESSAGE = '%s' where ID = '%d'", text, id);
+
+
+    sqlite3 *db;
+    char *err_msg = 0;
+    
+    int rc = sqlite3_open("data.db", &db);
+    
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return;
+    }
+
+    rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+    
+    if (rc != SQLITE_OK ) {
+        
+        fprintf(stderr, "SQL error: %s\n", err_msg);
+        
+        sqlite3_free(err_msg);        
+        sqlite3_close(db);
+        
+        return;
+    } 
+    
+    sqlite3_close(db);
+    return;
+}
+
+void insertUser(char* login, char* password, char* nick, char* status){
+    char sql[500];
+    sprintf (sql,"INSERT INTO USERS (LOGIN, PASSWORD, NICK, STATUS) VALUES ('%s','%s','%s','%s');",login,password,nick,status);
+    sqlite3 *db;
+    char *err_msg = 0;
+    int rc = sqlite3_open("data.db", &db);
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return;
+    }
+    rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+    if (rc != SQLITE_OK ) {
+        fprintf(stderr, "SQL error: %s\n", err_msg);
+        sqlite3_free(err_msg);
+        sqlite3_close(db);
+        return;
+    }
+    sqlite3_close(db);
     return;
 }
 
@@ -867,29 +971,26 @@ char* getAllMesFromChat(int id, char* rez){
     return rez;
 }
 
+
 int main(int argc, char* argv[]) {
     char rez[10000];
-    //printf("%s", getAllUsers(&rez));  //work
+    //getAllUsers(&rez);  //work
 
-    //getOneUser(1, &rez);
-   //printf("%s", getOneUser(1, &rez)); //work
+    //getOneUser(1, &rez);//work
    //printf("%s", rez);
 
-   //printf("%s", getOneChats(2, &rez)); // work
-   
+    //getOneChats(2, &rez); // work
+    //getOneMessage(1, &rez);//work
+    //printf("%s", rez);
 
-   //printf("%s", getOneMessage(1, &rez));//work
-  //printf("%s", rez);
-
-   insertUser("1", "2", "3", "4");//work
+   //insertUser("1", "2", "3", "4");//work
   //insertChat("New chat", "des0");//work
-   //insertMessage("1","2","something tam", "2010 02 13:11:00", "0");//work
+   insertMessage("1","2","something tam", "2010 02 13:11:00", "0");//work
    
    
    //deleteUser("7"); //work
    //deleteChat("7");//work
    //deleteMessage("4");//work
-   //updateUser("1", "awd", "AWD", "awd", "awd", "ad"); not working yet:(
 
     //insertInBlockList(1, 3);//work
 
@@ -898,15 +999,17 @@ int main(int argc, char* argv[]) {
     //getUserChats(1, &rez);//work
     //getBlockList(1, &rez);//work
 
-    //dopishi delete
     //deleteFromBlock(1,3);//work
     //deleteFromChat(1,3);//work
     //getAllMesFromChat(1, &rez);//work
     //printf("%d", getIdUserByUserName("THEBESTUSER"));//work
     //printf("%d", getIdChatByName("New chat"));//work
-    getUserName(1, rez);
-    printf("%s", rez);
-    getUserPassword(1, rez);
+    //getUserName(1, rez);//work
+    //getUserPassword(1, rez);//work
+    //updateNameUser(1, "WOOOOORK");//work
+    //updatePasswordUser(1, "NEW Pawssword");//work
+    updateStatusUser(1, "mew se");
+    updateTextMessage(1, "new mess");
 printf("%s", rez);
 
 }

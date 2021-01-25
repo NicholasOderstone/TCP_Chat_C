@@ -1,45 +1,24 @@
 #include "../inc/header.h"
 
-int main(int argc, char **argv){
+
+int main(int argc, char **argv) {
 
 // --- Checking IP & Port No ---
 
-	if (argc != 3) {
-		printf("Usage: %s <ipv4> <port>\n", argv[0]);
-		return EXIT_FAILURE;
-	}
+    static client_t client;
+    client_t *p_client = (client_t *)malloc(sizeof(client_t *));
+    p_client = &client;
 
-	char *ip = argv[1];
-	char *port = argv[2];
-	while(!validate_ip(argv[1])) {
-		printf("Error! IP is incorrect.\nTry one more time: ");
-		scanf("%s", ip);
-		printf("\n\r");
-	}
+    /* По максимуму надо уменьшить мейн и разнести все по функциям
+    * Функция, которая инициализирует потоки
+    * Функция, которая инициализирует интерфейс
+    */
 
-	while(!validate_port(port)) {
-		printf("Error! PORT is incorrect.\nTry one more time: ");
-		scanf("%s", port);
-		printf("\n\r");
-	}
-
-// --- Init client ---
-
-	client_t client;
-	init_client(&client, ip, port);
-
-// --- Connect to Server ---
-
-	pthread_t server_connection_handler;
-	if(pthread_create(&server_connection_handler, NULL, connect_to_server, (void*)&client) != 0){
-		perror("ERROR: pthread\n");
-		return EXIT_FAILURE;
-	}
-
-	while (client.is_connected == 0) {}
+    printf("main client: %p\n", (void *)&client);
+    init_interface(&builder, &window, &argc, &argv, (gpointer) p_client);
 
 // --- Message and command queue threads ---
-
+    printf("Message and command queue threads\n");
 	struct msg_q *msg_q_front = NULL;
 	struct cmd_q *cmd_q_front = NULL;
 
@@ -50,7 +29,7 @@ int main(int argc, char **argv){
 	pthread_t send_msg_thread;
 	if(pthread_create(&send_msg_thread, NULL, send_msg_handler, (void*)send_msg_info) != 0){
 		perror("ERROR: pthread\n");
-	return EXIT_FAILURE;
+	    return 1;
 	}
 
 	// -- MODULE 1 --
@@ -62,7 +41,7 @@ int main(int argc, char **argv){
 	pthread_t recv_msg_thread;
 	if(pthread_create(&recv_msg_thread, NULL, recv_msg_handler, (void*)recv_msg_info) != 0){
 		perror("ERROR: pthread\n");
-		return EXIT_FAILURE;
+		return 1;
 	}
 
 	// -- MODULE 4 --
@@ -74,22 +53,17 @@ int main(int argc, char **argv){
 	pthread_t th_process_cmd;
 	if(pthread_create(&th_process_cmd, NULL, process_cmd, (void*)process_cmd_info) != 0){
 		perror("ERROR: pthread\n");
-		return EXIT_FAILURE;
+		return 1;
 	}
-
+    gtk_main();
+    client.exit = 1;
+    printf("Bye!\n");
 // --- Checking for client exit ---
 
-	while(1) {
-		if (client.exit == 1) {
-			printf("Bye!\n");
-			break;
-		}
-	}
 	close(client.sockfd);
 	pthread_join(send_msg_thread, NULL);
 	pthread_join(recv_msg_thread, NULL);
 	pthread_join(th_process_cmd, NULL);
-
 	pthread_mutex_destroy(&client.mutex);
 
 	exit(0);

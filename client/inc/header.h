@@ -1,6 +1,11 @@
 #ifndef HEADER_H
 #define HEADER_H
 
+//////////////////////////
+// Macroses
+	#define UNUSED(x) (void)(x)
+
+//////////////////////////
 // INCLUDES
 	#include <sys/socket.h>
 	#include <netinet/in.h>
@@ -13,6 +18,7 @@
 	#include <pthread.h>
 	#include <sys/types.h>
 	#include <ctype.h>
+    #include "interface.h"
 
 //////////////////////////
 
@@ -21,7 +27,7 @@
 	#define BUFFER_SZ 2048
 	#define LENGTH 2048
 	#define NAME_SZ 32
-	#define AMOUNT_OF_CMD 11
+	#define AMOUNT_OF_CMD 10
 //////////////////////////
 
 // STRUCTURES
@@ -74,7 +80,6 @@
 
 	struct process_cmd_info_s {
 		client_t *client;
-		int *exit;
 		struct cmd_q **cmd_q_front;
 		cmd_func arr_cmd_func[AMOUNT_OF_CMD];
 	};
@@ -144,6 +149,7 @@
 
 
 	void send_cmd(command cmd, client_t *client);
+	void analyse_cmd(command fst_cmd, cmd_func function);
 
 	// --- Utility functions ---
 
@@ -154,6 +160,9 @@
 	char *param_3(char *params);
 	char *param_4(char *params);
 	char *param_5(char *params);
+
+	void *th_connect_to_server();
+
 
 //////////////////////////
 

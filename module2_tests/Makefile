@@ -1,10 +1,10 @@
 CC = clang
 CFLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic -lpthread
-NAME = mod_one
+NAME = mod_two
 OBJS = OBJ = $(addprefix obj/, $(notdir $(SRC:%.c=%.o)))
 INCS = inc/*.h
 SRCS = src/*.c
-TARGET = MOD_ONE
+TARGET = MOD_TWO
 DEBUG_FLAGS = -fsanitize=address -fno-omit-frame-pointer
 
 all: $(TARGET) clean

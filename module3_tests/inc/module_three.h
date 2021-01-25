@@ -5,25 +5,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <string.h> 
 
-pthread_mutex_t lock;
-
-struct command {
+typedef struct {
     char *command;
     char *params;
-};
+} command;
 
-struct msg_q {
-    char *data;
-    struct msg_q *link;
-} *msg_front;
-
-struct cmd_q {
-    struct command data;
-    struct cmd_q *link;
-} *cmd_front;
-
-
-char *cmd_to_msg(struct command)
+char *cmd_to_msg(command cmd);
+char *mx_strnew(const int size);
 
 #endif

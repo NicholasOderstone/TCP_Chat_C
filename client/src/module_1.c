@@ -49,7 +49,7 @@ void *make_cmd(void *arg) {
 		if (Info->client->exit == 1) {
 			break;
 		}
-		else if (*Info->msg_q_front != NULL) {
+		if (*Info->msg_q_front != NULL) {
 			char *fst_msg = strdup(take_fst_msg_in_q(Info->msg_q_front));
 			move_msg_q(Info->msg_q_front, Info->lock);
 			command cmd = msg_to_cmd(fst_msg);

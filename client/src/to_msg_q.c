@@ -19,7 +19,6 @@ void to_msg_q(char *data, struct msg_q **msg_q_front, pthread_mutex_t msg_lock) 
         current->link = temp;
     }
     printf("now in msg_q: %s", current->data);
-    str_overwrite_stdout();
     pthread_mutex_unlock(&msg_lock);
 }
 

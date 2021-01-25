@@ -18,6 +18,8 @@ void str_trim_lf(char* arr, int length) {
 void *connect_to_server(void *cnct_inf) {
 	client_t *info = (client_t *)cnct_inf;
 
+    init_client(info, ipv_str, port_str);
+    printf("connect_to_server client: %p\n", (void *)info);
 	while(1) {
         if(info->exit == 1) {
 			break;
@@ -35,12 +37,11 @@ void *connect_to_server(void *cnct_inf) {
 			else {
 
 				printf("Connected!\n");
-				send(info->sockfd, info->name, NAME_SZ, 0);
-				printf("Your name: \"%s\"\n", info->name);
-				printf("=== WELCOME TO THE CHATROOM ===\n");
+				//send(info->sockfd, info->name, NAME_SZ, 0);
+				//printf("Your name: \"%s\"\n", info->name);
+				//printf("=== WELCOME TO THE CHATROOM ===\n");
 				info->is_connected = 1;
 			}
-
 		}
 	}
     int ret_val = 1;
@@ -71,6 +72,8 @@ void init_client(client_t *client, char *ip, char *port) {
 	client->address.sin_port = htons(atoi(port));
 	client->is_connected = 0;
 	pthread_mutex_init(&client->mutex, NULL);
-    get_client_name(client->name);
+    //get_client_name(client->name);
+    strcpy(client->name, "");
     client->exit = 0;
+    printf("client_inited\n");
 }

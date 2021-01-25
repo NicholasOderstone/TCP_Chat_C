@@ -2,7 +2,7 @@ all:
 	@make -C client
 	@make -C server
 
-uninstall: clean
+uninstall:
 	@make uninstall -C client
 	@make uninstall -C server
 

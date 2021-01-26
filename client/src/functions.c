@@ -72,8 +72,8 @@ void init_funcs(cmd_func arr_cmd_func[]) {
                                 "<CHANGE_PASS>", "<SEARCH_USER>", "<ADD_CONTACT>",
                                 "<DEL_CONTACT>", "<BLOCK_USER>", "<UNBLOCK_USER>", "<NEW_CHNL>"};
 
-    arr_cmd_func[0].func = &func_login;
-    arr_cmd_func[1].func = &func_register;
+    //arr_cmd_func[0].func = &func_login;
+    //arr_cmd_func[1].func = &func_register;
     arr_cmd_func[2].func = &f_change_name;
     arr_cmd_func[3].func = &f_change_pass;
     arr_cmd_func[4].func = &f_search_user;

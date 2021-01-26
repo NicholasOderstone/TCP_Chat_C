@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
     */
 
     printf("main client: %p\n", (void *)&client);
-    init_interface(&builder, &window, &argc, &argv, (gpointer) p_client);
+    init_interface(&builder, &argc, &argv, (gpointer) p_client);
 
 // --- Message and command queue threads ---
 	struct msg_q *msg_q_front = NULL;

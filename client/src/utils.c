@@ -25,6 +25,7 @@ void *connect_to_server(void *cnct_inf) {
 			break;
 		}
 		if (info->is_connected == 0) {
+            gtk_spinner_start(connection_spin);
 			close(info->sockfd);
 			info->sockfd = socket(AF_INET, SOCK_STREAM, 0);
 			printf("Trying to connect to server\n");
@@ -35,7 +36,7 @@ void *connect_to_server(void *cnct_inf) {
 				sleep(5);
 			}
 			else {
-
+                gtk_spinner_stop (connection_spin);
 				printf("Connected!\n");
 				//send(info->sockfd, info->name, NAME_SZ, 0);
 				//printf("Your name: \"%s\"\n", info->name);

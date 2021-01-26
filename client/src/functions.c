@@ -1,16 +1,28 @@
 #include "../inc/header.h"
 
-void f_login(char *params) {
-    char *p_login = param_1(params);
-    char *p_pass = param_2(params);
+void func_login(GtkWidget *widget, gpointer data) {
+    UNUSED(widget);
+	client_t *client = (client_t *)data;
+    char buffer[LENGTH];
+    char *p_login = strdup(username_str);
+    char *p_pass = strdup(passoword_str);
+    snprintf(buffer, BUFFER_SZ, "<LOGIN> <%s> <%s>", p_login, p_pass);
+    send(client->sockfd, buffer, strlen(buffer), 0);
+    bzero(buffer, LENGTH);
     printf("LOGIN: success.\n\tLogin: %s\n\tPassword: %s\n", p_login, p_pass);
 }
 
-void f_register(char *params) {
-    char *p_username = param_1(params);
-    char *p_nick = param_2(params);
-    char *p_pass = param_3(params);
-    char *p_r_pass = param_4(params);
+void func_register(GtkWidget *widget, gpointer data) {
+    UNUSED(widget);
+	client_t *client = (client_t *)data;
+    char buffer[LENGTH];
+    char *p_username = strdup(username_str_s);
+    char *p_nick = strdup(nick_str_s);
+    char *p_pass = strdup(pass_str_s);
+    char *p_r_pass = strdup(r_pass_str_s);
+    snprintf(buffer, BUFFER_SZ, "<REGISTER> <%s> <%s> <%s> <%s>", p_username, p_nick, p_pass, p_r_pass);
+    send(client->sockfd, buffer, strlen(buffer), 0);
+    bzero(buffer, LENGTH);
     printf("REGISTER: success.\n\tUsername: %s\n\tNickname: %s\n", p_username, p_nick);
     printf("\tPassword: %s\n\tRepeated password: %s\n", p_pass, p_r_pass);
 }
@@ -60,8 +72,8 @@ void init_funcs(cmd_func arr_cmd_func[]) {
                                 "<CHANGE_PASS>", "<SEARCH_USER>", "<ADD_CONTACT>",
                                 "<DEL_CONTACT>", "<BLOCK_USER>", "<UNBLOCK_USER>", "<NEW_CHNL>"};
 
-    arr_cmd_func[0].func = &f_login;
-    arr_cmd_func[1].func = &f_register;
+    //arr_cmd_func[0].func = &func_login;
+    //arr_cmd_func[1].func = &func_register;
     arr_cmd_func[2].func = &f_change_name;
     arr_cmd_func[3].func = &f_change_pass;
     arr_cmd_func[4].func = &f_search_user;

@@ -18,7 +18,7 @@ typedef struct message_struct
     GtkWidget *view ;
     GtkTextBuffer *buffer;
     GtkTextIter iter;
-} message_s;
+} message_t;
 //////////////////////////
 
 // GLOBAL VARIABLES

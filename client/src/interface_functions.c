@@ -46,6 +46,7 @@ void port_changed(GtkEntry *e){
 void open_signup_page(GtkWidget *widget, gpointer gp_client)
 {
     GObject *login_p;
+    GObject *signup_b;
     UNUSED(widget);
     gtk_widget_hide(window);
     builder = gtk_builder_new();
@@ -54,7 +55,10 @@ void open_signup_page(GtkWidget *widget, gpointer gp_client)
     gtk_builder_connect_signals(builder, NULL);
     connection_spin = GTK_SPINNER(gtk_builder_get_object(builder, "connection_spinner_s"));
     login_p = gtk_builder_get_object (builder, "login_p");
+    signup_b = gtk_builder_get_object (builder, "signup_b");
     g_signal_connect(login_p, "clicked", G_CALLBACK(open_login_page), gp_client);
+    g_signal_connect(signup_b, "clicked", G_CALLBACK(open_main_page), gp_client);
+    g_signal_connect(signup_b, "clicked", G_CALLBACK(func_register), gp_client);
     gtk_widget_show(window);
 }
 
@@ -152,6 +156,21 @@ void password_changed(GtkEntry *e){
     sprintf(passoword_str, "%s", gtk_entry_get_text(e));
 }
 
+void username_s_changed(GtkEntry *e){
+    sprintf(username_str_s,"%s", gtk_entry_get_text(e));
+}
+
+void nick_s_changed(GtkEntry *e){
+    sprintf(nick_str_s,"%s", gtk_entry_get_text(e));
+}
+
+void pass_s_changed(GtkEntry *e){
+    sprintf(pass_str_s,"%s", gtk_entry_get_text(e));
+}
+
+void r_pass_s_changed(GtkEntry *e){
+    sprintf(r_pass_str_s,"%s", gtk_entry_get_text(e));
+}
 gboolean destroy() {
     gtk_main_quit();
     return TRUE;

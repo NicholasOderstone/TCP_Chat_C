@@ -25,7 +25,8 @@ typedef struct message_struct
     GtkBuilder      *builder;
     GtkWidget       *window;
     char username_str [32], passoword_str[32], message_str[2048], port_str[5],
-                ipv_str[16];
+                ipv_str[16], username_str_s[32], nick_str_s[32], pass_str_s[32]
+                r_pass_str_s[32];
     int is_exit;
     GtkEntry *message_entry, *ipv_entry, *port_entry;
     GtkSpinner *connection_spin;
@@ -43,6 +44,10 @@ typedef struct message_struct
     void send_message();
     void message_clear();
     void message_send();
+    void username_s_changed();
+    void nick_s_changed();
+    void pass_s_changed();
+    void r_pass_s_changed();
 //////////////////////////
 
 #endif

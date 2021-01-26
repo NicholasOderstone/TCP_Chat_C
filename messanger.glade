@@ -280,7 +280,7 @@
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <child>
-          <object class="GtkButton">
+          <object class="GtkButton" id="signup_b">
             <property name="label" translatable="yes">Sign Up</property>
             <property name="width-request">100</property>
             <property name="height-request">50</property>
@@ -326,13 +326,14 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry">
+          <object class="GtkEntry" id="username_s">
             <property name="width-request">100</property>
             <property name="height-request">40</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="max-length">31</property>
             <property name="placeholder-text" translatable="yes">username</property>
+            <signal name="changed" handler="username_s_changed" swapped="no"/>
           </object>
           <packing>
             <property name="x">145</property>
@@ -340,13 +341,14 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry">
+          <object class="GtkEntry" id="nick_s">
             <property name="width-request">100</property>
             <property name="height-request">40</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="max-length">31</property>
             <property name="placeholder-text" translatable="yes">nickname</property>
+            <signal name="changed" handler="nick_s_changed" swapped="no"/>
           </object>
           <packing>
             <property name="x">145</property>
@@ -354,13 +356,14 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry">
+          <object class="GtkEntry" id="pass_s">
             <property name="width-request">100</property>
             <property name="height-request">40</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="max-length">31</property>
             <property name="placeholder-text" translatable="yes">password</property>
+            <signal name="changed" handler="pass_s_changed" swapped="no"/>
           </object>
           <packing>
             <property name="x">145</property>
@@ -368,13 +371,14 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry">
+          <object class="GtkEntry" id="r_pass_s_changed">
             <property name="width-request">100</property>
             <property name="height-request">40</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="max-length">31</property>
             <property name="placeholder-text" translatable="yes">repeat password</property>
+            <signal name="changed" handler="r_pass_s_changed" swapped="no"/>
           </object>
           <packing>
             <property name="x">145</property>

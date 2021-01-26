@@ -5,6 +5,7 @@ void init_interface(GtkBuilder **p_builder,  int *argc, char ***argv, gpointer p
     gtk_init(argc, argv);
     *p_builder = gtk_builder_new();
     gtk_builder_add_from_file (*p_builder, "messanger.glade", NULL);
+
     init_connect_page(&connect_b, p_builder, p_client);
 }
 
@@ -16,7 +17,9 @@ void init_connect_page(GObject **p_connect_b, GtkBuilder **p_builder, gpointer g
     gtk_widget_show(window);
     ipv_entry = GTK_ENTRY(gtk_builder_get_object(builder, "ipv_field"));
     port_entry = GTK_ENTRY(gtk_builder_get_object(builder, "port_field"));
+
     printf("%d\n", validate_ip(ipv_str));
+
 // Add ip and port check when clicked on "Connect"
 // If ip or port is incorrect, show message "IP or PORT is incorrect. Try again"(or smth like that)
     g_signal_connect(*p_connect_b, "clicked", G_CALLBACK(open_login_page), gp_client);
@@ -24,15 +27,14 @@ void init_connect_page(GObject **p_connect_b, GtkBuilder **p_builder, gpointer g
 	g_signal_connect(*p_connect_b, "clicked", G_CALLBACK(th_connect_to_server), gp_client);
     g_object_unref(*p_builder);
 }
-
 void ipv_changed(GtkEntry *e){
     gtk_entry_set_icon_from_icon_name(ipv_entry, GTK_ENTRY_ICON_SECONDARY,"gtk-no");
     gtk_entry_set_icon_tooltip_text(ipv_entry, GTK_ENTRY_ICON_SECONDARY,"IP is incorrect");
     sprintf(ipv_str,"%s", gtk_entry_get_text(e));
     if (validate_ip(ipv_str) > 0)
         gtk_entry_set_icon_from_icon_name(ipv_entry, GTK_ENTRY_ICON_SECONDARY, NULL);
-}
 
+}
 void port_changed(GtkEntry *e){
     gtk_entry_set_icon_from_icon_name(port_entry, GTK_ENTRY_ICON_SECONDARY,"gtk-no");
     gtk_entry_set_icon_tooltip_text(port_entry, GTK_ENTRY_ICON_SECONDARY, "PORT is incorrect");
@@ -44,6 +46,7 @@ void port_changed(GtkEntry *e){
 void open_signup_page(GtkWidget *widget, gpointer gp_client)
 {
     GObject *login_p;
+    GObject *signup_b;
     UNUSED(widget);
     gtk_widget_hide(window);
     builder = gtk_builder_new();
@@ -52,7 +55,10 @@ void open_signup_page(GtkWidget *widget, gpointer gp_client)
     gtk_builder_connect_signals(builder, NULL);
     connection_spin = GTK_SPINNER(gtk_builder_get_object(builder, "connection_spinner_s"));
     login_p = gtk_builder_get_object (builder, "login_p");
+    signup_b = gtk_builder_get_object (builder, "signup_b");
     g_signal_connect(login_p, "clicked", G_CALLBACK(open_login_page), gp_client);
+    g_signal_connect(signup_b, "clicked", G_CALLBACK(open_main_page), gp_client);
+    g_signal_connect(signup_b, "clicked", G_CALLBACK(func_register), gp_client);
     gtk_widget_show(window);
 }
 
@@ -84,6 +90,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     struct message_struct *message_s = (struct message_struct*)malloc(sizeof(struct message_struct));
     UNUSED(widget);
     GObject *send_b;
+
     GtkWidget *send_b_image = gtk_image_new_from_file ("client/resources/send_b_img.png");
     gtk_widget_hide(window);
     builder = gtk_builder_new();
@@ -149,6 +156,21 @@ void password_changed(GtkEntry *e){
     sprintf(passoword_str, "%s", gtk_entry_get_text(e));
 }
 
+void username_s_changed(GtkEntry *e){
+    sprintf(username_str_s,"%s", gtk_entry_get_text(e));
+}
+
+void nick_s_changed(GtkEntry *e){
+    sprintf(nick_str_s,"%s", gtk_entry_get_text(e));
+}
+
+void pass_s_changed(GtkEntry *e){
+    sprintf(pass_str_s,"%s", gtk_entry_get_text(e));
+}
+
+void r_pass_s_changed(GtkEntry *e){
+    sprintf(r_pass_str_s,"%s", gtk_entry_get_text(e));
+}
 gboolean destroy() {
     gtk_main_quit();
     return TRUE;

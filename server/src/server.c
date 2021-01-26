@@ -57,6 +57,7 @@ int main(int argc, char **argv){
 	/*char temp[BUFFER_SZ];
 	printf("%s", getUserName(25, temp));*/
 	//printf("%d", getIdUserByUserName("Playsdfsdfsdfsder1"));
+	///insertUser("p_login", "p_pass", "NICK", "STATUS");
 	while(1){
 		socklen_t clilen = sizeof(cli_addr);
 		/* Accept incoming connection */

@@ -2,17 +2,22 @@
 
 void f_login(char *params, buff_t *Info) {
     char buff_out[BUFFER_SZ];
+	struct command cmd;
+	cmd.command = "<LOGIN>";
+
     char *p_login = param_1(params);
     char *p_pass = param_2(params);
 	if(getIdUserByUserName(p_login) == 0){
 		//Oшибка: неправильный логин
 		printf("Incorrect user_name\n");
+		send(Info->client->sockfd, "<LOGIN> <ERROR> <INCORRECT_LOGIN>", strlen("<LOGIN> <ERROR> <INCORRECT_LOGIN>"), 0);
 		return;
 	}
 	getUserPassword(getIdUserByUserName(p_login), buff_out);
 	if(strcmp(buff_out, p_pass) != 0) {
 		//Ошибка: неправильный пароль
 		printf("Incorrect password\n");
+		send(Info->client->sockfd, "<LOGIN> <ERROR> <INCORRECT_PASS>", strlen("<LOGIN> <ERROR> <INCORRECT_PASS>"), 0);
 		return;
 	}
 	bzero(buff_out, BUFFER_SZ);
@@ -21,9 +26,7 @@ void f_login(char *params, buff_t *Info) {
     sprintf(buff_out, "<JOIN> <%s>\n", Info->client->name);
 	printf("%s", buff_out);
 	
-	struct command cmd;
 	cmd.params = params;
-	cmd.command = "<LOGIN>";
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 	for(int i=0; i<MAX_CLIENTS; ++i){
 		if(Info->serv_inf->clients[i]){
@@ -52,6 +55,7 @@ void f_send(char *params, buff_t *Info) {
 }
 
 void f_register(char *params, buff_t *Info) {
+	char buff_out[BUFFER_SZ];
 	struct command cmd;
 	char *p_username = param_1(params);
 	char *nickname = param_2(params);
@@ -60,17 +64,21 @@ void f_register(char *params, buff_t *Info) {
 	if(getIdUserByUserName(p_username) != 0){
 		//Oшибка: юзернейм уже существует
 		printf("Username already exists\n");
+		send(Info->client->sockfd, "<REGISTER> <ERROR> <USERNAME_EXIST>", strlen("<REGISTER> <ERROR> <USERNAME_EXIST>"), 0);
 		return;
 	}
 	if(strcmp(password, rep_password) != 0) {
 		//Oшибка: пароли не равны
 		printf("Password is incorrest\n");
+		send(Info->client->sockfd, "<REGISTER> <ERROR> <PASS_NOT_MATCH>", strlen("<REGISTER> <ERROR> <PASS_NOT_MATCH>"), 0);
 		return;
 	}
 	insertUser(p_username, password, nickname, "");
 	printf("Insertion complete");
 	cmd.command = "<REGISTER>";
-	cmd.params = params;
+	strcat(buff_out, "<SUCCES>");
+	cmd.params = strcat(buff_out, params);
+	printf("%s\n", cmd.params);
 	send_cmd(cmd, Info->serv_inf->clients[Info->uid]);
 }
 

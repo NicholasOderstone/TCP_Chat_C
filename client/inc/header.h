@@ -163,6 +163,7 @@
 
 	void *th_connect_to_server();
 	void *init_threads(GtkWidget *widget, gpointer data);
+	void func_login(GtkWidget *widget, gpointer data);
 
 
 //////////////////////////

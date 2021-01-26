@@ -13,11 +13,12 @@
 //////////////////////////
 
 // STRUCTURES
-struct message_struct
+typedef struct message_struct
 {
     GtkWidget *view ;
     GtkTextBuffer *buffer;
-} ;
+    GtkTextIter iter;
+} message_s;
 //////////////////////////
 
 // GLOBAL VARIABLES
@@ -26,7 +27,8 @@ struct message_struct
     char username_str [32], passoword_str[32], message_str[2048], port_str[5],
                 ipv_str[16];
     int is_exit;
-    GtkEntry *message_entry;
+    GtkEntry *message_entry, *ipv_entry, *port_entry;
+    GtkSpinner *connection_spin;
 //////////////////////////
 
 // FUNCTIONS

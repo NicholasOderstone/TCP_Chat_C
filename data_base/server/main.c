@@ -240,6 +240,43 @@ int getIdUserByUserName(char* login){
     return atoi(rez);
 }
 
+char* getIdUserByNick(char* nick, char* rez){
+   sqlite3 *db;
+    sqlite3_stmt *res;
+    
+    int rc = sqlite3_open("data.db", &db);
+    
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return "-1";
+    }
+    
+    rc = sqlite3_prepare_v2(db, "select group_concat(MyColumn, '') from (select NICK || ','  as MyColumn  from Users WHERE NICK = ?);", -1, &res, 0);    
+     sqlite3_bind_text(res, 1, nick, strlen(nick), NULL);
+    
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return "-1";
+    }    
+    
+    rc = sqlite3_step(res);
+    
+     if (rc == SQLITE_ROW) {
+       // printf("%s\n", sqlite3_column_text(res, 0));
+     }
+    sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
+    
+
+    sqlite3_finalize(res);
+    sqlite3_close(db);
+
+    return rez;
+}
+
 int getIdChatByName(char* chat){
     sqlite3 *db;
     sqlite3_stmt *res;
@@ -972,6 +1009,7 @@ char* getAllMesFromChat(int id, char* rez){
 }
 
 
+
 int main(int argc, char* argv[]) {
     char rez[10000];
     //getAllUsers(&rez);  //work
@@ -983,7 +1021,7 @@ int main(int argc, char* argv[]) {
     //getOneMessage(1, &rez);//work
     //printf("%s", rez);
 
-   //insertUser("1", "2", "3", "4");//work
+   //insertUser("AAA", "2", "3", "4");//work
   //insertChat("New chat", "des0");//work
    //insertMessage("1","2","something tam", "2010 02 13:11:00", "0");//work
    
@@ -1010,6 +1048,10 @@ int main(int argc, char* argv[]) {
     //updatePasswordUser(1, "NEW Pawssword");//work
     //updateStatusUser(1, "mew se");
     //updateTextMessage(1, "new mess");
+
+    //printf("%d", getIdUserByUserName("AAA"));
+    getIdUserByNick("3", rez);
+
 printf("%s", rez);
 
 }

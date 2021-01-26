@@ -1,3 +1,5 @@
+#include "../inc/interface.h"
+
 void init_interface(GtkBuilder **p_builder,  int *argc, char ***argv, gpointer p_client) {
     GObject *connect_b;
     gtk_init(argc, argv);

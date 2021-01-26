@@ -26,7 +26,7 @@
     #define BUFFER_SZ 2048
     #define LENGTH 2048
     #define NAME_SZ 32
-    #define AMOUNT_OF_CMD 2
+    #define AMOUNT_OF_CMD 3
 
 
 /* STRUCTURES */
@@ -184,6 +184,8 @@
     void insertUser(char* login, char* password, char* nick, char* status);
     int getIdUserByUserName(char* login);
     char* getAllUsers(char* rez);
-    void deleteUser(char* id);
+    void deleteUser(char* id);  
+    char* getUserName(int id, char* rez);
+    char* getUserPassword(int id, char* rez);
 
 #endif

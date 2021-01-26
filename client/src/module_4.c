@@ -24,7 +24,7 @@ void *process_cmd(void *arg) {
 void analyse_cmd(command fst_cmd, cmd_func function) {
 	if (strcmp(fst_cmd.command, function.name) == 0) {
 		printf("--- %s ---\n", function.name);
-		function.func(fst_cmd.params);
+		//function.func(fst_cmd.params);
 		/*if (strcmp(param_1(fst_cmd.params), "success") == 0) {
 			printf("--- %s ---\n", function.name);
 			function.func(fst_cmd.params);

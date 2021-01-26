@@ -1,5 +1,17 @@
 #include "../inc/header.h"
 
+void func_login(GtkWidget *widget, gpointer data) {
+    UNUSED(widget);
+	client_t *client = (client_t *)data;
+    char buffer[LENGTH + 32];
+    char *p_login = strdup(username_str);
+    char *p_pass = strdup(passoword_str);
+    snprintf(buffer, BUFFER_SZ, "<LOGIN> <%s> <%s>", p_login, p_pass);
+    send(client->sockfd, buffer, strlen(buffer), 0);
+    bzero(buffer, LENGTH + 32);
+    printf("LOGIN: success.\n\tLogin: %s\n\tPassword: %s\n", p_login, p_pass);
+}
+
 void f_login(char *params) {
     char *p_login = param_1(params);
     char *p_pass = param_2(params);

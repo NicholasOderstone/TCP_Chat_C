@@ -58,16 +58,6 @@ void open_signup_page(GtkWidget *widget, gpointer gp_client)
     gtk_widget_show(window);
 }
 
-/*void func_login(GtkWidget *widget, gpointer data) {
-    UNUSED(widget);
-	client_t *client = (client_t *)data;
-    send(client->sockfd, "<LOGIN> <name> <pass>", strlen("<LOGIN> <name> <pass>"), 0);
-    printf("func_login client: %p\n", (void *)client);
-    char *p_login = strdup(username_str);
-    char *p_pass = strdup(passoword_str);
-    printf("LOGIN: success.\n\tLogin: %s\n\tPassword: %s\n", p_login, p_pass);
-}*/
-
 void open_login_page(GtkWidget *widget, gpointer gp_client)
 {
 	UNUSED(widget);
@@ -140,6 +130,7 @@ void message_send(GtkWidget *widget, gpointer data) {
     //send(client->sockfd, message_str, strlen(message_str), 0);
     bzero(buffer, LENGTH + 32);
 }
+
 void send_message(GtkWidget *widget, gpointer m) {
     UNUSED(widget);
     GtkTextBuffer *mess = GTK_TEXT_BUFFER((GtkTextBuffer *)m);
@@ -147,6 +138,7 @@ void send_message(GtkWidget *widget, gpointer m) {
     gtk_text_buffer_insert_interactive_at_cursor (mess, message_str, -1, TRUE);
     gtk_text_buffer_insert_interactive_at_cursor (mess, "\n", -1, TRUE);
 }
+
 void message_clear() {
     gtk_entry_set_text(GTK_ENTRY(message_entry), "");
 }
@@ -154,18 +146,13 @@ void message_clear() {
 void username_changed(GtkEntry *e){
     sprintf(username_str,"%s", gtk_entry_get_text(e));
 }
+
 void password_changed(GtkEntry *e){
     gtk_entry_set_visibility (e, FALSE);
     sprintf(passoword_str, "%s", gtk_entry_get_text(e));
 }
 
-
 gboolean destroy() {
     gtk_main_quit();
     return TRUE;
 }
-// called when window is closed
-/*void on_window_main_destroy()
-{
-    gtk_main_quit();
-}*/

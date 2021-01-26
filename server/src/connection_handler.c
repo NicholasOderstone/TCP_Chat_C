@@ -43,9 +43,9 @@ void *handle_client(void *arg){
 	process_cmd_info->buff_m->client = client;
 	pthread_create(&th_process_cmd, NULL, process_cmd, (void *)process_cmd_info);
 
-	pthread_join(th_read_msg, NULL);
-	pthread_join(th_process_cmd, NULL);
+	while(client->exit_flag == 0) {
 
+	}
 	/* Delete client from queue and yield thread */
 	close(client->sockfd);
 	client_remove(client->uid, serv_inf);

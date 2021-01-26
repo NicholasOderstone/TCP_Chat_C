@@ -11,11 +11,11 @@ void *read_msg(void *arg) {
 	}
 
 	while (1) {
+		if (Info->client->exit == 1) {
+			break;
+		}
 		if (Info->client->is_connected == 1) {
 			int receive = recv(Info->client->sockfd, msg_buf, LENGTH, 0);
-			if (Info->client->exit == 1) {
-				break;
-			}
 			if (receive > 0) {
 				if (msg_buf[0] != 0)
 					to_msg_q(msg_buf, Info->msg_q_front, Info->lock);

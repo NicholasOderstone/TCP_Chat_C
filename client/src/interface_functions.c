@@ -22,7 +22,7 @@ void init_connect_page(GObject **p_connect_b,GtkBuilder **p_builder, gpointer gp
 }
 
 
-void open_signup_page()
+void open_signup_page(gpointer gp_client)
 {
     GObject *login_p;
     gtk_widget_hide(window);
@@ -31,17 +31,19 @@ void open_signup_page()
     window = GTK_WIDGET(gtk_builder_get_object(builder, "signup_window"));
     gtk_builder_connect_signals(builder, NULL);
     login_p = gtk_builder_get_object (builder, "login_p");
-    g_signal_connect(login_p, "clicked", G_CALLBACK(open_login_page), NULL);
+    g_signal_connect(login_p, "clicked", G_CALLBACK(open_login_page), gp_client);
     gtk_widget_show(window);
 }
 
 void func_login(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
 	client_t *client = (client_t *)data;
-    send(client->sockfd, "<LOGIN> <name> <pass>", strlen("<LOGIN> <name> <pass>"), 0);
-    printf("func_login client: %p\n", (void *)client);
+    char buffer[LENGTH + 32];
     char *p_login = strdup(username_str);
     char *p_pass = strdup(passoword_str);
+    snprintf(buffer, BUFFER_SZ, "<LOGIN> <%s> <%s>", p_login, p_pass);
+    send(client->sockfd, buffer, strlen(buffer), 0);
+    bzero(buffer, LENGTH + 32);
     printf("LOGIN: success.\n\tLogin: %s\n\tPassword: %s\n", p_login, p_pass);
 }
 
@@ -59,9 +61,10 @@ void open_login_page(GtkWidget *widget, gpointer gp_client)
     gtk_builder_connect_signals(builder, NULL);
     signup_p = gtk_builder_get_object (builder, "signup_p");
     login_b = gtk_builder_get_object (builder, "login_b");
-    g_signal_connect(signup_p, "clicked", G_CALLBACK(open_signup_page), NULL);
+    g_signal_connect(signup_p, "clicked", G_CALLBACK(open_signup_page), gp_client);
     g_signal_connect(login_b, "clicked", G_CALLBACK(func_login), gp_client);
     g_signal_connect(login_b, "clicked", G_CALLBACK(open_main_page), gp_client);
+    //g_signal_connect(login_b, "clicked", G_CALLBACK(init_threads), gp_client);
     login = gtk_builder_get_object(builder, "login");
     password = gtk_builder_get_object(builder, "password");
     gtk_widget_show(window);
@@ -86,9 +89,9 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     //gtk_text_buffer_insert_interactive_at_cursor (message_s->buffer, passoword_str, -1, TRUE);
     send_b = gtk_builder_get_object (builder, "send_buttom");
     gtk_button_set_image (GTK_BUTTON (send_b), send_b_image);
-    //g_signal_connect(send_b, "clicked", G_CALLBACK(send_message), (gpointer)message_s->buffer);
-    g_signal_connect(send_b, "clicked", G_CALLBACK(message_clear), NULL);
+    g_signal_connect(send_b, "clicked", G_CALLBACK(send_message), (gpointer)message_s->buffer);
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_send), gp_client);
+    g_signal_connect(send_b, "clicked", G_CALLBACK(message_clear), NULL);
     gtk_text_buffer_get_iter_at_offset(message_s->buffer, &start, 0);
     //gchar *name;
     gtk_text_buffer_create_tag(message_s->buffer, "gray_bg", "background","gray", NULL);
@@ -103,17 +106,17 @@ void message_send(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
     client_t *client = (client_t *)data;
     char buffer[LENGTH + 32];
-    snprintf(buffer, BUFFER_SZ, "<SEND> %s\n", message_str);
+    snprintf(buffer, BUFFER_SZ, "<SEND> <%s>", message_str);
     send(client->sockfd, buffer, strlen(buffer), 0);
-    //send(client->sockfd, message_str, strlen(message_str), 0);
     bzero(buffer, LENGTH + 32);
 }
-/*void send_message(GtkWidget *widget, gpointer m) {
-    //GtkTextBuffer *mess = GTK_TEXT_BUFFER((GtkTextBuffer *)m);
+void send_message(GtkWidget *widget, gpointer m) {
+    UNUSED(widget);
+    GtkTextBuffer *mess = GTK_TEXT_BUFFER((GtkTextBuffer *)m);
     (void)(widget);
-    //gtk_text_buffer_insert_interactive_at_cursor (mess, message_str, -1, TRUE);
-    //gtk_text_buffer_insert_interactive_at_cursor (mess, "\n", -1, TRUE);
-}*/
+    gtk_text_buffer_insert_interactive_at_cursor (mess, message_str, -1, TRUE);
+    gtk_text_buffer_insert_interactive_at_cursor (mess, "\n", -1, TRUE);
+}
 void message_clear() {
     gtk_entry_set_text(GTK_ENTRY(message_entry), "");
 }

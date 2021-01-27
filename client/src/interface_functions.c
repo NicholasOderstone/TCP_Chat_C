@@ -18,8 +18,6 @@ void init_connect_page(GObject **p_connect_b, GtkBuilder **p_builder, gpointer g
     ipv_entry = GTK_ENTRY(gtk_builder_get_object(builder, "ipv_field"));
     port_entry = GTK_ENTRY(gtk_builder_get_object(builder, "port_field"));
 
-    printf("%d\n", validate_ip(ipv_str));
-
 // Add ip and port check when clicked on "Connect"
 // If ip or port is incorrect, show message "IP or PORT is incorrect. Try again"(or smth like that)
     g_signal_connect(*p_connect_b, "clicked", G_CALLBACK(open_login_page), gp_client);
@@ -97,7 +95,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     client_t *client = (client_t *)gp_client;
     client->m = (message_t *)malloc(sizeof(message_t *));
     client->m = message_s;
-    GtkTextMark * del_mark;
+
     GtkWidget *send_b_image = gtk_image_new_from_file ("client/resources/send_b_img.png");
     gtk_widget_hide(window);
     builder = gtk_builder_new();
@@ -122,8 +120,8 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     g_signal_connect(send_b, "clicked", G_CALLBACK(send_message), (gpointer)message_s);
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_send), gp_client);
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_clear), NULL);
-    del_mark = gtk_text_buffer_get_selection_bound (message_s->buffer);
-    gtk_text_buffer_delete_mark(message_s->buffer, del_mark);
+    //g_signal_connect(message_s->view, "move-cursor", G_CALLBACK(del_message), (gpointer)message_s->buffer);
+
 }
 
 void message_changed(GtkEntry *e){
@@ -178,6 +176,13 @@ void r_pass_s_changed(GtkEntry *e){
     sprintf(r_pass_str_s,"%s", gtk_entry_get_text(e));
 }
 
+void del_message(GtkTextBuffer *m){
+    GtkTextMark * del_mark;
+    GtkTextBuffer *mess = (GtkTextBuffer *)m;
+    del_mark = gtk_text_buffer_get_selection_bound (mess);
+    gtk_text_buffer_delete_mark(mess, del_mark);
+    printf("%s\n", "work");
+}
 
 gboolean destroy() {
     gtk_main_quit();

@@ -55,7 +55,7 @@ typedef struct message_struct
 
 	typedef struct {
 	    char *name;
-	    void (*func)(GtkWidget *widget, gpointer data);
+	    void (*func)(char *params);
 	} cmd_func;
 
 	typedef struct {
@@ -171,6 +171,12 @@ typedef struct message_struct
 	void init_threads(client_t *client);
 	void func_login(GtkWidget *widget, gpointer data);
 	void func_register(GtkWidget *widget, gpointer data);
+
+
+//////////////////////////
+
+// GLOBAL VARIABLES
+	int sw_login;
 
 
 //////////////////////////

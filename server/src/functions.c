@@ -5,7 +5,7 @@ void f_login(char *params, buff_t *Info) {
 	struct command cmd;
 
     char *p_login = param_1(params);
-    //char *p_pass = param_2(params);
+    char *p_pass = param_2(params);
 
 	/* Check for mistakes */
 	if(getIdUserByUserName(p_login) == 0){

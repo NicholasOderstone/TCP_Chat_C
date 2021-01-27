@@ -70,18 +70,19 @@ void f_new_chnl(char *params) {
 void init_funcs(cmd_func arr_cmd_func[]) {
     char *arr_func_names[AMOUNT_OF_CMD] = { "<LOGIN>", "<REGISTER>", "<CHANGE_NAME>",
                                 "<CHANGE_PASS>", "<SEARCH_USER>", "<ADD_CONTACT>",
-                                "<DEL_CONTACT>", "<BLOCK_USER>", "<UNBLOCK_USER>", "<NEW_CHNL>"};
+                                "<DEL_CONTACT>", "<BLOCK_USER>", "<UNBLOCK_USER>",
+                                "<NEW_CHNL>", "<SEND>"};
 
-    //arr_cmd_func[0].func = &func_login;
-    //arr_cmd_func[1].func = &func_register;
-    arr_cmd_func[2].func = &f_change_name;
+    arr_cmd_func[0].func = &func_login;
+    arr_cmd_func[1].func = &func_register;
+    /*arr_cmd_func[2].func = &f_change_name;
     arr_cmd_func[3].func = &f_change_pass;
     arr_cmd_func[4].func = &f_search_user;
     arr_cmd_func[5].func = &f_add_contact;
     arr_cmd_func[6].func = &f_del_contact;
     arr_cmd_func[7].func = &f_block_user;
     arr_cmd_func[8].func = &f_unblock_user;
-    arr_cmd_func[9].func = &f_new_chnl;
+    arr_cmd_func[9].func = &f_new_chnl;*/
 
     for (int i = 0; i < AMOUNT_OF_CMD; i++)
         arr_cmd_func[i].name = strdup(arr_func_names[i]);

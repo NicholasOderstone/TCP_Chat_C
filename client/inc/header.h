@@ -27,9 +27,14 @@
 	#define BUFFER_SZ 2048
 	#define LENGTH 2048
 	#define NAME_SZ 32
-	#define AMOUNT_OF_CMD 10
+	#define AMOUNT_OF_CMD 11
 //////////////////////////
-
+typedef struct message_struct
+{
+    GtkWidget *view ;
+    GtkTextBuffer *buffer;
+    GtkTextIter iter;
+} message_t;
 // STRUCTURES
 	// Handles all neccesary info about client
 	typedef struct{
@@ -37,7 +42,7 @@
 		int sockfd;
 		int uid;
 		char name[32];
-
+		message_t *m;
 		int is_connected;
 		int exit;
 		pthread_mutex_t mutex;
@@ -50,7 +55,7 @@
 
 	typedef struct {
 	    char *name;
-	    void (*func)(char *params);
+	    void (*func)(GtkWidget *widget, gpointer data);
 	} cmd_func;
 
 	typedef struct {
@@ -162,7 +167,8 @@
 	char *param_5(char *params);
 
 	void *th_connect_to_server();
-	void *init_threads(GtkWidget *widget, gpointer data);
+	//void *init_threads(GtkWidget *widget, gpointer data);
+	void init_threads(client_t *client);
 	void func_login(GtkWidget *widget, gpointer data);
 	void func_register(GtkWidget *widget, gpointer data);
 

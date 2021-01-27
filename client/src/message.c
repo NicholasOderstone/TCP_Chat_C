@@ -40,6 +40,7 @@ void *recv_msg_handler(void *arg) {
 	make_cmd_info->client = Info->client;
 	make_cmd_info->cmd_q_front = Info->cmd_q_front;
 	make_cmd_info->msg_q_front = Info->msg_q_front;
+	printf("recv_msg_handler front_addr: %p\n", (void *)*make_cmd_info->msg_q_front);
 
 	pthread_t th_make_cmd;
 	pthread_create(&th_make_cmd, NULL, make_cmd, (void *)make_cmd_info);

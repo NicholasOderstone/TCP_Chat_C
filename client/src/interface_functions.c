@@ -23,7 +23,6 @@ void init_connect_page(GObject **p_connect_b, GtkBuilder **p_builder, gpointer g
 // Add ip and port check when clicked on "Connect"
 // If ip or port is incorrect, show message "IP or PORT is incorrect. Try again"(or smth like that)
     g_signal_connect(*p_connect_b, "clicked", G_CALLBACK(open_login_page), gp_client);
-    // printf("main client addr: %p\n", (void *) p_client);
 	g_signal_connect(*p_connect_b, "clicked", G_CALLBACK(th_connect_to_server), gp_client);
     g_object_unref(*p_builder);
 }
@@ -89,12 +88,15 @@ void open_login_page(GtkWidget *widget, gpointer gp_client)
 
 void open_main_page(GtkWidget *widget, gpointer gp_client)
 {
+    UNUSED(widget);
     //struct message_struct *message_s = (struct message_struct*)malloc(sizeof(struct message_struct));
     static message_t m;
     message_t *message_s = (message_t *)malloc(sizeof(message_t *));
     message_s = &m;
-    UNUSED(widget);
     GObject *send_b;
+    client_t *client = (client_t *)gp_client;
+    client->m = (message_t *)malloc(sizeof(message_t *));
+    client->m = message_s;
 
     GtkWidget *send_b_image = gtk_image_new_from_file ("client/resources/send_b_img.png");
     gtk_widget_hide(window);
@@ -111,8 +113,6 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     //gtk_text_buffer_insert_interactive_at_cursor (message_s->buffer, passoword_str, -1, TRUE);
     send_b = gtk_builder_get_object (builder, "send_buttom");
     gtk_button_set_image (GTK_BUTTON (send_b), send_b_image);
-
-
 
     gtk_text_buffer_get_iter_at_offset(message_s->buffer, &message_s->iter, 0);
     //gchar *name;
@@ -134,7 +134,6 @@ void message_send(GtkWidget *widget, gpointer data) {
     char buffer[LENGTH + 32];
     snprintf(buffer, BUFFER_SZ, "<SEND> <%s>", message_str);
     send(client->sockfd, buffer, strlen(buffer), 0);
-    //send(client->sockfd, message_str, strlen(message_str), 0);
     bzero(buffer, LENGTH + 32);
 }
 

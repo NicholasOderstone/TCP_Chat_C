@@ -10,6 +10,10 @@ void *process_cmd(void *arg) {
 		{
 			command fst_cmd = take_fst_cmd_in_q(Info->cmd_q_front);
 			move_cmd_q(Info->cmd_q_front);
+			/*if (Info->client->buffer) {
+				gtk_text_buffer_insert_interactive (Info->client->buffer, &Info->client->iter, fst_cmd.params, -1, TRUE );
+				gtk_text_buffer_insert_interactive (Info->client->buffer, &Info->client->iter, "\n", -1, TRUE );
+			}*/
 			for (int j = 0; j < AMOUNT_OF_CMD; j++) {
 				analyse_cmd(fst_cmd, Info->arr_cmd_func[j]);
 			}
@@ -22,8 +26,6 @@ void *process_cmd(void *arg) {
 }
 
 void analyse_cmd(command fst_cmd, cmd_func function) {
-	printf("--- %s ---\t", fst_cmd.command);
-	printf("--- %s ---\n", function.name);
 	if (strcmp(fst_cmd.command, function.name) == 0) {
 		printf("--- %s ---\n", function.name);
 		//function.func(fst_cmd.params);

@@ -16,9 +16,9 @@ int main(int argc, char **argv) {
 
     printf("main client: %p\n", (void *)&client);
     init_interface(&builder, &argc, &argv, (gpointer) p_client);
-
+    init_threads(p_client);
 // --- Message and command queue threads ---
-	struct msg_q *msg_q_front = NULL;
+    /*struct msg_q *msg_q_front = NULL;
 	struct cmd_q *cmd_q_front = NULL;
 
 	// -- MODULE 3 --
@@ -53,16 +53,16 @@ int main(int argc, char **argv) {
 	if(pthread_create(&th_process_cmd, NULL, process_cmd, (void*)process_cmd_info) != 0){
 		perror("ERROR: pthread\n");
 		return 1;
-	}
+	}*/
     gtk_main();
     client.exit = 1;
     printf("Bye!\n");
 // --- Checking for client exit ---
 
 	close(client.sockfd);
-	pthread_join(send_msg_thread, NULL);
+	/*pthread_join(send_msg_thread, NULL);
 	pthread_join(recv_msg_thread, NULL);
-	pthread_join(th_process_cmd, NULL);
+	pthread_join(th_process_cmd, NULL);*/
 	pthread_mutex_destroy(&client.mutex);
 
 	exit(0);

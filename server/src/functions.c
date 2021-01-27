@@ -47,10 +47,9 @@ void f_login(char *params, buff_t *Info) {
 void f_send(char *params, buff_t *Info) {
 	struct command cmd;
 	char buff_out[BUFFER_SZ];
-	cmd.params = params;
 	cmd.command = "<SEND>";
 	strcat(buff_out, " <SUCCES> ");
-	cmd.params = strcat(buff_out, params);
+	cmd.params = strdup(strcat(buff_out, params));
 	bzero(buff_out, BUFFER_SZ);
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 	for(int i=0; i<MAX_CLIENTS; ++i){

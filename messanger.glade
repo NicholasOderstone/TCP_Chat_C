@@ -87,7 +87,6 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
-            <signal name="clicked" handler="open_main_page" swapped="no"/>
           </object>
           <packing>
             <property name="x">176</property>
@@ -118,7 +117,6 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
-            <signal name="clicked" handler="open_signup_page" swapped="no"/>
           </object>
           <packing>
             <property name="x">347</property>
@@ -317,7 +315,6 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
-            <signal name="clicked" handler="open_login_page" swapped="no"/>
           </object>
           <packing>
             <property name="x">346</property>

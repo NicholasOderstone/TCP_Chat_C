@@ -9,16 +9,11 @@ int main(int argc, char **argv) {
     client_t *p_client = (client_t *)malloc(sizeof(client_t *));
     p_client = &client;
 
-    /* По максимуму надо уменьшить мейн и разнести все по функциям
-    * Функция, которая инициализирует потоки
-    * Функция, которая инициализирует интерфейс
-    */
-
-    printf("main client: %p\n", (void *)&client);
     init_interface(&builder, &argc, &argv, (gpointer) p_client);
-
+    init_switches();
+    
 // --- Message and command queue threads ---
-	struct msg_q *msg_q_front = NULL;
+    struct msg_q *msg_q_front = NULL;
 	struct cmd_q *cmd_q_front = NULL;
 
 	// -- MODULE 3 --
@@ -54,6 +49,7 @@ int main(int argc, char **argv) {
 		perror("ERROR: pthread\n");
 		return 1;
 	}
+
     gtk_main();
     client.exit = 1;
     printf("Bye!\n");

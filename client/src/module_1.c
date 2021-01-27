@@ -19,7 +19,8 @@ void *read_msg(void *arg) {
 			if (receive > 0) {
 				if (msg_buf[0] != 0) {
 					to_msg_q(msg_buf, Info->msg_q_front, Info->lock);
-					printf("--# %s #--\n", msg_buf);
+					//gtk_text_buffer_insert_interactive(Info->client->m->buffer, &Info->client->m->iter, msg_buf, -1, TRUE );
+				    //gtk_text_buffer_insert_interactive(Info->client->m->buffer, &Info->client->m->iter, "\n", -1, TRUE );
 				}
 			}
 			else if (receive == 0) {

@@ -13,12 +13,7 @@
 //////////////////////////
 
 // STRUCTURES
-typedef struct message_struct
-{
-    GtkWidget *view ;
-    GtkTextBuffer *buffer;
-    GtkTextIter iter;
-} message_t;
+
 //////////////////////////
 
 // GLOBAL VARIABLES

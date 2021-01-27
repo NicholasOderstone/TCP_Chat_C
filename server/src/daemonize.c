@@ -31,7 +31,7 @@ static pid_t insurance(char *cmd, pid_t pid) {
  * Initialize the log file.
  */
 static void manage_fd(char *cmd) { //, struct rlimit *rl) {
-    //int fd0;
+    int fd0;
     int fd1;
     int fd2;
 
@@ -47,7 +47,8 @@ static void manage_fd(char *cmd) { //, struct rlimit *rl) {
         fd0 = open(MX_SERVERLOG_PATH, O_RDWR | O_CREAT);
     }*/
     fd1 = dup(0);
-    fd2 = dup(0);
+    fd2 = dup(1);
+    fd0 = dup(2);
     fprintf(stderr, "%s: daemonize success\n", cmd);
 }
 

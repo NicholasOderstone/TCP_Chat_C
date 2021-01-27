@@ -15,6 +15,7 @@ void f_login(char *params, buff_t *Info) {
 		return;
 	}
 	getUserPassword(getIdUserByUserName(p_login), buff_out);
+	str_trim_lf(buff_out, strlen(buff_out));
 	if(strcmp(buff_out, p_pass) != 0) {
 		//Ошибка: неправильный пароль
 		printf("Incorrect password\n");
@@ -29,7 +30,7 @@ void f_login(char *params, buff_t *Info) {
 	printf("%s", buff_out);
 
 	cmd.command = "<LOGIN>";
-	cmd.params = " <SUCCES>";
+	cmd.params = " <SUCCESS>";
 	printf("%s\n", cmd.params);
 	
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
@@ -47,7 +48,7 @@ void f_send(char *params, buff_t *Info) {
 	struct command cmd;
 	cmd.params = params;
 	cmd.command = "<SEND>";
-	cmd.params = " <SUCCES>";
+	cmd.params = " <SUCCESS>";
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 	for(int i=0; i<MAX_CLIENTS; ++i){
 		if(Info->serv_inf->clients[i]){
@@ -81,7 +82,7 @@ void f_register(char *params, buff_t *Info) {
 	insertUser(p_username, password, nickname, "");
 	printf("Insertion complete");
 	cmd.command = "<REGISTER>";
-	cmd.params = " <SUCCES>";
+	cmd.params = " <SUCCESS>";
 
 	strcpy(Info->client->name, p_username);
     sprintf(buff_out, "<JOIN> <%s>\n", Info->client->name);

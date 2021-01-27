@@ -54,11 +54,8 @@ int main(int argc, char **argv){
 
 	/* Data Base */
 	initDB();
-	
-	/*char temp[BUFFER_SZ];
-	printf("%s", getUserName(25, temp));*/
-	//printf("%d", getIdUserByUserName("Playsdfsdfsdfsder1"));
-	///insertUser("p_login", "p_pass", "NICK", "STATUS");
+	//daemonize();
+	//insertUser("8798894654", "789", "fsdfsdf", "sdasdasdasd");
 	while(1){
 		socklen_t clilen = sizeof(cli_addr);
 		/* Accept incoming connection */

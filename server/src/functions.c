@@ -3,10 +3,11 @@
 void f_login(char *params, buff_t *Info) {
     char buff_out[BUFFER_SZ];
 	struct command cmd;
-	cmd.command = "<LOGIN>";
 
     char *p_login = param_1(params);
     char *p_pass = param_2(params);
+
+	/* Check for mistakes */
 	if(getIdUserByUserName(p_login) == 0){
 		//Oшибка: неправильный логин
 		printf("Incorrect user_name\n");
@@ -23,10 +24,15 @@ void f_login(char *params, buff_t *Info) {
 	bzero(buff_out, BUFFER_SZ);
 
     strcpy(Info->client->name, p_login);
+	// Потом убрать
     sprintf(buff_out, "<JOIN> <%s>\n", Info->client->name);
 	printf("%s", buff_out);
+
+	cmd.command = "<LOGIN>";
+	strcat(buff_out, " <SUCCES> ");
+	cmd.params = strcat(buff_out, params);
+	printf("%s\n", cmd.params);
 	
-	cmd.params = params;
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 	for(int i=0; i<MAX_CLIENTS; ++i){
 		if(Info->serv_inf->clients[i]){
@@ -69,17 +75,35 @@ void f_register(char *params, buff_t *Info) {
 	}
 	if(strcmp(password, rep_password) != 0) {
 		//Oшибка: пароли не равны
-		printf("Password is incorrest\n");
+		printf("Password is incorrect\n");
 		send(Info->client->sockfd, "<REGISTER> <ERROR> <PASS_NOT_MATCH>", strlen("<REGISTER> <ERROR> <PASS_NOT_MATCH>"), 0);
 		return;
 	}
 	insertUser(p_username, password, nickname, "");
 	printf("Insertion complete");
 	cmd.command = "<REGISTER>";
-	strcat(buff_out, "<SUCCES>");
+	printf("1\n");
+	strcat(buff_out, " <SUCCES> ");
+	printf("2\n");
 	cmd.params = strcat(buff_out, params);
 	printf("%s\n", cmd.params);
-	send_cmd(cmd, Info->serv_inf->clients[Info->uid]);
+	printf("3\n");
+
+	bzero(buff_out, BUFFER_SZ);
+	strcpy(Info->client->name, p_username);
+    sprintf(buff_out, "<JOIN> <%s>\n", Info->client->name);
+	printf("%s", buff_out);
+	bzero(buff_out, BUFFER_SZ);
+
+	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
+	for(int i=0; i<MAX_CLIENTS; ++i){
+		if(Info->serv_inf->clients[i]){
+			if(Info->serv_inf->clients[i]->uid == Info->uid){
+				send_cmd(cmd, Info->serv_inf->clients[i]);
+			}
+		}
+	}
+	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
 }
 
 

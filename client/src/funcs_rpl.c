@@ -3,11 +3,14 @@
 void func_rpl_login(char *params) {
     char *p_rpl = param_1(params);
     if (strcmp(p_rpl, "ERROR") == 0) {
-        printf("%s: %s\n", p_rpl, param_2(params));
-        sw_login = 1;
+        if (strcmp(param_2(params), "INCORRECT_LOGIN") == 0) {
+            sw_login = 1;
+        }
+        else if (strcmp(param_2(params), "INCORRECT_PASS") == 0) {
+            sw_login = 2;
+        }
     }
     else if (strcmp(p_rpl, "SUCCESS") == 0) {
-        printf("%s\n", p_rpl);
         sw_login = 0;
     }
 }
@@ -64,8 +67,13 @@ void func_rpl_new_chnl(char *params) {
 }
 
 void func_rpl_send(char *params) {
-    char *p_message = param_1(params);
-    printf("SEND: success.\n\tMessage: %s\n", p_message);
+    char *p_rpl = param_1(params);
+    if (strcmp(p_rpl, "ERROR") == 0) {
+        printf("SEND: error\n");
+    }
+    else if (strcmp(p_rpl, "SUCCESS") == 0) {
+        sw_send = 0;
+    }
 }
 
 void init_funcs(cmd_func arr_cmd_func[]) {
@@ -88,4 +96,10 @@ void init_funcs(cmd_func arr_cmd_func[]) {
 
     for (int i = 0; i < AMOUNT_OF_CMD; i++)
         arr_cmd_func[i].name = strdup(arr_func_names[i]);
+}
+
+void init_switches(void) {
+    sw_login = -1;
+    sw_register = -1;
+    sw_send = -1;
 }

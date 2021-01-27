@@ -11,12 +11,16 @@ void func_login(GtkWidget *widget, gpointer data) {
     bzero(buffer, LENGTH);
     while (sw_login == -1) { }
     switch(sw_login) {
-        case 1:
-            printf("Error 1\n");
-            sw_login = -1;
-            break;
         case 0:
             open_main_page(NULL, data);
+            sw_login = -1;
+            break;
+        case 1:
+            printf("## INCORRECT_LOGIN\n");
+            sw_login = -1;
+            break;
+        case 2:
+            printf("## INCORRECT_PASS\n");
             sw_login = -1;
             break;
         default:
@@ -35,4 +39,21 @@ void func_register(GtkWidget *widget, gpointer data) {
     snprintf(buffer, BUFFER_SZ, "<REGISTER> <%s> <%s> <%s> <%s>", p_username, p_nick, p_pass, p_r_pass);
     send(client->sockfd, buffer, strlen(buffer), 0);
     bzero(buffer, LENGTH);
+    while (sw_register == -1) { }
+    switch(sw_register) {
+        case 0:
+            open_main_page(NULL, data);
+            sw_register = -1;
+            break;
+        case 1:
+            printf("## USERNAME_EXIST\n");
+            sw_register = -1;
+            break;
+        case 2:
+            printf("## PASS_NOT_MATCH\n");
+            sw_register = -1;
+            break;
+        default:
+            break;
+    }
 }

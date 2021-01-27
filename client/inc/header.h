@@ -168,7 +168,7 @@ typedef struct message_struct
 
 	void *th_connect_to_server();
 	//void *init_threads(GtkWidget *widget, gpointer data);
-	void init_threads(client_t *client);
+	void init_switches(void);
 	void func_login(GtkWidget *widget, gpointer data);
 	void func_register(GtkWidget *widget, gpointer data);
 
@@ -177,7 +177,8 @@ typedef struct message_struct
 
 // GLOBAL VARIABLES
 	int sw_login;
-
+	int sw_register;
+	int sw_send;
 
 //////////////////////////
 

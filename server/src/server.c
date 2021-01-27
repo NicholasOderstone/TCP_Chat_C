@@ -54,6 +54,7 @@ int main(int argc, char **argv){
 
 	/* Data Base */
 	initDB();
+	
 	/*char temp[BUFFER_SZ];
 	printf("%s", getUserName(25, temp));*/
 	//printf("%d", getIdUserByUserName("Playsdfsdfsdfsder1"));

@@ -29,8 +29,7 @@ void f_login(char *params, buff_t *Info) {
 	printf("%s", buff_out);
 
 	cmd.command = "<LOGIN>";
-	strcat(buff_out, " <SUCCES> ");
-	cmd.params = strcat(buff_out, params);
+	cmd.params = " <SUCCES>";
 	printf("%s\n", cmd.params);
 	
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
@@ -48,7 +47,7 @@ void f_send(char *params, buff_t *Info) {
 	struct command cmd;
 	cmd.params = params;
 	cmd.command = "<SEND>";
-
+	cmd.params = " <SUCCES>";
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 	for(int i=0; i<MAX_CLIENTS; ++i){
 		if(Info->serv_inf->clients[i]){
@@ -82,14 +81,8 @@ void f_register(char *params, buff_t *Info) {
 	insertUser(p_username, password, nickname, "");
 	printf("Insertion complete");
 	cmd.command = "<REGISTER>";
-	printf("1\n");
-	strcat(buff_out, " <SUCCES> ");
-	printf("2\n");
-	cmd.params = strcat(buff_out, params);
-	printf("%s\n", cmd.params);
-	printf("3\n");
+	cmd.params = " <SUCCES>";
 
-	bzero(buff_out, BUFFER_SZ);
 	strcpy(Info->client->name, p_username);
     sprintf(buff_out, "<JOIN> <%s>\n", Info->client->name);
 	printf("%s", buff_out);

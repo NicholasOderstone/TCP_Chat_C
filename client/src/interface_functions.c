@@ -97,7 +97,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     client_t *client = (client_t *)gp_client;
     client->m = (message_t *)malloc(sizeof(message_t *));
     client->m = message_s;
-
+    GtkTextMark * del_mark;
     GtkWidget *send_b_image = gtk_image_new_from_file ("client/resources/send_b_img.png");
     gtk_widget_hide(window);
     builder = gtk_builder_new();
@@ -122,6 +122,8 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     g_signal_connect(send_b, "clicked", G_CALLBACK(send_message), (gpointer)message_s);
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_send), gp_client);
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_clear), NULL);
+    del_mark = gtk_text_buffer_get_selection_bound (message_s->buffer);
+    gtk_text_buffer_delete_mark(message_s->buffer, del_mark);
 }
 
 void message_changed(GtkEntry *e){
@@ -175,6 +177,8 @@ void r_pass_s_changed(GtkEntry *e){
     gtk_entry_set_visibility (e, FALSE);
     sprintf(r_pass_str_s,"%s", gtk_entry_get_text(e));
 }
+
+
 gboolean destroy() {
     gtk_main_quit();
     return TRUE;

@@ -15,12 +15,12 @@ void f_login(char *params, buff_t *Info) {
 		return;
 	}
 	getUserPassword(getIdUserByUserName(p_login), buff_out);
-	/*if(strcmp(buff_out, p_pass) != 0) {
+	if(strcmp(buff_out, p_pass) != 0) {
 		//Ошибка: неправильный пароль
 		printf("Incorrect password\n");
 		send(Info->client->sockfd, "<LOGIN> <ERROR> <INCORRECT_PASS>", strlen("<LOGIN> <ERROR> <INCORRECT_PASS>"), 0);
 		return;
-	}*/
+	}
 	bzero(buff_out, BUFFER_SZ);
 
     strcpy(Info->client->name, p_login);

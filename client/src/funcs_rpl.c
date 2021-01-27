@@ -4,6 +4,7 @@ void func_rpl_login(char *params) {
     char *p_rpl = param_1(params);
     if (strcmp(p_rpl, "ERROR") == 0) {
         printf("%s: %s\n", p_rpl, param_2(params));
+        sw_login = 1;
     }
     else if (strcmp(p_rpl, "SUCCESS") == 0) {
         printf("%s\n", p_rpl);

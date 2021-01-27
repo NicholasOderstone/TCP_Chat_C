@@ -13,9 +13,11 @@ void func_login(GtkWidget *widget, gpointer data) {
     switch(sw_login) {
         case 1:
             printf("Error 1\n");
+            sw_login = -1;
             break;
         case 0:
             open_main_page(NULL, data);
+            sw_login = -1;
             break;
         default:
             break;

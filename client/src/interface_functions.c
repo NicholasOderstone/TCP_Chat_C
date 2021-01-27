@@ -76,7 +76,7 @@ void open_login_page(GtkWidget *widget, gpointer gp_client)
     login_b = gtk_builder_get_object (builder, "login_b");
     g_signal_connect(signup_p, "clicked", G_CALLBACK(open_signup_page), gp_client);
     g_signal_connect(login_b, "clicked", G_CALLBACK(func_login), gp_client);
-    g_signal_connect(login_b, "clicked", G_CALLBACK(open_main_page), gp_client);
+    //g_signal_connect(login_b, "clicked", G_CALLBACK(open_main_page), gp_client);
     login = gtk_builder_get_object(builder, "login");
     password = GTK_ENTRY(gtk_builder_get_object(builder, "password"));
     gtk_entry_set_visibility (password, FALSE);

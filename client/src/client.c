@@ -9,8 +9,9 @@ int main(int argc, char **argv) {
     client_t *p_client = (client_t *)malloc(sizeof(client_t *));
     p_client = &client;
 
-    printf("main client: %p\n", (void *)&client);
     init_interface(&builder, &argc, &argv, (gpointer) p_client);
+    init_switches();
+    
 // --- Message and command queue threads ---
     struct msg_q *msg_q_front = NULL;
 	struct cmd_q *cmd_q_front = NULL;

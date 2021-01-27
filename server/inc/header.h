@@ -15,6 +15,7 @@
     #include <signal.h>
     #include <netdb.h>
     #include <fcntl.h>
+    #include <sys/stat.h>
 
     /* DATA_BASE */
     #include <stdlib.h>
@@ -187,5 +188,9 @@
     void deleteUser(char* id);  
     char* getUserName(int id, char* rez);
     char* getUserPassword(int id, char* rez);
+
+
+    // --- Daemonize ---
+    void daemonize();
 
 #endif

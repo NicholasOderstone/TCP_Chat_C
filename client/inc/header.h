@@ -18,6 +18,8 @@
 	#include <pthread.h>
 	#include <sys/types.h>
 	#include <ctype.h>
+	#include <sqlite3.h>
+	#include <time.h>
     #include "interface.h"
 
 //////////////////////////

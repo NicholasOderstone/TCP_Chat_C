@@ -10,26 +10,27 @@ void *read_msg(void *arg) {
 	  return NULL;
 	}
 
+
 	while (1) {
 		if (Info->client->exit == 1) {
 			break;
 		}
 		if (Info->client->is_connected == 1) {
 			int receive = recv(Info->client->sockfd, msg_buf, LENGTH, 0);
-			if (receive > 0) {
-				if (msg_buf[0] != 0) {
-					to_msg_q(msg_buf, Info->msg_q_front, Info->lock);
-					printf(": %s\n", msg_buf);
+				if (receive > 0) {
+					if (msg_buf[0] != 0) {
+						to_msg_q(msg_buf, Info->msg_q_front, Info->lock);
+						printf("%s\n", msg_buf);
+					}
 				}
-			}
-			else if (receive == 0) {
-					Info->client->is_connected = 0;
-			}
-			else {
-				printf("\r-- Disconnected from server --\n");
-				break;
-			}
-			memset(msg_buf, 0, sizeof(msg_buf));
+				else if (receive == 0) {
+						Info->client->is_connected = 0;
+				}
+				else {
+					printf("\r-- Disconnected from server --\n");
+					break;
+				}
+				memset(msg_buf, 0, sizeof(msg_buf));
 		}
 	}
 	int ret_val = 1;

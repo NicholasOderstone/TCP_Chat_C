@@ -31,7 +31,6 @@ void f_login(char *params, buff_t *Info) {
 
 	cmd.command = "<LOGIN>";
 	cmd.params = " <SUCCESS>";
-	printf("%s\n", cmd.params);
 
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 	for(int i=0; i<MAX_CLIENTS; ++i){

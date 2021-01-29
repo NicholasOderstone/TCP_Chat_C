@@ -179,6 +179,7 @@ void send_message(GtkWidget *widget, gpointer m) {
     UNUSED(widget);
     message_t *mess = (message_t *)m;
     (void)(widget);
+    gtk_text_buffer_insert_interactive (mess->buffer, &mess->end, "you: ", -1, TRUE );
     gtk_text_buffer_insert_interactive (mess->buffer, &mess->end, message_str, -1, TRUE );
     gtk_text_buffer_insert_interactive (mess->buffer, &mess->end, "\n", -1, TRUE );
     mess->mark = gtk_text_buffer_create_mark (mess->buffer, NULL, &mess->end, 1);

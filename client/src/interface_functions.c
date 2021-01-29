@@ -157,6 +157,7 @@ gboolean message_show(gpointer m) {
         gtk_text_buffer_insert_interactive (received_mess->client->m->buffer, &received_mess->client->m->end, "\n", -1, TRUE );
     }
     memset(received_mess->message, 0, sizeof(received_mess->message));
+    memset(received_mess->sender_name, 0, sizeof(received_mess->sender_name));
     return FALSE;
     //return TRUE;
 }

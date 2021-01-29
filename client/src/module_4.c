@@ -14,10 +14,10 @@ void *process_cmd(void *arg) {
 				analyse_cmd(fst_cmd, Info->arr_cmd_func[j]);
 			}
 			if (strcmp(fst_cmd.command, Info->arr_cmd_func[10].name) == 0) {
-				printf("--- %s ---\t", fst_cmd.command);
-				printf("--- %s ---\n", Info->arr_cmd_func[10].name);
-				gtk_text_buffer_insert_interactive(Info->client->m->buffer, &Info->client->m->end, param_2(fst_cmd.params), -1, TRUE );
-				gtk_text_buffer_insert_interactive(Info->client->m->buffer, &Info->client->m->end, "\n", -1, TRUE );
+				received_messages *received_mess = (received_messages *)malloc(sizeof(received_messages));
+				received_mess->client = Info->client;
+				strcpy(received_mess->message, param_2(fst_cmd.params));
+			    gdk_threads_add_idle(message_show, (gpointer)received_mess);
 			}
 		}
 	}

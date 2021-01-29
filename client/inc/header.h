@@ -18,6 +18,8 @@
 	#include <pthread.h>
 	#include <sys/types.h>
 	#include <ctype.h>
+	#include <sqlite3.h>
+	#include <time.h>
     #include "interface.h"
 
 //////////////////////////
@@ -37,6 +39,8 @@ typedef struct message_struct
 	GtkTextIter end;
 	GtkTextMark* mark;
 } message_t;
+
+
 // STRUCTURES
 	// Handles all neccesary info about client
 	typedef struct{
@@ -49,6 +53,11 @@ typedef struct message_struct
 		int exit;
 		pthread_mutex_t mutex;
 	} client_t;
+
+	typedef struct received_s {
+		client_t *client;
+		char message[LENGTH];
+	}	received_messages;
 
 	typedef struct {
 	    char *command;

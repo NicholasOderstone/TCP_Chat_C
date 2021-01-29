@@ -1,6 +1,5 @@
 #include "../inc/header.h"
 
-
 int main(int argc, char **argv) {
 
 // --- Checking IP & Port No ---
@@ -11,7 +10,7 @@ int main(int argc, char **argv) {
 
     init_interface(&builder, &argc, &argv, (gpointer) p_client);
     init_switches();
-    
+
 // --- Message and command queue threads ---
     struct msg_q *msg_q_front = NULL;
 	struct cmd_q *cmd_q_front = NULL;

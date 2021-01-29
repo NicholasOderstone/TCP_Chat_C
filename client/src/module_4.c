@@ -14,8 +14,7 @@ void *process_cmd(void *arg) {
 				analyse_cmd(fst_cmd, Info->arr_cmd_func[j]);
 			}
 			if (strcmp(fst_cmd.command, Info->arr_cmd_func[10].name) == 0) {
-				//gtk_text_buffer_insert_interactive(Info->client->m->buffer, &Info->client->m->iter, param_2(fst_cmd.params), -1, TRUE );
-				//gtk_text_buffer_insert_interactive(Info->client->m->buffer, &Info->client->m->iter, "\n", -1, TRUE );
+				printf("--- %s ---\t", fst_cmd.command);
 			}
 		}
 	}

@@ -33,9 +33,11 @@
 //////////////////////////
 typedef struct message_struct
 {
-    GtkWidget *view ;
+    GtkTextView *view ;
     GtkTextBuffer *buffer;
-    GtkTextIter iter;
+	GtkTextIter start;
+	GtkTextIter end;
+	GtkTextMark* mark;
 } message_t;
 // STRUCTURES
 	// Handles all neccesary info about client

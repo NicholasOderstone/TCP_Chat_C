@@ -151,6 +151,8 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
 gboolean message_show(gpointer m) {
     received_messages *received_mess = (received_messages *)m;
     if (received_mess->message[0] != 0) {
+        gtk_text_buffer_insert_interactive (received_mess->client->m->buffer, &received_mess->client->m->end, received_mess->sender_name, -1, TRUE );
+        gtk_text_buffer_insert_interactive (received_mess->client->m->buffer, &received_mess->client->m->end, ": ", -1, TRUE );
         gtk_text_buffer_insert_interactive (received_mess->client->m->buffer, &received_mess->client->m->end, received_mess->message, -1, TRUE );
         gtk_text_buffer_insert_interactive (received_mess->client->m->buffer, &received_mess->client->m->end, "\n", -1, TRUE );
     }

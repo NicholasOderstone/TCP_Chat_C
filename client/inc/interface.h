@@ -44,6 +44,7 @@
     void pass_s_changed();
     void r_pass_s_changed();
     void del_message();
-//////////////////////////
+    gboolean message_show();
+    //////////////////////////
 
 #endif

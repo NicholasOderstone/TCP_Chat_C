@@ -26,8 +26,8 @@ void f_login(char *params, buff_t *Info) {
 
     strcpy(Info->client->name, p_login);
 	// Потом убрать
-    sprintf(buff_out, "<JOIN> <%s>\n", Info->client->name);
-	printf("%s", buff_out);
+    //sprintf(buff_out, "<JOIN> <%s>\n", Info->client->name);
+	//printf("%s", buff_out);
 
 	cmd.command = "<LOGIN>";
 	cmd.params = " <SUCCESS>";
@@ -87,8 +87,8 @@ void f_register(char *params, buff_t *Info) {
 	cmd.params = " <SUCCESS>";
 
 	strcpy(Info->client->name, p_username);
-    sprintf(buff_out, "<JOIN> <%s>\n", Info->client->name);
-	printf("%s", buff_out);
+    //sprintf(buff_out, "<JOIN> <%s>\n", Info->client->name);
+	//printf("%s", buff_out);
 	bzero(buff_out, BUFFER_SZ);
 
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);

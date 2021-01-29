@@ -17,13 +17,17 @@ void func_rpl_login(char *params) {
 
 void func_rpl_register(char *params) {
     char *p_rpl = param_1(params);
-    printf("%s\n", p_rpl);
-    char *p_username = strdup(username_str_s);
-    char *p_nick = strdup(nick_str_s);
-    char *p_pass = strdup(pass_str_s);
-    char *p_r_pass = strdup(r_pass_str_s);
-    printf("REGISTER: success.\n\tUsername: %s\n\tNickname: %s\n", p_username, p_nick);
-    printf("\tPassword: %s\n\tRepeated password: %s\n", p_pass, p_r_pass);
+    if (strcmp(p_rpl, "ERROR") == 0) {
+        if (strcmp(param_2(params), "USERNAME_EXIST") == 0) {
+            sw_login = 1;
+        }
+        else if (strcmp(param_2(params), "PASS_NOT_MATCH") == 0) {
+            sw_login = 2;
+        }
+    }
+    else if (strcmp(p_rpl, "SUCCESS") == 0) {
+        sw_login = 0;
+    }
 }
 
 void func_rpl_change_name(char *params) {

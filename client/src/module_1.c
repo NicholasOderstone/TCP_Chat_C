@@ -20,7 +20,6 @@ void *read_msg(void *arg) {
 				if (receive > 0) {
 					if (msg_buf[0] != 0) {
 						to_msg_q(msg_buf, Info->msg_q_front, Info->lock);
-						printf("%s\n", msg_buf);
 					}
 				}
 				else if (receive == 0) {

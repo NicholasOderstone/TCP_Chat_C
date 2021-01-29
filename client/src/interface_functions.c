@@ -93,6 +93,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     message_s = &m;
     GObject *send_b;
     client_t *client = (client_t *)gp_client;
+
     GtkListBox *box;
     GtkWidget *child;
     GtkWidget *child2;
@@ -131,7 +132,6 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     gtk_button_set_image (menu_b, menu_b_image);
 
     gtk_text_buffer_get_iter_at_offset(message_s->buffer, &message_s->end, 0);
-    //gchar *name;
     gtk_text_buffer_create_tag(message_s->buffer, "gray_bg", "background","gray", NULL);
     gtk_text_buffer_insert_with_tags_by_name (message_s->buffer, &message_s->end, "name", -1, "gray_bg", NULL);
     message_entry = GTK_ENTRY(gtk_builder_get_object(builder, "message_entry"));
@@ -140,22 +140,23 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_send), gp_client);
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_clear), NULL);
     //g_signal_connect(message_s->view, "move-cursor", G_CALLBACK(del_message), (gpointer)message_s->buffer);
-    gdk_threads_add_idle (message_show, (gpointer)message_s);
+
     gtk_widget_show (GTK_WIDGET(child));
     gtk_widget_show (GTK_WIDGET(child2));
     gtk_list_box_insert(box, GTK_WIDGET(child), -1 );
     gtk_list_box_insert(box, GTK_WIDGET(child2), -1 );
 
 }
-int i = 0;
+
 gboolean message_show(gpointer m) {
-    message_t *mess = (message_t *)m;
-    gtk_text_buffer_insert_interactive (mess->buffer, &mess->end, "bimbom", -1, TRUE );
-    gtk_text_buffer_insert_interactive (mess->buffer, &mess->end, "\n", -1, TRUE );
-    if (i >= 5)
-        return FALSE;
-    i++;
-    return TRUE;
+    received_messages *received_mess = (received_messages *)m;
+    if (received_mess->message[0] != 0) {
+        gtk_text_buffer_insert_interactive (received_mess->client->m->buffer, &received_mess->client->m->end, received_mess->message, -1, TRUE );
+        gtk_text_buffer_insert_interactive (received_mess->client->m->buffer, &received_mess->client->m->end, "\n", -1, TRUE );
+    }
+    memset(received_mess->message, 0, sizeof(received_mess->message));
+    return FALSE;
+    //return TRUE;
 }
 
 void message_changed(GtkEntry *e){

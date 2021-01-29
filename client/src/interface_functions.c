@@ -151,10 +151,13 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
 gboolean message_show(gpointer m) {
     received_messages *received_mess = (received_messages *)m;
     if (received_mess->message[0] != 0) {
+        gtk_text_buffer_insert_interactive (received_mess->client->m->buffer, &received_mess->client->m->end, received_mess->sender_name, -1, TRUE );
+        gtk_text_buffer_insert_interactive (received_mess->client->m->buffer, &received_mess->client->m->end, ": ", -1, TRUE );
         gtk_text_buffer_insert_interactive (received_mess->client->m->buffer, &received_mess->client->m->end, received_mess->message, -1, TRUE );
         gtk_text_buffer_insert_interactive (received_mess->client->m->buffer, &received_mess->client->m->end, "\n", -1, TRUE );
     }
     memset(received_mess->message, 0, sizeof(received_mess->message));
+    memset(received_mess->sender_name, 0, sizeof(received_mess->sender_name));
     return FALSE;
     //return TRUE;
 }
@@ -176,6 +179,7 @@ void send_message(GtkWidget *widget, gpointer m) {
     UNUSED(widget);
     message_t *mess = (message_t *)m;
     (void)(widget);
+    gtk_text_buffer_insert_interactive (mess->buffer, &mess->end, "you: ", -1, TRUE );
     gtk_text_buffer_insert_interactive (mess->buffer, &mess->end, message_str, -1, TRUE );
     gtk_text_buffer_insert_interactive (mess->buffer, &mess->end, "\n", -1, TRUE );
     mess->mark = gtk_text_buffer_create_mark (mess->buffer, NULL, &mess->end, 1);

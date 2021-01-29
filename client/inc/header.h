@@ -47,7 +47,7 @@ typedef struct message_struct
 		struct sockaddr_in address; // Stores ip (sin_addr.s_addr), port (sin_port) and ip format (sin_family = AF_INET)
 		int sockfd;
 		int uid;
-		char name[32];
+		char name[NAME_SZ];
 		message_t *m;
 		int is_connected;
 		int exit;
@@ -57,6 +57,7 @@ typedef struct message_struct
 	typedef struct received_s {
 		client_t *client;
 		char message[LENGTH];
+		char sender_name[NAME_SZ];
 	}	received_messages;
 
 	typedef struct {

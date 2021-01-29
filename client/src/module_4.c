@@ -17,6 +17,7 @@ void *process_cmd(void *arg) {
 				received_messages *received_mess = (received_messages *)malloc(sizeof(received_messages));
 				received_mess->client = Info->client;
 				strcpy(received_mess->message, param_2(fst_cmd.params));
+				strcpy(received_mess->sender_name, "sender");
 			    gdk_threads_add_idle(message_show, (gpointer)received_mess);
 			}
 		}

@@ -13,7 +13,7 @@ GTK_LIBS = `pkg-config --libs gtk+-3.0`
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	@$(CC) $(FLAGS) $(GTK_LIBS) -l sqlite3 $(DEBUG_FLAGS) $(OBJ) -o ../$(NAME)
+	@$(CC) $(FLAGS) $(GTK_LIBS) $(DEBUG_FLAGS) $(OBJ) -o ../$(NAME)
 	@make clean
 	@printf "\r\33[2K$(NAME):\t\t \033[32;1mcreated\033[0m\n"
 

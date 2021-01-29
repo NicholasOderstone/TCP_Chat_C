@@ -48,6 +48,11 @@ void f_send(char *params, buff_t *Info) {
 	char buff_out[BUFFER_SZ];
 	cmd.command = "<SEND>";
 	strcat(buff_out, " <SUCCES> ");
+	strcat(buff_out, params);
+	strcat(buff_out, " <");
+	strcat(buff_out, Info->client->name);
+	strcat(buff_out, ">");
+	printf("%s\n", buff_out);
 	cmd.params = strdup(strcat(buff_out, params));
 	bzero(buff_out, BUFFER_SZ);
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);

@@ -18,6 +18,8 @@
 	#include <pthread.h>
 	#include <sys/types.h>
 	#include <ctype.h>
+	#include <sqlite3.h>
+	#include <time.h>
     #include "interface.h"
 
 //////////////////////////
@@ -27,8 +29,17 @@
 	#define BUFFER_SZ 2048
 	#define LENGTH 2048
 	#define NAME_SZ 32
-	#define AMOUNT_OF_CMD 10
+	#define AMOUNT_OF_CMD 11
 //////////////////////////
+typedef struct message_struct
+{
+    GtkTextView *view ;
+    GtkTextBuffer *buffer;
+	GtkTextIter start;
+	GtkTextIter end;
+	GtkTextMark* mark;
+} message_t;
+
 
 // STRUCTURES
 	// Handles all neccesary info about client
@@ -36,12 +47,18 @@
 		struct sockaddr_in address; // Stores ip (sin_addr.s_addr), port (sin_port) and ip format (sin_family = AF_INET)
 		int sockfd;
 		int uid;
-		char name[32];
-
+		char name[NAME_SZ];
+		message_t *m;
 		int is_connected;
 		int exit;
 		pthread_mutex_t mutex;
 	} client_t;
+
+	typedef struct received_s {
+		client_t *client;
+		char message[LENGTH];
+		char sender_name[NAME_SZ];
+	}	received_messages;
 
 	typedef struct {
 	    char *command;
@@ -162,7 +179,18 @@
 	char *param_5(char *params);
 
 	void *th_connect_to_server();
+	//void *init_threads(GtkWidget *widget, gpointer data);
+	void init_switches(void);
+	void func_login(GtkWidget *widget, gpointer data);
+	void func_register(GtkWidget *widget, gpointer data);
 
+
+//////////////////////////
+
+// GLOBAL VARIABLES
+	int sw_login;
+	int sw_register;
+	int sw_send;
 
 //////////////////////////
 

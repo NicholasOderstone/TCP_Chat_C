@@ -22,6 +22,6 @@ void *read_msg(void *arg) {
 		}
 		memset(buff_out, 0, sizeof(buff_out));
 	}
-	pthread_detach(pthread_self());
+	pthread_exit(NULL);
 	return NULL;
 }

@@ -48,6 +48,8 @@ typedef struct message_struct
 		int sockfd;
 		int uid;
 		char name[NAME_SZ];
+		char *login;
+		char *pass;
 		message_t *m;
 		int is_connected;
 		int exit;

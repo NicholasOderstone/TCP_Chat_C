@@ -23,7 +23,7 @@ void *process_cmd(void *arg) {
 		}
 	}
 	int ret_val = 1;
-	printf("5. Process command thread terminated\n");
+	printf("-- Process command thread terminated --\n");
 	pthread_exit(&ret_val);
 	return NULL;
 }

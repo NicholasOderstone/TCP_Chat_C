@@ -69,7 +69,7 @@ void *connect_to_server(void *cnct_inf) {
 		}
 	}
     int ret_val = 1;
-	printf("6. Connect to server thread terminated\n");
+	printf("-- Connect to server thread terminated --\n");
 	pthread_exit(&ret_val);
 	return NULL;
 }

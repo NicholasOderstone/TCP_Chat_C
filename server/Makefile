@@ -12,6 +12,7 @@ DEBUG_FLAGS = -fsanitize=address -fno-omit-frame-pointer
 all: $(NAME)
 
 $(NAME): $(OBJ)
+	@$(CC) $(FLAGS) $(FLAG_SQL) $(DEBUG_FLAGS) $(OBJ) -o ../$(NAME)
 	@make clean
 	@printf "\r\33[2K$(NAME):\t\t \033[32;1mcreated\033[0m\n"
 $(OBJ): | obj

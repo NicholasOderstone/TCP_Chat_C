@@ -10,7 +10,6 @@ void *read_msg(void *arg) {
 	  return NULL;
 	}
 
-
 	while (1) {
 		if (Info->client->exit == 1) {
 			break;
@@ -33,7 +32,7 @@ void *read_msg(void *arg) {
 		}
 	}
 	int ret_val = 1;
-	printf("3. Read message thread terminated\n");
+	printf("-- Read message thread terminated --\n");
 	pthread_mutex_destroy(&Info->lock);
 	pthread_exit(&ret_val);
 	return NULL;
@@ -60,7 +59,7 @@ void *make_cmd(void *arg) {
 		}
 	}
 	int ret_val = 1;
-	printf("4. Make command thread terminated\n");
+	printf("-- Make command thread terminated --\n");
 	pthread_mutex_destroy(&Info->lock);
 	pthread_exit(&ret_val);
 	return NULL;

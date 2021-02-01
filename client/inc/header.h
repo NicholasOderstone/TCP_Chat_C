@@ -87,10 +87,6 @@ typedef struct message_struct
 	    struct cmd_q *link;
 	};
 
-	struct send_msg_info_s {
-		client_t *client;
-	};
-
 	struct recv_msg_info_s {
 		client_t *client;
 		struct msg_q **msg_q_front;
@@ -138,8 +134,6 @@ typedef struct message_struct
 
 	// --- Thread functions ---
 
-	// Handles sending messages
-	void *send_msg_handler(void *arg);
 	// Handles recieving messages
 	void *recv_msg_handler(void *arg);
 	// Handles reconnect
@@ -173,7 +167,6 @@ typedef struct message_struct
 	// --- Utility functions ---
 
 	command msg_to_cmd(char *msg);
-	char *cmd_to_msg(command cmd);
 	char *param_1(char *params);
 	char *param_2(char *params);
 	char *param_3(char *params);
@@ -183,6 +176,7 @@ typedef struct message_struct
 	void *th_connect_to_server();
 	//void *init_threads(GtkWidget *widget, gpointer data);
 	void init_switches(void);
+	void *init_threads(void *client);
 	void func_login(GtkWidget *widget, gpointer data);
 	void func_register(GtkWidget *widget, gpointer data);
 

@@ -1,32 +1,5 @@
 #include "../inc/header.h"
 
-void *send_msg_handler(void *arg) {
-	struct send_msg_info_s *Info = (struct send_msg_info_s *)arg;
-  	//char message[LENGTH];
-	while(1) {
-		if (Info->client->exit == 1) {
-			break;
-		}
-		/*str_overwrite_stdout();
-		fgets(message, LENGTH, stdin);
-		str_trim_lf(message, LENGTH);
-		if (strcmp(message, "exit") == 0) {
-			Info->client->exit = 1;
-		}
-		else {
-		  pthread_mutex_lock(&Info->client->mutex);
-		  command cmd = msg_to_cmd(message);
-		  send_cmd(cmd, Info->client);
-		  pthread_mutex_unlock(&Info->client->mutex);
-		}
-		bzero(message, LENGTH);*/
-	}
-	int ret_val = 1;
-	printf("1. Send message thread terminated\n");
-	pthread_exit(&ret_val);
-	return NULL;
-}
-
 void *recv_msg_handler(void *arg) {
 	struct recv_msg_info_s *Info = (struct recv_msg_info_s *)arg;
 	struct read_msg_info_s *read_msg_info = (struct read_msg_info_s *)malloc(sizeof(struct read_msg_info_s));
@@ -54,7 +27,7 @@ void *recv_msg_handler(void *arg) {
 	pthread_join(th_make_cmd, NULL);
 
 	int ret_val = 1;
-	printf("2. Recv message thread terminated\n");
+	printf("-- Recv message thread terminated --\n");
     pthread_exit(&ret_val);
   	return NULL;
 }

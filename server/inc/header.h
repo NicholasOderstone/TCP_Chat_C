@@ -189,6 +189,11 @@
     void deleteUser(char* id);
     char* getUserName(int id, char* rez);
     char* getUserPassword(int id, char* rez);
+    char* getUserChats(int id, char* rez);
+    void insertChat(char* name, char* description);
+    void insertInUserInChats(int user_id, int chat_id);
+    int getIdChatByName(char* chat);
+    char* getOneChats(int id, char* rez);
 
 
     // --- Daemonize ---

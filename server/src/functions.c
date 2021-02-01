@@ -26,12 +26,14 @@ void f_login(char *params, buff_t *Info) {
 
     strcpy(Info->client->name, p_login);
 	// Потом убрать
-    //sprintf(buff_out, "<JOIN> <%s>\n", Info->client->name);
-	//printf("%s", buff_out);
+    sprintf(buff_out, "<JOIN> <%s>\n", Info->client->name);
+	printf("%s", buff_out);
+	bzero(buff_out, BUFFER_SZ);
 
 	cmd.command = "<LOGIN>";
 	cmd.params = " <SUCCESS>";
 
+/*
     struct command cmd1;
     cmd1.command = "<CHAT_LIST>";
     cmd1.params = " <123> <first chat>";
@@ -43,15 +45,76 @@ void f_login(char *params, buff_t *Info) {
     struct command cmd3;
     cmd3.command = "<CHAT_LIST>";
     cmd3.params = " <125> <third chat>";
+*/
+	/*insertInUserInChats(getIdUserByUserName(p_login), getIdChatByName("Name"));
+	insertInUserInChats(getIdUserByUserName(p_login), getIdChatByName("Name1"));
+	insertInUserInChats(getIdUserByUserName(p_login), getIdChatByName("Name2"));
+	insertInUserInChats(getIdUserByUserName(p_login), getIdChatByName("Name3"));*/
+
+	getUserChats(getIdUserByUserName(p_login), buff_out);
+	printf("%s\n", buff_out);
+	int mass_of_chats[128];
+	int i_for_buff = 0;
+	int i = 0;
+	while(1) {
+		if(!buff_out[i_for_buff+1]) {
+			break;
+		}
+		char *temp = &buff_out[i_for_buff];
+		mass_of_chats[i] = atoi(temp);
+		i_for_buff++;
+		i_for_buff++;
+		//printf("%d\n", mass_of_chats[i]);
+	}
+	bzero(buff_out, BUFFER_SZ);
+
+	struct command arr_of_chats[i_for_buff];
+	for(int i = 0; i < i_for_buff; i++) {
+		arr_of_chats[i].command = "<CHAT_LIST>";
+		printf("1\n");
+		strcat(arr_of_chats[i].params, " <");
+		printf("1\n");
+		getOneChats(mass_of_chats[i], buff_out);
+		strcat(arr_of_chats[i].params, buff_out);
+		printf("1\n");
+		bzero(buff_out, BUFFER_SZ);
+		arr_of_chats[i].params = ">  <";
+		printf("1\n");
+		itoa(mass_of_chats[i], buff_out, 10);
+		strcat(arr_of_chats[i].params, buff_out);
+		printf("1\n");
+		bzero(buff_out, BUFFER_SZ);
+		arr_of_chats[i].params = ">";
+		arr_of_chats[i].params = buff_out;
+		printf("%s\n", arr_of_chats[i].params);
+	}
+	
+	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
+	for(int i=0; i<MAX_CLIENTS; ++i){
+		if(Info->serv_inf->clients[i]){
+			if(Info->serv_inf->clients[i]->uid == Info->uid){
+				send_cmd(cmd, Info->serv_inf->clients[i]);
+               /* send_cmd(cmd1, Info->serv_inf->clients[i]);
+                send_cmd(cmd2, Info->serv_inf->clients[i]);
+                send_cmd(cmd3, Info->serv_inf->clients[i]);*/
+			}
+		}
+	}
+	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
+
+
+
+
+
 
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 	for(int i=0; i<MAX_CLIENTS; ++i){
 		if(Info->serv_inf->clients[i]){
 			if(Info->serv_inf->clients[i]->uid == Info->uid){
 				send_cmd(cmd, Info->serv_inf->clients[i]);
-                send_cmd(cmd1, Info->serv_inf->clients[i]);
+               /* send_cmd(cmd1, Info->serv_inf->clients[i]);
                 send_cmd(cmd2, Info->serv_inf->clients[i]);
-                send_cmd(cmd3, Info->serv_inf->clients[i]);
+                send_cmd(cmd3, Info->serv_inf->clients[i]);*/
 			}
 		}
 	}

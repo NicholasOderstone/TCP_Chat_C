@@ -54,6 +54,11 @@ int main(int argc, char **argv){
 
 	/* Data Base */
 	initDB();
+	/*insertChat("Name", "Description");
+	insertChat("Name1", "Description1");
+	insertChat("Name2", "Description2");
+	insertChat("Name3", "Description3");*/
+
 	//daemonize();
 	//insertUser("8798894654", "789", "fsdfsdf", "sdasdasdasd");
 	while(1){

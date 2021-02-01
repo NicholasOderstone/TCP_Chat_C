@@ -3,6 +3,20 @@
 #include <sqlite3.h> 
 #include <string.h>
 
+int getLastId(){
+
+    sqlite3 *db;
+    sqlite3_stmt *res;
+    int rc = sqlite3_open("data.db", &db);
+    rc = sqlite3_prepare_v2(db, "select max(id) from CHATS;", -1, &res, 0);    
+    rc = sqlite3_step(res);
+    int rez = sqlite3_column_int(res, 0);
+    sqlite3_finalize(res);
+    sqlite3_close(db);
+
+    return rez;
+}
+
 
 
 char* getAllUsers(char* rez){
@@ -318,9 +332,6 @@ int getIdChatByName(char* chat){
 }
 
 char* getOneChats(int id, char* rez){
-    //printf("%d", id);
-    //return "-1";
-   //char rez[10000];
    sqlite3 *db;
     sqlite3_stmt *res;
     
@@ -400,7 +411,6 @@ char* getOneMessage(int id, char* rez){
 
 void updateNameUser(int id, char* name){
    char sql[500];
-    //sprintf (sql,"update USERS set LOGIN = ? where ID = ? ('%s','%d');", name, id);
     sprintf (sql,"update USERS set LOGIN = '%s' where ID = '%d'", name, id);
 
 
@@ -527,102 +537,73 @@ void updateTextMessage(int id, char* text){
     return;
 }
 
-void insertUser(char* login, char* password, char* nick, char* status){
+int insertUser(char* login, char* password, char* nick, char* status){
     char sql[500];
     sprintf (sql,"INSERT INTO USERS (LOGIN, PASSWORD, NICK, STATUS) VALUES ('%s','%s','%s','%s');",login,password,nick,status);
+    
     sqlite3 *db;
+    sqlite3_stmt *res;
     char *err_msg = 0;
+
     int rc = sqlite3_open("data.db", &db);
-    if (rc != SQLITE_OK) {
-        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
-        sqlite3_close(db);
-        return;
-    }
+
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
-    if (rc != SQLITE_OK ) {
-        fprintf(stderr, "SQL error: %s\n", err_msg);
-        sqlite3_free(err_msg);
-        sqlite3_close(db);
-        return;
-    }
+
+    rc = sqlite3_prepare_v2(db, "select max(id) from USERS;", -1, &res, 0);    
+    rc = sqlite3_step(res);
+
+    
+    int rez = sqlite3_column_int(res, 0);
+    sqlite3_finalize(res);
     sqlite3_close(db);
-    return;
+    return rez;
 }
 
-void insertChat(char* name, char* description){
+int insertChat(char* name, char* description){
     char sql[500];
     sprintf (sql,"INSERT INTO CHATS (name, description) VALUES ('%s','%s');",name,description);
 
 
     sqlite3 *db;
+    sqlite3_stmt *res;
     char *err_msg = 0;
    
     
     int rc = sqlite3_open("data.db", &db);
     
-    if (rc != SQLITE_OK) {
-        
-        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
-        sqlite3_close(db);
-        
-        return;
-    }
-    
-   
-
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
-    
-    if (rc != SQLITE_OK ) {
-        
-        fprintf(stderr, "SQL error: %s\n", err_msg);
-        
-        sqlite3_free(err_msg);        
-        sqlite3_close(db);
-        
-        return;
-    } 
-    
+
+    rc = sqlite3_prepare_v2(db, "select max(id) from CHATS;", -1, &res, 0);    
+    rc = sqlite3_step(res);
+
+
+    int rez = sqlite3_column_int(res, 0);
+    sqlite3_finalize(res);
     sqlite3_close(db);
-    
-    return;
+    return rez;
 }
 
-void insertMessage(char* chat_id, char* user_id, char* message, char* date, char* is_read){
+int insertMessage(char* chat_id, char* user_id, char* message, char* date, char* is_read){
     char sql[500];
     sprintf (sql,"INSERT INTO MESSAGES (chat_id, user_id, message, date, is_read) VALUES ('%s','%s','%s','%s','%s');",chat_id,user_id,message,date,is_read);
     
-
     sqlite3 *db;
+    sqlite3_stmt *res;
     char *err_msg = 0;
    
-    
     int rc = sqlite3_open("data.db", &db);
-    
-    if (rc != SQLITE_OK) {
-        
-        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
-        sqlite3_close(db);
-        
-        return;
-    }
-    
    
 
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+
     
-    if (rc != SQLITE_OK ) {
-        
-        fprintf(stderr, "SQL error: %s\n", err_msg);
-        
-        sqlite3_free(err_msg);        
-        sqlite3_close(db);
-        
-        return;
-    } 
-    
+    rc = sqlite3_prepare_v2(db, "select max(id) from MESSAGES;", -1, &res, 0);    
+    rc = sqlite3_step(res);
+
+    int rez = sqlite3_column_int(res, 0);
+    sqlite3_finalize(res);
     sqlite3_close(db);
-    
-    return;
+    return rez;
 }
 
 void deleteUser(char* id){
@@ -1012,6 +993,7 @@ char* getAllMesFromChat(int id, char* rez){
 
 int main(int argc, char* argv[]) {
     char rez[10000];
+
     //getAllUsers(&rez);  //work
 
     //getOneUser(1, &rez);//work
@@ -1025,6 +1007,11 @@ int main(int argc, char* argv[]) {
   //insertChat("New chat", "des0");//work
    //insertMessage("1","2","something tam", "2010 02 13:11:00", "0");//work
    
+       //printf("%d", insertUser("AAA", "2", "3", "4"));
+       //printf("%d", insertChat("New chat", "des0"));
+        //printf("%d", insertMessage("1","2","something tam", "2010 02 13:11:00", "0"));
+
+
    
    //deleteUser("7"); //work
    //deleteChat("7");//work
@@ -1050,8 +1037,8 @@ int main(int argc, char* argv[]) {
     //updateTextMessage(1, "new mess");
 
     //printf("%d", getIdUserByUserName("AAA"));
-    getIdUserByNick("3", rez);
+    //getIdUserByNick("3", rez);
 
-printf("%s", rez);
+//printf("%s", rez);
 
 }

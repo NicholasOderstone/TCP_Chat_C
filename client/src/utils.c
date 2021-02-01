@@ -15,15 +15,41 @@ void str_trim_lf(char* arr, int length) {
   }
 }
 
+void send_client_info_to_server(client_t *client) {
+	char buffer[LENGTH];
+	snprintf(buffer, BUFFER_SZ, "<LOGIN> <%s> <%s>", client->login, client->pass);
+    send(client->sockfd, buffer, strlen(buffer), 0);
+	printf("%s\n", buffer);
+    bzero(buffer, LENGTH);
+    while (sw_login == -1) { }
+    switch(sw_login) {
+        case 0:
+            //open_main_page(NULL, data);
+            sw_login = -1;
+            break;
+        case 1:
+            printf("## INCORRECT_LOGIN\n");
+            sw_login = -1;
+            break;
+        case 2:
+            printf("## INCORRECT_PASS\n");
+            sw_login = -1;
+            break;
+        default:
+            break;
+    }
+}
+
 void *connect_to_server(void *cnct_inf) {
 	client_t *info = (client_t *)cnct_inf;
-
-    init_client(info, ipv_str, port_str);
+	printf("Reconnect is ready\n");
+    // init_client(info, ipv_str, port_str);
 	while(1) {
         if(info->exit == 1) {
 			break;
 		}
 		if (info->is_connected == 0) {
+			printf("Trying to reconnect\n");
             gtk_spinner_start(connection_spin);
 			close(info->sockfd);
 			info->sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -32,17 +58,18 @@ void *connect_to_server(void *cnct_inf) {
 			if (err == -1) {
 				printf("ERROR: connect\n");
 				close(info->sockfd);
-				sleep(5);
+				sleep(3);
 			}
 			else {
                 gtk_spinner_stop (connection_spin);
 				printf("Connected!\n");
 				info->is_connected = 1;
+				send_client_info_to_server(info);
 			}
 		}
 	}
     int ret_val = 1;
-	printf("6. Connect to server thread terminated\n");
+	printf("-- Connect to server thread terminated --\n");
 	pthread_exit(&ret_val);
 	return NULL;
 }
@@ -68,6 +95,8 @@ void init_client(client_t *client, char *ip, char *port) {
 	client->address.sin_addr.s_addr = inet_addr(ip);
 	client->address.sin_port = htons(atoi(port));
 	client->is_connected = 0;
+	client->login = NULL;
+	client->pass = NULL;
 	pthread_mutex_init(&client->mutex, NULL);
     //get_client_name(client->name);
     strcpy(client->name, "");

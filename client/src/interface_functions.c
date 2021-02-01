@@ -54,7 +54,7 @@ void open_signup_page(GtkWidget *widget, gpointer gp_client)
     login_p = gtk_builder_get_object (builder, "login_p");
     signup_b = gtk_builder_get_object (builder, "signup_b");
     g_signal_connect(login_p, "clicked", G_CALLBACK(open_login_page), gp_client);
-    g_signal_connect(signup_b, "clicked", G_CALLBACK(open_main_page), gp_client);
+    //g_signal_connect(signup_b, "clicked", G_CALLBACK(open_main_page), gp_client);
     g_signal_connect(signup_b, "clicked", G_CALLBACK(func_register), gp_client);
     gtk_widget_show(window);
 }

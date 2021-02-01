@@ -29,28 +29,36 @@
 	#define BUFFER_SZ 2048
 	#define LENGTH 2048
 	#define NAME_SZ 32
-	#define AMOUNT_OF_CMD 11
+	#define AMOUNT_OF_CMD 12
 //////////////////////////
-typedef struct message_struct
-{
-    GtkTextView *view ;
-    GtkTextBuffer *buffer;
-	GtkTextIter start;
-	GtkTextIter end;
-	GtkTextMark* mark;
-} message_t;
-
 
 // STRUCTURES
-	// Handles all neccesary info about client
+	typedef struct message_struct
+	{
+	    GtkTextView *view ;
+	    GtkTextBuffer *buffer;
+		GtkTextIter start;
+		GtkTextIter end;
+		GtkTextMark* mark;
+	} message_t;
+
+	typedef struct chat_info {
+		int chat_id;
+		char *chat_name;
+		struct chat_info *next;
+	} chat_info_t;
+
 	typedef struct{
 		struct sockaddr_in address; // Stores ip (sin_addr.s_addr), port (sin_port) and ip format (sin_family = AF_INET)
 		int sockfd;
 		int uid;
 		char name[NAME_SZ];
+		char *login;
+		char *pass;
 		message_t *m;
 		int is_connected;
 		int exit;
+		chat_info_t *chat_list_head;
 		pthread_mutex_t mutex;
 	} client_t;
 
@@ -67,7 +75,7 @@ typedef struct message_struct
 
 	typedef struct {
 	    char *name;
-	    void (*func)(char *params);
+	    void (*func)(char *params, void *p);
 	} cmd_func;
 
 	typedef struct {
@@ -83,10 +91,6 @@ typedef struct message_struct
 	struct cmd_q {
 	    command data;
 	    struct cmd_q *link;
-	};
-
-	struct send_msg_info_s {
-		client_t *client;
 	};
 
 	struct recv_msg_info_s {
@@ -136,8 +140,6 @@ typedef struct message_struct
 
 	// --- Thread functions ---
 
-	// Handles sending messages
-	void *send_msg_handler(void *arg);
 	// Handles recieving messages
 	void *recv_msg_handler(void *arg);
 	// Handles reconnect
@@ -155,6 +157,8 @@ typedef struct message_struct
 	void to_msg_q(char *data, struct msg_q **msg_q_front, pthread_mutex_t msg_lock);
 	// Inserts the command into the command queue
 	void to_cmd_q(command data, struct cmd_q **cmd_q_front, pthread_mutex_t cmd_lock);
+
+	void to_chat_list(int chat_id, char *chat_name, chat_info_t **chat_list_head);
 	// Deletes the first elememt from the message queue
 	void move_msg_q(struct msg_q **msg_q_front, pthread_mutex_t msg_lock);
 	// Deletes the first elememt from the command queue
@@ -166,12 +170,11 @@ typedef struct message_struct
 
 
 	void send_cmd(command cmd, client_t *client);
-	void analyse_cmd(command fst_cmd, cmd_func function);
+	void analyse_cmd(command fst_cmd, cmd_func function, client_t *client);
 
 	// --- Utility functions ---
 
 	command msg_to_cmd(char *msg);
-	char *cmd_to_msg(command cmd);
 	char *param_1(char *params);
 	char *param_2(char *params);
 	char *param_3(char *params);
@@ -179,8 +182,9 @@ typedef struct message_struct
 	char *param_5(char *params);
 
 	void *th_connect_to_server();
-	//void *init_threads(GtkWidget *widget, gpointer data);
+	void display(chat_info_t **chat_list_head);
 	void init_switches(void);
+	void *init_threads(void *client);
 	void func_login(GtkWidget *widget, gpointer data);
 	void func_register(GtkWidget *widget, gpointer data);
 
@@ -191,6 +195,8 @@ typedef struct message_struct
 	int sw_login;
 	int sw_register;
 	int sw_send;
+
+	pthread_mutex_t chat_lock;
 
 //////////////////////////
 

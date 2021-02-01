@@ -1,6 +1,6 @@
 #include "../inc/header.h"
 
-char *cmd_to_msg(command cmd) {
+char *cmd_to_msg(struct command cmd) {
     int len1 = strlen(cmd.command);
     int len2 = strlen(cmd.params);
     char *msg = mx_strnew(len1 + len2 + 1);

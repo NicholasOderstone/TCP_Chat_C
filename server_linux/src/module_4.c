@@ -2,13 +2,6 @@
 
 void *process_cmd(void *arg) {
 	struct process_cmd_info_s *Info = (struct process_cmd_info_s *)arg;
-
-	if (pthread_mutex_init(&send_cmd_lock, NULL) != 0)
-	{
-	  printf("Mutex initialization failed.\n");
-	  return NULL;
-	}
-
 	while(1) {
 		if(Info->buff_m->client->exit_flag == 1) {
 			break;

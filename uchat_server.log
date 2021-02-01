@@ -1,0 +1,3 @@
+	0: cmd_q: command = LOGIN; params = <name> <pass>
+--- LOGIN ---
+5. Process command thread terminated

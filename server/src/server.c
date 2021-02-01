@@ -84,10 +84,10 @@ int main(int argc, char **argv){
 		client_add(cli, &server);
 
 		pthread_create(&tid, NULL, &handle_client, (void*)clnt);
-
 		/* Reduce CPU usage */
 		sleep(1);
 	}
+	printf("1\n");
 	free(server.clients);
 	close(server.listenfd);
 

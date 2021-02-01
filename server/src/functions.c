@@ -44,6 +44,10 @@ void f_login(char *params, buff_t *Info) {
     cmd3.command = "<CHAT_LIST>";
     cmd3.params = " <125> <third chat>";
 
+    struct command cmd4;
+    cmd4.command = "<CHAT_LIST>";
+    cmd4.params = " <126> <fourth chat>";
+
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 	for(int i=0; i<MAX_CLIENTS; ++i){
 		if(Info->serv_inf->clients[i]){
@@ -55,6 +59,8 @@ void f_login(char *params, buff_t *Info) {
                 send_cmd(cmd2, Info->serv_inf->clients[i]);
                 usleep(100);
                 send_cmd(cmd3, Info->serv_inf->clients[i]);
+                usleep(100);
+                send_cmd(cmd4, Info->serv_inf->clients[i]);
 			}
 		}
 	}

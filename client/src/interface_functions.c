@@ -95,7 +95,6 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     client_t *client = (client_t *)gp_client;
 
     GtkListBox *box;
-    GtkWidget **chat = malloc(3 * sizeof(GtkWidget *));
     GtkButton *menu_b;
     GtkCssProvider *cssProvider = gtk_css_provider_new();
     client->m = (message_t *)malloc(sizeof(message_t *));
@@ -128,6 +127,8 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
         gtk_list_box_insert(box, GTK_WIDGET(chat[i]), -1 );
     }*/
     int i = 0;
+    GtkWidget **chat = malloc(chat_list_size(&client->chat_list_head) * sizeof(GtkWidget *));
+    printf("### chat_list size %d ###\n", chat_list_size(&client->chat_list_head));
     chat_info_t *current = client->chat_list_head;
     while (current != NULL)
     {

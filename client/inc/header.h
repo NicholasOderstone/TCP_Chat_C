@@ -150,6 +150,7 @@
 	void *make_cmd(void *arg);
 	// Handles processing recieved commands
 	void *process_cmd(void *arg);
+	void *th_connect_to_server();
 
 	// --- Queue functions ---
 
@@ -181,8 +182,9 @@
 	char *param_4(char *params);
 	char *param_5(char *params);
 
-	void *th_connect_to_server();
 	void display(chat_info_t **chat_list_head);
+	int chat_list_size(chat_info_t **chat_list_head);
+
 	void init_switches(void);
 	void *init_threads(void *client);
 	void func_login(GtkWidget *widget, gpointer data);

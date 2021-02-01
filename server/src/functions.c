@@ -49,8 +49,11 @@ void f_login(char *params, buff_t *Info) {
 		if(Info->serv_inf->clients[i]){
 			if(Info->serv_inf->clients[i]->uid == Info->uid){
 				send_cmd(cmd, Info->serv_inf->clients[i]);
+                usleep(100);
                 send_cmd(cmd1, Info->serv_inf->clients[i]);
+                usleep(100);
                 send_cmd(cmd2, Info->serv_inf->clients[i]);
+                usleep(100);
                 send_cmd(cmd3, Info->serv_inf->clients[i]);
 			}
 		}

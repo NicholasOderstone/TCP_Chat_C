@@ -19,14 +19,14 @@ void func_rpl_register(char *params) {
     char *p_rpl = param_1(params);
     if (strcmp(p_rpl, "ERROR") == 0) {
         if (strcmp(param_2(params), "USERNAME_EXIST") == 0) {
-            sw_login = 1;
+            sw_register = 1;
         }
         else if (strcmp(param_2(params), "PASS_NOT_MATCH") == 0) {
-            sw_login = 2;
+            sw_register = 2;
         }
     }
     else if (strcmp(p_rpl, "SUCCESS") == 0) {
-        sw_login = 0;
+        sw_register = 0;
     }
 }
 

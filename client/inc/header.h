@@ -31,13 +31,14 @@
 	#define NAME_SZ 32
 	#define AMOUNT_OF_CMD 11
 //////////////////////////
-typedef struct message_struct
+typedef struct
 {
     GtkTextView *view ;
     GtkTextBuffer *buffer;
 	GtkTextIter start;
 	GtkTextIter end;
 	GtkTextMark* mark;
+	GtkListBox *box_message;
 } message_t;
 
 

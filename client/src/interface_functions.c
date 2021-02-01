@@ -54,7 +54,6 @@ void open_signup_page(GtkWidget *widget, gpointer gp_client)
     login_p = gtk_builder_get_object (builder, "login_p");
     signup_b = gtk_builder_get_object (builder, "signup_b");
     g_signal_connect(login_p, "clicked", G_CALLBACK(open_login_page), gp_client);
-    g_signal_connect(signup_b, "clicked", G_CALLBACK(open_main_page), gp_client);
     g_signal_connect(signup_b, "clicked", G_CALLBACK(func_register), gp_client);
     gtk_widget_show(window);
 }
@@ -97,6 +96,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     GtkListBox *box;
     GtkWidget *child;
     GtkWidget *child2;
+    GtkWidget *child3;
     GtkButton *menu_b;
     GtkCssProvider *cssProvider = gtk_css_provider_new();
     client->m = (message_t *)malloc(sizeof(message_t *));
@@ -119,23 +119,23 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     gtk_widget_show(window);
     //ПЕРЕДЕЛАЙ ОКНА В ОКНА А НЕ ВИДЖЕТЫ
     connection_spin = GTK_SPINNER(gtk_builder_get_object(builder, "connection_spinner"));
-    message_s->view = GTK_TEXT_VIEW(gtk_builder_get_object(builder, "message_field"));
-    message_s->buffer = gtk_text_view_get_buffer (message_s->view);
+
+
     box = GTK_LIST_BOX(gtk_builder_get_object(builder, "chat_list"));
     child = gtk_button_new_with_label ("contact1");
     child2 = gtk_button_new_with_label ("contact2");
+    child3 = gtk_button_new_with_label ("contact3");
     //gtk_text_buffer_insert_interactive_at_cursor (message_s->buffer, username_str, -1, TRUE);
     //gtk_text_buffer_insert_interactive_at_cursor (message_s->buffer, passoword_str, -1, TRUE);
     send_b = gtk_builder_get_object (builder, "send_buttom");
     gtk_button_set_image (GTK_BUTTON (send_b), send_b_image);
     menu_b = GTK_BUTTON(gtk_builder_get_object (builder, "main_menu"));
     gtk_button_set_image (menu_b, menu_b_image);
-
-    gtk_text_buffer_get_iter_at_offset(message_s->buffer, &message_s->end, 0);
+    message_s->box_message = GTK_LIST_BOX(gtk_builder_get_object(builder, "message_list"));
     //gtk_text_buffer_create_tag(message_s->buffer, "gray_bg", "background","gray", NULL);
     //gtk_text_buffer_insert_with_tags_by_name (message_s->buffer, &message_s->end, "name", -1, "gray_bg", NULL);
     message_entry = GTK_ENTRY(gtk_builder_get_object(builder, "message_entry"));
-    g_signal_connect(send_b, "clicked", G_CALLBACK(send_message), (gpointer)message_s);
+    g_signal_connect(send_b, "clicked", G_CALLBACK(show_my_msg), (gpointer)message_s);
     //gtk_binding_entry_add_signall()
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_send), gp_client);
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_clear), NULL);
@@ -143,14 +143,24 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
 
     gtk_widget_show (GTK_WIDGET(child));
     gtk_widget_show (GTK_WIDGET(child2));
-    gtk_list_box_insert(box, GTK_WIDGET(child), -1 );
-    gtk_list_box_insert(box, GTK_WIDGET(child2), -1 );
+    gtk_widget_show (GTK_WIDGET(child3));
+    //gtk_list_box_insert(box, GTK_WIDGET(child), -1 );
+    //gtk_list_box_insert(box, GTK_WIDGET(child2), -1 );
+    gtk_container_add (GTK_CONTAINER(box), GTK_WIDGET(child));
+    gtk_container_add (GTK_CONTAINER(box), GTK_WIDGET(child2));
+    gtk_container_add (GTK_CONTAINER(box), GTK_WIDGET(child3));
+    gtk_widget_destroy(child2);
 
 }
 
 gboolean message_show(gpointer m) {
     received_messages *received_mess = (received_messages *)m;
+    GtkTextView *view ;
+    GtkTextBuffer *buffer;
+    GtkTextIter end;
+    
     if (received_mess->message[0] != 0) {
+        gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(received_mess->client->m->view));
         gtk_text_buffer_insert_interactive (received_mess->client->m->buffer, &received_mess->client->m->end, received_mess->sender_name, -1, TRUE );
         gtk_text_buffer_insert_interactive (received_mess->client->m->buffer, &received_mess->client->m->end, ": ", -1, TRUE );
         gtk_text_buffer_insert_interactive (received_mess->client->m->buffer, &received_mess->client->m->end, received_mess->message, -1, TRUE );
@@ -175,15 +185,27 @@ void message_send(GtkWidget *widget, gpointer data) {
     bzero(buffer, LENGTH + 32);
 }
 
-void send_message(GtkWidget *widget, gpointer m) {
+void show_my_msg(GtkWidget *widget, gpointer m) {
     UNUSED(widget);
     message_t *mess = (message_t *)m;
     (void)(widget);
-    gtk_text_buffer_insert_interactive (mess->buffer, &mess->end, "you: ", -1, TRUE );
-    gtk_text_buffer_insert_interactive (mess->buffer, &mess->end, message_str, -1, TRUE );
-    gtk_text_buffer_insert_interactive (mess->buffer, &mess->end, "\n", -1, TRUE );
-    mess->mark = gtk_text_buffer_create_mark (mess->buffer, NULL, &mess->end, 1);
-    gtk_text_view_scroll_to_mark (mess->view, mess->mark, 0.0, 0, 0.0, 1.0);
+
+    GtkTextView *view ;
+    GtkTextBuffer *buffer;
+    GtkTextIter end;
+	GtkTextMark* mark;
+    view = GTK_TEXT_VIEW(gtk_text_view_new ());
+    buffer =gtk_text_buffer_new(NULL);
+    gtk_text_view_set_left_margin(view, 300);
+    gtk_text_view_set_right_margin(view, 10);
+    gtk_text_view_set_wrap_mode ( view, GTK_WRAP_WORD_CHAR);
+    gtk_text_view_set_buffer(view, buffer);
+    gtk_text_buffer_get_iter_at_offset(buffer, &end, 0);
+    gtk_text_buffer_insert_interactive (buffer, &end, message_str, -1, TRUE );
+    gtk_container_add (GTK_CONTAINER(mess->box_message), GTK_WIDGET(view));
+    gtk_widget_show (GTK_WIDGET(view));
+    mark = gtk_text_buffer_create_mark (buffer, NULL, &end, 1);
+    gtk_text_view_scroll_to_mark (view, mark, 0.0, 0, 0.0, 1.0);
 }
 
 void message_clear() {

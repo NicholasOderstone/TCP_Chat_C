@@ -36,7 +36,7 @@
     void open_main_page();
     void username_changed();
     void password_changed();
-    void send_message();
+    void show_my_msg();
     void message_clear();
     void message_send();
     void username_s_changed();

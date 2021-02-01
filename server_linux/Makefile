@@ -4,7 +4,7 @@ NAME = uchat_server
 INC = inc/*.h
 SRC := $(wildcard src/*.c)
 OBJ := $(addprefix obj/, $(notdir $(SRC:%.c=%.o)))
-FLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic
+FLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic -D_GNU_SOURCE
 FLAG_SQL = -lsqlite3 
 DEBUG_FLAGS = -fsanitize=address -fno-omit-frame-pointer
 
@@ -12,7 +12,7 @@ DEBUG_FLAGS = -fsanitize=address -fno-omit-frame-pointer
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	@$(CC) $(FLAGS) $(FLAG_SQL) $(DEBUG_FLAGS) $(OBJ) -o ../$(NAME)
+	@$(CC) $(FLAGS) $(FLAG_SQL) $(DEBUG_FLAGS) $(OBJ) -o $(NAME)
 	@make clean
 	@printf "\r\33[2K$(NAME):\t\t \033[32;1mcreated\033[0m\n"
 $(OBJ): | obj

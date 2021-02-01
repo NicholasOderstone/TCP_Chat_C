@@ -1,4 +1,4 @@
-#include "../inc/module_two.h"
+#include "../inc/header.h"
 
 char *param_1(char *params) {
     char *start_frst = strchr(params, '<');

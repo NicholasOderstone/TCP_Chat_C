@@ -1,4 +1,4 @@
-#include "../inc/module_three.h"
+#include "../inc/header.h"
 
 char *mx_strnew(const int size) {
     int i = 0;

@@ -3,6 +3,7 @@
 #include <sqlite3.h> 
 
 static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
+   (void)(NotUsed);
    int i;
    for(i = 0; i<argc; i++) {
       printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
@@ -52,7 +53,7 @@ sql = "CREATE TABLE IF NOT EXISTS CHATS("  \
       "CHAT_ID             INT     NOT NULL," \
       "USER_ID             INT     NOT NULL," \
       "MESSAGE             TEXT    NOT NULL," \
-      "DATE                TEXT    NOT NULL," \
+      "DATE                INT    NOT NULL," \
       "IS_READ             INT     NOT NULL );";
   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
    
@@ -67,7 +68,9 @@ sql = "CREATE TABLE IF NOT EXISTS CHATS("  \
 //USER_IN_CHAT
   sql = "CREATE TABLE IF NOT EXISTS USER_IN_CHAT("  \
       "USER_ID       INT     NOT NULL," \
-      "CHAT_ID       INT     NOT NULL);";
+      "LOGIN         TEXT    NOT NULL," \
+      "CHAT_ID       INT     NOT NULL," \
+      "NAME          TEXT    NOT NULL);";
   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg); 
    
    
@@ -82,7 +85,7 @@ sql = "CREATE TABLE IF NOT EXISTS CHATS("  \
    return 0;
 }
 
-int main(int argc, char* argv[]) {
+int main() {
    
    initDB();
 

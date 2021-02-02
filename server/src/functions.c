@@ -21,7 +21,7 @@ void f_chat_msg(char *params, buff_t *Info) {
 		for(int i=0; i<MAX_CLIENTS; ++i){
 			if(Info->serv_inf->clients[i]){
 				if(Info->serv_inf->clients[i]->uid == Info->uid){
-					for(int i = 0; i < 5000; i++) {
+					for(int i = 0; i < 50; i++) {
 						send_cmd(cmd_arr[i], Info->serv_inf->clients[i]);
 					}
 				}

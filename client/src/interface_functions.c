@@ -158,14 +158,19 @@ gboolean message_show(gpointer m) {
     GtkTextView *view ;
     GtkTextBuffer *buffer;
     GtkTextIter end;
-    
+    view = GTK_TEXT_VIEW(gtk_text_view_new ());
+    buffer =gtk_text_buffer_new(NULL);
+    gtk_text_view_set_wrap_mode ( view, GTK_WRAP_WORD_CHAR);
+    gtk_text_view_set_buffer(view, buffer);
+    gtk_text_buffer_get_iter_at_offset(buffer, &end, 0);
     if (received_mess->message[0] != 0) {
-        gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(received_mess->client->m->view));
-        gtk_text_buffer_insert_interactive (received_mess->client->m->buffer, &received_mess->client->m->end, received_mess->sender_name, -1, TRUE );
-        gtk_text_buffer_insert_interactive (received_mess->client->m->buffer, &received_mess->client->m->end, ": ", -1, TRUE );
-        gtk_text_buffer_insert_interactive (received_mess->client->m->buffer, &received_mess->client->m->end, received_mess->message, -1, TRUE );
-        gtk_text_buffer_insert_interactive (received_mess->client->m->buffer, &received_mess->client->m->end, "\n", -1, TRUE );
+        gtk_text_buffer_insert_interactive (buffer, &end, received_mess->sender_name, -1, TRUE );
+        gtk_text_buffer_insert_interactive (buffer, &end, ": ", -1, TRUE );
+        gtk_text_buffer_insert_interactive (buffer, &end, received_mess->message, -1, TRUE );
+        //gtk_text_buffer_insert_interactive (received_mess->client->m->buffer, &received_mess->client->m->end, "\n", -1, TRUE );
     }
+    gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view));
+    gtk_widget_show (GTK_WIDGET(view));
     memset(received_mess->message, 0, sizeof(received_mess->message));
     memset(received_mess->sender_name, 0, sizeof(received_mess->sender_name));
     return FALSE;
@@ -196,11 +201,12 @@ void show_my_msg(GtkWidget *widget, gpointer m) {
 	GtkTextMark* mark;
     view = GTK_TEXT_VIEW(gtk_text_view_new ());
     buffer =gtk_text_buffer_new(NULL);
-    gtk_text_view_set_left_margin(view, 300);
-    gtk_text_view_set_right_margin(view, 10);
+    //gtk_text_view_set_left_margin(view, 300);
+    //gtk_text_view_set_right_margin(view, 10);
     gtk_text_view_set_wrap_mode ( view, GTK_WRAP_WORD_CHAR);
     gtk_text_view_set_buffer(view, buffer);
     gtk_text_buffer_get_iter_at_offset(buffer, &end, 0);
+    gtk_text_buffer_insert_interactive (buffer, &end, "you: ", -1, TRUE );
     gtk_text_buffer_insert_interactive (buffer, &end, message_str, -1, TRUE );
     gtk_container_add (GTK_CONTAINER(mess->box_message), GTK_WIDGET(view));
     gtk_widget_show (GTK_WIDGET(view));

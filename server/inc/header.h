@@ -39,12 +39,12 @@
         int uid;
         char name[32];
         int exit_flag;
-    } client_t; 
+    } client_t;
 
     /* Handles all neccessary info about server*/
     typedef struct
     {
-        char *ipv4; /* IP in char* format. Standard 127.0.0.1*/ 
+        char *ipv4; /* IP in char* format. Standard 127.0.0.1*/
         int port; /* Port in int format*/
         struct sockaddr_in address; /*Server IP, Port and ip format */
         int listenfd; /* Main server socket*/
@@ -55,14 +55,14 @@
 
         _Atomic unsigned int cli_count; /* Client count. _Atomic is used as a built-in mutex */
 
-    } server_info_t; 
+    } server_info_t;
 
     /* Buffer that is used to transfer info to the new thread*/
     typedef struct {
         server_info_t *serv_inf; /* Server info*/
-        int uid; /* uid of client which connection is handled in this thread*/ 
+        int uid; /* uid of client which connection is handled in this thread*/
         client_t *client;
-    } buff_t; 
+    } buff_t;
 
 
     pthread_mutex_t cmd_lock; //Mutex for commands
@@ -73,7 +73,7 @@
         char *params;
     };
 
-    //A queue for commands 
+    //A queue for commands
     struct cmd_q {
         struct command data;
         struct cmd_q *link;
@@ -98,7 +98,7 @@
 		cmd_func arr_cmd_func[AMOUNT_OF_CMD];
         buff_t *buff_m;
 	};
-    
+
 
 
 //////////////////////////
@@ -144,8 +144,8 @@
     /* add "> " at the beginning of the new line*/
     void str_overwrite_stdout();
     /* trim /n*/
-    void str_trim_lf (char* arr, int length); 
-    /* Print client ipv4 address*/ 
+    void str_trim_lf (char* arr, int length);
+    /* Print client ipv4 address*/
     void print_client_addr(struct sockaddr_in addr);
     /* CONBERT INT TO CHAR* */
     char* itoa(int num, char* buffer, int base);
@@ -185,12 +185,14 @@
     void insertUser(char* login, char* password, char* nick, char* status);
     int getIdUserByUserName(char* login);
     char* getAllUsers(char* rez);
-    void deleteUser(char* id);  
+    void deleteUser(char* id);
     char* getUserName(int id, char* rez);
     char* getUserPassword(int id, char* rez);
 
 
     // --- Daemonize ---
     void daemonize();
+
+    pthread_mutex_t send_cmd_lock;
 
 #endif

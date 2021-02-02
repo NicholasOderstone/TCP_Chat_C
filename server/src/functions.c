@@ -32,11 +32,26 @@ void f_login(char *params, buff_t *Info) {
 	cmd.command = "<LOGIN>";
 	cmd.params = " <SUCCESS>";
 
+    struct command cmd1;
+    cmd1.command = "<CHAT_LIST>";
+    cmd1.params = " <123> <first chat>";
+
+    struct command cmd2;
+    cmd2.command = "<CHAT_LIST>";
+    cmd2.params = " <124> <second chat>";
+
+    struct command cmd3;
+    cmd3.command = "<CHAT_LIST>";
+    cmd3.params = " <125> <third chat>";
+
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 	for(int i=0; i<MAX_CLIENTS; ++i){
 		if(Info->serv_inf->clients[i]){
 			if(Info->serv_inf->clients[i]->uid == Info->uid){
 				send_cmd(cmd, Info->serv_inf->clients[i]);
+                send_cmd(cmd1, Info->serv_inf->clients[i]);
+                send_cmd(cmd2, Info->serv_inf->clients[i]);
+                send_cmd(cmd3, Info->serv_inf->clients[i]);
 			}
 		}
 	}

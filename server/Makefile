@@ -5,7 +5,7 @@ INC = inc/*.h
 SRC := $(wildcard src/*.c)
 OBJ := $(addprefix obj/, $(notdir $(SRC:%.c=%.o)))
 FLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic
-FLAG_SQL = -lsqlite3 
+FLAG_SQL = -lsqlite3
 DEBUG_FLAGS = -fsanitize=address -fno-omit-frame-pointer
 
 
@@ -16,10 +16,10 @@ $(NAME): $(OBJ)
 	@make clean
 	@printf "\r\33[2K$(NAME):\t\t \033[32;1mcreated\033[0m\n"
 $(OBJ): | obj
-obj: 
+obj:
 	@mkdir $@
-	
-obj/%.o: src/%.c $(INC) 
+
+obj/%.o: src/%.c $(INC)
 ifeq ($< ,src/db.c)
 		@$(CC) $(FLAGS) $(FLAG_SQL) -c $< -o $@
 else

@@ -8,6 +8,6 @@ uninstall:
 
 clean:
 	@make clean -C client
-	@make clean -C client
+	@make clean -C server
 
 reinstall: uninstall all

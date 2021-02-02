@@ -94,9 +94,6 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     client_t *client = (client_t *)gp_client;
 
     GtkListBox *box;
-    GtkWidget *child;
-    GtkWidget *child2;
-    GtkWidget *child3;
     GtkButton *menu_b;
     GtkCssProvider *cssProvider = gtk_css_provider_new();
     client->m = (message_t *)malloc(sizeof(message_t *));
@@ -122,9 +119,24 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
 
 
     box = GTK_LIST_BOX(gtk_builder_get_object(builder, "chat_list"));
-    child = gtk_button_new_with_label ("contact1");
-    child2 = gtk_button_new_with_label ("contact2");
-    child3 = gtk_button_new_with_label ("contact3");
+    /*for (int i =0; i<3; i++) {
+        chat[i] = gtk_button_new_with_label (client->chat_list_head->chat_name);
+        client->chat_list_head = client->chat_list_head->next;
+        gtk_widget_show (GTK_WIDGET(chat[i]));
+        gtk_list_box_insert(box, GTK_WIDGET(chat[i]), -1 );
+    }*/
+    int i = 0;
+    GtkWidget **chat = malloc(chat_list_size(&client->chat_list_head) * sizeof(GtkWidget *));
+    printf("### chat_list size %d ###\n", chat_list_size(&client->chat_list_head));
+    chat_info_t *current = client->chat_list_head;
+    while (current != NULL)
+    {
+        chat[i] = gtk_button_new_with_label(current->chat_name);
+        gtk_widget_show(GTK_WIDGET(chat[i]));
+        gtk_list_box_insert(box, GTK_WIDGET(chat[i]), -1 );
+        current = current->next;
+        i++;
+    }
     //gtk_text_buffer_insert_interactive_at_cursor (message_s->buffer, username_str, -1, TRUE);
     //gtk_text_buffer_insert_interactive_at_cursor (message_s->buffer, passoword_str, -1, TRUE);
     send_b = gtk_builder_get_object (builder, "send_buttom");
@@ -140,16 +152,6 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_send), gp_client);
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_clear), NULL);
     //g_signal_connect(message_s->view, "move-cursor", G_CALLBACK(del_message), (gpointer)message_s->buffer);
-
-    gtk_widget_show (GTK_WIDGET(child));
-    gtk_widget_show (GTK_WIDGET(child2));
-    gtk_widget_show (GTK_WIDGET(child3));
-    //gtk_list_box_insert(box, GTK_WIDGET(child), -1 );
-    //gtk_list_box_insert(box, GTK_WIDGET(child2), -1 );
-    gtk_container_add (GTK_CONTAINER(box), GTK_WIDGET(child));
-    gtk_container_add (GTK_CONTAINER(box), GTK_WIDGET(child2));
-    gtk_container_add (GTK_CONTAINER(box), GTK_WIDGET(child3));
-    gtk_widget_destroy(child2);
 
 }
 

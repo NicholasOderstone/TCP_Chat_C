@@ -17,9 +17,6 @@ void init_connect_page(GObject **p_connect_b, GtkBuilder **p_builder, gpointer g
     gtk_widget_show(window);
     ipv_entry = GTK_ENTRY(gtk_builder_get_object(builder, "ipv_field"));
     port_entry = GTK_ENTRY(gtk_builder_get_object(builder, "port_field"));
-
-// Add ip and port check when clicked on "Connect"
-// If ip or port is incorrect, show message "IP or PORT is incorrect. Try again"(or smth like that)
     g_signal_connect(*p_connect_b, "clicked", G_CALLBACK(open_login_page), gp_client);
 	g_signal_connect(*p_connect_b, "clicked", G_CALLBACK(th_connect_to_server), gp_client);
     g_object_unref(*p_builder);
@@ -54,7 +51,6 @@ void open_signup_page(GtkWidget *widget, gpointer gp_client)
     login_p = gtk_builder_get_object (builder, "login_p");
     signup_b = gtk_builder_get_object (builder, "signup_b");
     g_signal_connect(login_p, "clicked", G_CALLBACK(open_login_page), gp_client);
-    //g_signal_connect(signup_b, "clicked", G_CALLBACK(open_main_page), gp_client);
     g_signal_connect(signup_b, "clicked", G_CALLBACK(func_register), gp_client);
     gtk_widget_show(window);
 }
@@ -76,7 +72,6 @@ void open_login_page(GtkWidget *widget, gpointer gp_client)
     login_b = gtk_builder_get_object (builder, "login_b");
     g_signal_connect(signup_p, "clicked", G_CALLBACK(open_signup_page), gp_client);
     g_signal_connect(login_b, "clicked", G_CALLBACK(func_login), gp_client);
-    //g_signal_connect(login_b, "clicked", G_CALLBACK(open_main_page), gp_client);
     login = gtk_builder_get_object(builder, "login");
     password = GTK_ENTRY(gtk_builder_get_object(builder, "password"));
     gtk_entry_set_visibility (password, FALSE);
@@ -87,9 +82,8 @@ void open_login_page(GtkWidget *widget, gpointer gp_client)
 void open_main_page(GtkWidget *widget, gpointer gp_client)
 {
     UNUSED(widget);
-    //struct message_struct *message_s = (struct message_struct*)malloc(sizeof(struct message_struct));
-    static message_t m;
-    message_t *message_s = (message_t *)malloc(sizeof(message_t *));
+    static gtk_utils_t m;
+    gtk_utils_t *message_s = (gtk_utils_t *)malloc(sizeof(gtk_utils_t *));
     message_s = &m;
     GObject *send_b;
     client_t *client = (client_t *)gp_client;
@@ -97,7 +91,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     GtkListBox *box;
     GtkButton *menu_b;
     GtkCssProvider *cssProvider = gtk_css_provider_new();
-    client->m = (message_t *)malloc(sizeof(message_t *));
+    client->m = (gtk_utils_t *)malloc(sizeof(gtk_utils_t *));
     client->m = message_s;
 
     GtkWidget *send_b_image = gtk_image_new_from_file ("client/resources/send_b_img.png");
@@ -108,7 +102,6 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
                                GTK_STYLE_PROVIDER(cssProvider),
                                GTK_STYLE_PROVIDER_PRIORITY_USER);
 
-    //gtk_binding_set_find ("binding-set1");
     gtk_widget_hide(window);
     builder = gtk_builder_new();
     gtk_builder_add_from_file (builder, "messanger.glade", NULL);
@@ -120,42 +113,57 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     message_s->view = GTK_TEXT_VIEW(gtk_builder_get_object(builder, "message_field"));
     message_s->buffer = gtk_text_view_get_buffer (message_s->view);
     box = GTK_LIST_BOX(gtk_builder_get_object(builder, "chat_list"));
-    /*for (int i =0; i<3; i++) {
-        chat[i] = gtk_button_new_with_label (client->chat_list_head->chat_name);
-        client->chat_list_head = client->chat_list_head->next;
-        gtk_widget_show (GTK_WIDGET(chat[i]));
-        gtk_list_box_insert(box, GTK_WIDGET(chat[i]), -1 );
-    }*/
+
     int i = 0;
     GtkWidget **chat = malloc(chat_list_size(&client->chat_list_head) * sizeof(GtkWidget *));
     printf("### chat_list size %d ###\n", chat_list_size(&client->chat_list_head));
     chat_info_t *current = client->chat_list_head;
+    get_messages_request_s *get_messages_request = (get_messages_request_s *)malloc(sizeof(get_messages_request_s));
     while (current != NULL)
     {
         chat[i] = gtk_button_new_with_label(current->chat_name);
         gtk_widget_show(GTK_WIDGET(chat[i]));
-        gtk_list_box_insert(box, GTK_WIDGET(chat[i]), -1 );
+        gtk_list_box_insert(box, GTK_WIDGET(chat[i]), -1);
+        get_messages_request->chat = current;
+        get_messages_request->client = client;
+        g_signal_connect(get_messages_info->chat[i], "clicked", G_CALLBACK(get_msg_request), (gpointer)get_messages_request);
         current = current->next;
         i++;
     }
-    //gtk_text_buffer_insert_interactive_at_cursor (message_s->buffer, username_str, -1, TRUE);
-    //gtk_text_buffer_insert_interactive_at_cursor (message_s->buffer, passoword_str, -1, TRUE);
+    //get_messages_info_s *get_messages_info = (get_messages_info_s *)malloc(sizeof(get_messages_info_s *));
+    //get_messages_info->chat = chat;
+    //get_messages_info->client = client;
+    //gdk_threads_add_idle(get_messages, (gpointer)get_messages_info);
+
     send_b = gtk_builder_get_object (builder, "send_buttom");
     gtk_button_set_image (GTK_BUTTON (send_b), send_b_image);
     menu_b = GTK_BUTTON(gtk_builder_get_object (builder, "main_menu"));
     gtk_button_set_image (menu_b, menu_b_image);
 
     gtk_text_buffer_get_iter_at_offset(message_s->buffer, &message_s->end, 0);
-    //gtk_text_buffer_create_tag(message_s->buffer, "gray_bg", "background","gray", NULL);
-    //gtk_text_buffer_insert_with_tags_by_name (message_s->buffer, &message_s->end, "name", -1, "gray_bg", NULL);
     message_entry = GTK_ENTRY(gtk_builder_get_object(builder, "message_entry"));
     g_signal_connect(send_b, "clicked", G_CALLBACK(send_message), (gpointer)message_s);
-    //gtk_binding_entry_add_signall()
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_send), gp_client);
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_clear), NULL);
-    //g_signal_connect(message_s->view, "move-cursor", G_CALLBACK(del_message), (gpointer)message_s->buffer);
-
 }
+
+/*gboolean get_messages(gpointer data) {
+    get_messages_info_s *get_messages_info = (get_messages_info_s *)data;
+    int i = 0;
+    chat_info_t *current = get_messages_info->client->chat_list_head;
+    get_messages_request_s **get_messages_request = (get_messages_request_s **)malloc(chat_list_size(&get_messages_info->client->chat_list_head) * sizeof(get_messages_request_s));
+    while (current != NULL) {
+        get_messages_request[i]->chat = current;
+        get_messages_request[i]->client = get_messages_info->client;
+
+        g_signal_connect(get_messages_info->chat[i], "clicked", G_CALLBACK(get_msg_request), (gpointer)get_messages_request[i]);
+        current = current->next;
+        i++;
+    }
+    //if (get_messages_request->client->exit == 1)
+        return FALSE;
+    //return TRUE;
+}*/
 
 gboolean message_show(gpointer m) {
     received_messages *received_mess = (received_messages *)m;
@@ -168,7 +176,6 @@ gboolean message_show(gpointer m) {
     memset(received_mess->message, 0, sizeof(received_mess->message));
     memset(received_mess->sender_name, 0, sizeof(received_mess->sender_name));
     return FALSE;
-    //return TRUE;
 }
 
 void message_changed(GtkEntry *e){
@@ -178,15 +185,15 @@ void message_changed(GtkEntry *e){
 void message_send(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
     client_t *client = (client_t *)data;
-    char buffer[LENGTH + 32];
+    char buffer[BUFFER_SZ + 32];
     snprintf(buffer, BUFFER_SZ, "<SEND> <%s>", message_str);
     send(client->sockfd, buffer, strlen(buffer), 0);
-    bzero(buffer, LENGTH + 32);
+    bzero(buffer, BUFFER_SZ + 32);
 }
 
 void send_message(GtkWidget *widget, gpointer m) {
     UNUSED(widget);
-    message_t *mess = (message_t *)m;
+    gtk_utils_t *mess = (gtk_utils_t *)m;
     (void)(widget);
     gtk_text_buffer_insert_interactive (mess->buffer, &mess->end, "you: ", -1, TRUE );
     gtk_text_buffer_insert_interactive (mess->buffer, &mess->end, message_str, -1, TRUE );

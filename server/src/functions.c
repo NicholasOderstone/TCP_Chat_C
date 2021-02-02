@@ -11,7 +11,9 @@ void f_login(char *params, buff_t *Info) {
 	if(getIdUserByUserName(p_login) == 0){
 		//Oшибка: неправильный логин
 		printf("Incorrect user_name\n");
-		send(Info->client->sockfd, "<LOGIN> <ERROR> <INCORRECT_LOGIN>", strlen("<LOGIN> <ERROR> <INCORRECT_LOGIN>"), 0);
+        cmd.command = "<LOGIN>";
+    	cmd.params = " <ERROR> <INCORRECT_LOGIN>";
+        send_cmd(cmd, Info->client);
 		return;
 	}
 	getUserPassword(getIdUserByUserName(p_login), buff_out);
@@ -19,7 +21,9 @@ void f_login(char *params, buff_t *Info) {
 	if(strcmp(buff_out, p_pass) != 0) {
 		//Ошибка: неправильный пароль
 		printf("Incorrect password\n");
-		send(Info->client->sockfd, "<LOGIN> <ERROR> <INCORRECT_PASS>", strlen("<LOGIN> <ERROR> <INCORRECT_PASS>"), 0);
+        cmd.command = "<LOGIN>";
+    	cmd.params = " <ERROR> <INCORRECT_PASS>";
+        send_cmd(cmd, Info->client);
 		return;
 	}
 	bzero(buff_out, BUFFER_SZ);

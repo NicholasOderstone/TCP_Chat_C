@@ -3,7 +3,7 @@
 	static char inbuf[BUFFER_SZ];
 	static size_t inbuf_used = 0;
 void input_pump(struct read_msg_info_s *Info) {
-	
+
 	size_t inbuf_remain = sizeof(inbuf) - inbuf_used;
 	if (inbuf_remain == 0) {
 		fprintf(stderr, "Line exceeded buffer length!\n");
@@ -40,7 +40,7 @@ void input_pump(struct read_msg_info_s *Info) {
 
 void *read_msg(void *arg) {
 	struct read_msg_info_s *Info = (struct read_msg_info_s *)arg;
-	//char msg_buf[LENGTH];
+	//char msg_buf[BUFFER_SZ];
 
 	if (pthread_mutex_init(&Info->lock, NULL) != 0)
 	{
@@ -54,20 +54,6 @@ void *read_msg(void *arg) {
 		}
 		if (Info->client->is_connected == 1) {
 			input_pump(Info);
-			/*int receive = recv(Info->client->sockfd, msg_buf, LENGTH, 0);
-				if (receive > 0) {
-					if (msg_buf[0] != 0) {
-						to_msg_q(msg_buf, Info->msg_q_front, Info->lock);
-					}
-				}
-				else if (receive == 0) {
-						Info->client->is_connected = 0;
-				}
-				else {
-					printf("\r-- Disconnected from server --\n");
-					break;
-				}
-				memset(msg_buf, 0, sizeof(msg_buf));*/
 		}
 	}
 	int ret_val = 1;

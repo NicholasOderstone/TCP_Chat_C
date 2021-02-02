@@ -27,26 +27,24 @@
 // DEFINES
 	#define MAX_CLIENTS 100
 	#define BUFFER_SZ 2048
-	#define LENGTH 2048
 	#define NAME_SZ 32
 	#define AMOUNT_OF_CMD 12
 //////////////////////////
 
 // STRUCTURES
-	typedef struct message_struct
-	{
-	    GtkTextView *view ;
-	    GtkTextBuffer *buffer;
-		GtkTextIter start;
-		GtkTextIter end;
-		GtkTextMark* mark;
-	} message_t;
-
 	typedef struct chat_info {
 		int chat_id;
 		char *chat_name;
 		struct chat_info *next;
 	} chat_info_t;
+
+	typedef struct {
+	    GtkTextView *view ;
+	    GtkTextBuffer *buffer;
+		GtkTextIter start;
+		GtkTextIter end;
+		GtkTextMark* mark;
+	} gtk_utils_t;
 
 	typedef struct{
 		struct sockaddr_in address; // Stores ip (sin_addr.s_addr), port (sin_port) and ip format (sin_family = AF_INET)
@@ -55,16 +53,27 @@
 		char name[NAME_SZ];
 		char *login;
 		char *pass;
-		message_t *m;
+		gtk_utils_t *m;
 		int is_connected;
 		int exit;
 		chat_info_t *chat_list_head;
 		pthread_mutex_t mutex;
 	} client_t;
 
+
+	typedef struct {
+		GtkWidget **chat;
+		client_t *client;
+	} get_messages_info_s;
+
+	typedef struct {
+		chat_info_t *chat;
+		client_t *client;
+	} get_messages_request_s;
+
 	typedef struct received_s {
 		client_t *client;
-		char message[LENGTH];
+		char message[BUFFER_SZ];
 		char sender_name[NAME_SZ];
 	}	received_messages;
 
@@ -176,11 +185,7 @@
 	// --- Utility functions ---
 
 	command msg_to_cmd(char *msg);
-	char *param_1(char *params);
-	char *param_2(char *params);
-	char *param_3(char *params);
-	char *param_4(char *params);
-	char *param_5(char *params);
+	char *take_param(char *params, int number);
 
 	void display(chat_info_t **chat_list_head);
 	int chat_list_size(chat_info_t **chat_list_head);
@@ -189,6 +194,8 @@
 	void *init_threads(void *client);
 	void func_login(GtkWidget *widget, gpointer data);
 	void func_register(GtkWidget *widget, gpointer data);
+
+	void get_msg_request(GtkWidget *widget, gpointer data);
 
 
 //////////////////////////

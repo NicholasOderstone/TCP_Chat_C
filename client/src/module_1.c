@@ -1,40 +1,41 @@
 #include "../inc/header.h"
 
-#define BUFFER_SIZE 1024
-char inbuf[BUFFER_SIZE];
-size_t inbuf_used = 0;
+	static char inbuf[BUFFER_SZ];
+	static size_t inbuf_used = 0;
 void input_pump(struct read_msg_info_s *Info) {
-  size_t inbuf_remain = sizeof(inbuf) - inbuf_used;
-  if (inbuf_remain == 0) {
-    fprintf(stderr, "Line exceeded buffer length!\n");
-  }
-  ssize_t rv = recv(Info->client->sockfd, (void*)&inbuf[inbuf_used], inbuf_remain, MSG_DONTWAIT);
-  if (rv == 0) {
-    Info->client->is_connected = 0;
-  }
-  if (rv < 0 && errno == EAGAIN) {
-    /* no data for now, call back when the socket is readable */
-    return;
-  }
-  if (rv < 0) {
-	  printf("\r-- Disconnected from server --\n");
-	  return;
-  }
-  inbuf_used += rv;
-  /* Scan for newlines in the line buffer; we're careful here to deal with embedded \0s
-   * an evil server may send, as well as only processing lines that are complete.
-   */
-  char *line_start = inbuf;
-  char *line_end;
-  while ( (line_end = (char*)memchr((void*)line_start, '\n', inbuf_used - (line_start - inbuf))))
-  {
-    *line_end = 0;
-    to_msg_q(line_start, Info->msg_q_front, Info->lock);
-    line_start = line_end + 1;
-  }
-  /* Shift buffer down so the unprocessed data is at the start */
-  inbuf_used -= (line_start - inbuf);
-  memmove(inbuf, line_start, inbuf_used);
+	
+	size_t inbuf_remain = sizeof(inbuf) - inbuf_used;
+	if (inbuf_remain == 0) {
+		fprintf(stderr, "Line exceeded buffer length!\n");
+	}
+	ssize_t rv = recv(Info->client->sockfd, (void*)&inbuf[inbuf_used], inbuf_remain, MSG_DONTWAIT);
+	if (rv == 0) {
+		Info->client->is_connected = 0;
+		return;
+	}
+	if (rv < 0 && errno == EAGAIN) {
+		/* no data for now, call back when the socket is readable */
+		return;
+	}
+	if (rv < 0) {
+		printf("\r-- Disconnected from server --\n");
+		return;
+	}
+	inbuf_used += rv;
+	/* Scan for newlines in the line buffer; we're careful here to deal with embedded \0s
+	* an evil server may send, as well as only processing lines that are complete.
+	*/
+	char *line_start = inbuf;
+	char *line_end;
+	while ( (line_end = (char*)memchr((void*)line_start, '\n', inbuf_used - (line_start - inbuf))))
+	{
+		*line_end = 0;
+		to_msg_q(line_start, Info->msg_q_front, Info->lock);
+		line_start = line_end + 1;
+	}
+	/* Shift buffer down so the unprocessed data is at the start */
+	inbuf_used -= (line_start - inbuf);
+	memmove(inbuf, line_start, inbuf_used);
 }
 
 void *read_msg(void *arg) {

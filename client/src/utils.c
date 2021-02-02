@@ -16,11 +16,11 @@ void str_trim_lf(char* arr, int length) {
 }
 
 void send_client_info_to_server(client_t *client) {
-	char buffer[LENGTH];
+	char buffer[BUFFER_SZ];
 	snprintf(buffer, BUFFER_SZ, "<LOGIN> <%s> <%s>", client->login, client->pass);
     send(client->sockfd, buffer, strlen(buffer), 0);
 	printf("%s\n", buffer);
-    bzero(buffer, LENGTH);
+    bzero(buffer, BUFFER_SZ);
     while (sw_login == -1) { }
     switch(sw_login) {
         case 0:

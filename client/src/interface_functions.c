@@ -169,10 +169,10 @@ void message_changed(GtkEntry *e){
 void message_send(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
     client_t *client = (client_t *)data;
-    char buffer[LENGTH + 32];
+    char buffer[BUFFER_SZ + 32];
     snprintf(buffer, BUFFER_SZ, "<SEND> <%s>", message_str);
     send(client->sockfd, buffer, strlen(buffer), 0);
-    bzero(buffer, LENGTH + 32);
+    bzero(buffer, BUFFER_SZ + 32);
 }
 
 void send_message(GtkWidget *widget, gpointer m) {

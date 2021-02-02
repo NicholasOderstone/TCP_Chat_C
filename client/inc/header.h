@@ -27,7 +27,6 @@
 // DEFINES
 	#define MAX_CLIENTS 100
 	#define BUFFER_SZ 2048
-	#define LENGTH 2048
 	#define NAME_SZ 32
 	#define AMOUNT_OF_CMD 12
 //////////////////////////
@@ -64,7 +63,7 @@
 
 	typedef struct received_s {
 		client_t *client;
-		char message[LENGTH];
+		char message[BUFFER_SZ];
 		char sender_name[NAME_SZ];
 	}	received_messages;
 

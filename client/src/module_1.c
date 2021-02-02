@@ -2,7 +2,7 @@
 
 void *read_msg(void *arg) {
 	struct read_msg_info_s *Info = (struct read_msg_info_s *)arg;
-	char msg_buf[LENGTH];
+	char msg_buf[BUFFER_SZ];
 
 	if (pthread_mutex_init(&Info->lock, NULL) != 0)
 	{
@@ -15,7 +15,7 @@ void *read_msg(void *arg) {
 			break;
 		}
 		if (Info->client->is_connected == 1) {
-			int receive = recv(Info->client->sockfd, msg_buf, LENGTH, 0);
+			int receive = recv(Info->client->sockfd, msg_buf, BUFFER_SZ, 0);
 				if (receive > 0) {
 					if (msg_buf[0] != 0) {
 						to_msg_q(msg_buf, Info->msg_q_front, Info->lock);

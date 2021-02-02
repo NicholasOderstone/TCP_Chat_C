@@ -1,5 +1,41 @@
 #include "../inc/header.h"
 
+
+void f_chat_msg(char *params, buff_t *Info) {
+	char buff_out[BUFFER_SZ];
+	char buff_temp[BUFFER_SZ];
+	struct command cmd_arr[50];
+	Info->uid++;
+	Info->uid--;
+	printf("%s\n", params);
+	for(int i = 0; i < 50; i++) {
+		cmd_arr[i].command = "<SEND>";
+		strcat(buff_out, " <SUCCESS>");
+		strcat(buff_out, " <");
+		//Получения сообщения
+		strcat(buff_out, itoa(i, buff_temp, 10));
+		strcat(buff_out, ">");
+		cmd_arr[i].params = buff_out;
+		//Вывод
+		pthread_mutex_lock(&Info->serv_inf->clients_mutex);
+		for(int i=0; i<MAX_CLIENTS; ++i){
+			if(Info->serv_inf->clients[i]){
+				if(Info->serv_inf->clients[i]->uid == Info->uid){
+					for(int i = 0; i < 5000; i++) {
+						send_cmd(cmd_arr[i], Info->serv_inf->clients[i]);
+					}
+				}
+			}
+		}
+		pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
+		//printf("%s%s\n", cmd_arr[i].command, cmd_arr[i].params);
+		bzero(buff_out, BUFFER_SZ);
+		bzero(buff_temp, BUFFER_SZ);
+	}
+	
+
+}
+
 void f_login(char *params, buff_t *Info) {
     char buff_out[BUFFER_SZ];
 	struct command cmd;
@@ -25,100 +61,67 @@ void f_login(char *params, buff_t *Info) {
 	bzero(buff_out, BUFFER_SZ);
 
     strcpy(Info->client->name, p_login);
-	// Потом убрать
+	// заджойнился (пусть живет)
     sprintf(buff_out, "<JOIN> <%s>\n", Info->client->name);
 	printf("%s", buff_out);
 	bzero(buff_out, BUFFER_SZ);
 
 	cmd.command = "<LOGIN>";
 	cmd.params = " <SUCCESS>";
+	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
+	for(int i=0; i<MAX_CLIENTS; ++i){
+		if(Info->serv_inf->clients[i]){
+			if(Info->serv_inf->clients[i]->uid == Info->uid){
+				send_cmd(cmd, Info->serv_inf->clients[i]);
+			}
+		}
+	}
+	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
 
-/*
-    struct command cmd1;
-    cmd1.command = "<CHAT_LIST>";
-    cmd1.params = " <123> <first chat>";
 
-    struct command cmd2;
-    cmd2.command = "<CHAT_LIST>";
-    cmd2.params = " <124> <second chat>";
 
-    struct command cmd3;
-    cmd3.command = "<CHAT_LIST>";
-    cmd3.params = " <125> <third chat>";
-*/
-	/*insertInUserInChats(getIdUserByUserName(p_login), getIdChatByName("Name"));
-	insertInUserInChats(getIdUserByUserName(p_login), getIdChatByName("Name1"));
-	insertInUserInChats(getIdUserByUserName(p_login), getIdChatByName("Name2"));
-	insertInUserInChats(getIdUserByUserName(p_login), getIdChatByName("Name3"));*/
 
+
+	/* OTHER */
 	getUserChats(getIdUserByUserName(p_login), buff_out);
 	printf("%s\n", buff_out);
 	int mass_of_chats[128];
-	int i_for_buff = 0;
 	int i = 0;
-	while(1) {
-		if(!buff_out[i_for_buff+1]) {
-			break;
-		}
-		char *temp = &buff_out[i_for_buff];
+	char *temp;
+	temp = strtok(buff_out, ",");
+	while(temp != NULL) {
 		mass_of_chats[i] = atoi(temp);
-		i_for_buff++;
-		i_for_buff++;
-		//printf("%d\n", mass_of_chats[i]);
+		temp = strtok(NULL, ",");
+		printf("%d\n", mass_of_chats[i]);
+		if(temp != NULL) {
+			i++;
+		}
 	}
 	bzero(buff_out, BUFFER_SZ);
-
-	struct command arr_of_chats[i_for_buff];
-	for(int i = 0; i < i_for_buff; i++) {
-		arr_of_chats[i].command = "<CHAT_LIST>";
-		printf("1\n");
-		strcat(arr_of_chats[i].params, " <");
-		printf("1\n");
-		getOneChats(mass_of_chats[i], buff_out);
-		strcat(arr_of_chats[i].params, buff_out);
-		printf("1\n");
+	char buff_temp[BUFFER_SZ];
+	struct command arr_of_chats[i];
+	for(int j = 0; j < i; j++) {
+		getChatName(mass_of_chats[j], buff_out);
+		arr_of_chats[j].command = "<ADD_CHAT>";
+		strcat(buff_temp, " <SUCCESS> ");
+		strcat(buff_temp, "<");
+		str_trim_lf (buff_out, strlen(buff_out));
+		strcat(buff_temp, buff_out);
 		bzero(buff_out, BUFFER_SZ);
-		arr_of_chats[i].params = ">  <";
-		printf("1\n");
-		itoa(mass_of_chats[i], buff_out, 10);
-		strcat(arr_of_chats[i].params, buff_out);
-		printf("1\n");
+		strcat(buff_temp, "> <");
+		itoa(mass_of_chats[j], buff_out, 10);
+		strcat(buff_temp, buff_out);
 		bzero(buff_out, BUFFER_SZ);
-		arr_of_chats[i].params = ">";
-		arr_of_chats[i].params = buff_out;
-		printf("%s\n", arr_of_chats[i].params);
+		strcat(buff_temp, ">");
+		arr_of_chats[j].params = buff_temp;
+		/*printf("%s", arr_of_chats[j].command);
+		printf("%s\n", arr_of_chats[j].params);*/
+
+		pthread_mutex_lock(&Info->serv_inf->clients_mutex);
+		send_cmd(arr_of_chats[j], Info->client);
+		pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
+		bzero(buff_temp, BUFFER_SZ);
 	}
-	
-	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
-	for(int i=0; i<MAX_CLIENTS; ++i){
-		if(Info->serv_inf->clients[i]){
-			if(Info->serv_inf->clients[i]->uid == Info->uid){
-				send_cmd(cmd, Info->serv_inf->clients[i]);
-               /* send_cmd(cmd1, Info->serv_inf->clients[i]);
-                send_cmd(cmd2, Info->serv_inf->clients[i]);
-                send_cmd(cmd3, Info->serv_inf->clients[i]);*/
-			}
-		}
-	}
-	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
-
-
-
-
-
-
-	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
-	for(int i=0; i<MAX_CLIENTS; ++i){
-		if(Info->serv_inf->clients[i]){
-			if(Info->serv_inf->clients[i]->uid == Info->uid){
-				send_cmd(cmd, Info->serv_inf->clients[i]);
-               /* send_cmd(cmd1, Info->serv_inf->clients[i]);
-                send_cmd(cmd2, Info->serv_inf->clients[i]);
-                send_cmd(cmd3, Info->serv_inf->clients[i]);*/
-			}
-		}
-	}
-	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
 }
 
 void f_send(char *params, buff_t *Info) {
@@ -184,14 +187,13 @@ void f_register(char *params, buff_t *Info) {
 	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
 }
 
-
-
 void initialize_functions(cmd_func arr_cmd_func[]) {
-    char *arr_func_names[AMOUNT_OF_CMD] = { "LOGIN", "SEND", "REGISTER"};
+    char *arr_func_names[AMOUNT_OF_CMD] = { "LOGIN", "SEND", "REGISTER", "CHAT_MSG"};
 
     arr_cmd_func[0].func = &f_login;
     arr_cmd_func[1].func = &f_send;
 	arr_cmd_func[2].func = &f_register;
+	arr_cmd_func[3].func = &f_chat_msg;
 
     for (int i = 0; i < AMOUNT_OF_CMD; i++)
         arr_cmd_func[i].name = strdup(arr_func_names[i]);

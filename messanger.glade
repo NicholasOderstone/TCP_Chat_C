@@ -21,7 +21,7 @@
   </object>
   <object class="GtkWindow" id="main_window">
     <property name="can-focus">False</property>
-    <property name="window-position">center-on-parent</property>
+    <property name="window-position">center-always</property>
     <signal name="destroy" handler="destroy" swapped="no"/>
     <child>
       <object class="GtkFixed">
@@ -140,12 +140,50 @@
             </child>
           </object>
         </child>
+        <child>
+          <object class="GtkButtonBox" id="ed_del_box">
+            <property name="width-request">94</property>
+            <property name="height-request">47</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="layout-style">start</property>
+            <child>
+              <object class="GtkButton" id="ed_b">
+                <property name="label" translatable="yes">edit</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="del_b">
+                <property name="label" translatable="yes">delete</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="x">283</property>
+          </packing>
+        </child>
       </object>
     </child>
   </object>
   <object class="GtkWindow" id="login_window">
     <property name="can-focus">False</property>
-    <property name="window-position">center-on-parent</property>
+    <property name="window-position">center-always</property>
     <signal name="destroy" handler="destroy" swapped="no"/>
     <child>
       <object class="GtkFixed" id="fix">
@@ -245,7 +283,7 @@
   </object>
   <object class="GtkWindow" id="signup_window">
     <property name="can-focus">False</property>
-    <property name="window-position">center-on-parent</property>
+    <property name="window-position">center-always</property>
     <signal name="destroy" handler="destroy" swapped="no"/>
     <child>
       <object class="GtkFixed">
@@ -376,7 +414,7 @@
   </object>
   <object class="GtkWindow" id="connect_window">
     <property name="can-focus">False</property>
-    <property name="window-position">center</property>
+    <property name="window-position">center-always</property>
     <signal name="destroy" handler="destroy" swapped="no"/>
     <child>
       <object class="GtkFixed">

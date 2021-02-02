@@ -1,5 +1,5 @@
 #include "../inc/interface.h"
-
+    gint row_num_list_gtk = 0;
 void init_interface(GtkBuilder **p_builder,  int *argc, char ***argv, gpointer p_client) {
     GObject *connect_b;
     gtk_init(argc, argv);
@@ -87,8 +87,8 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
 {
     UNUSED(widget);
     //struct message_struct *message_s = (struct message_struct*)malloc(sizeof(struct message_struct));
-    static message_t m;
-    message_t *message_s = (message_t *)malloc(sizeof(message_t *));
+    static gtk_utils_t m;
+    gtk_utils_t *message_s = (gtk_utils_t *)malloc(sizeof(gtk_utils_t *));
     message_s = &m;
     GObject *send_b;
     client_t *client = (client_t *)gp_client;
@@ -96,7 +96,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     GtkListBox *box;
     GtkButton *menu_b;
     GtkCssProvider *cssProvider = gtk_css_provider_new();
-    client->m = (message_t *)malloc(sizeof(message_t *));
+    client->m = (gtk_utils_t *)malloc(sizeof(gtk_utils_t *));
     client->m = message_s;
 
     GtkWidget *send_b_image = gtk_image_new_from_file ("client/resources/send_b_img.png");
@@ -151,27 +151,73 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     //gtk_binding_entry_add_signall()
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_send), gp_client);
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_clear), NULL);
+    gtk_list_box_set_selection_mode(message_s->box_message, GTK_SELECTION_MULTIPLE);
+    gdk_threads_add_idle(is_edit_delet, (gpointer)client);
+    message_s->edit_b = GTK_WIDGET(gtk_builder_get_object (builder, "ed_b"));
+    message_s->delet_b = GTK_WIDGET(gtk_builder_get_object (builder, "del_b"));
+    message_s->b_box = GTK_BUTTON_BOX(gtk_builder_get_object(builder, "ed_del_box"));
+    gtk_widget_hide(GTK_WIDGET(message_s->b_box));
+    gtk_widget_hide(message_s->edit_b);
+    gtk_widget_hide(message_s->delet_b);
+    g_signal_connect(message_s->delet_b, "clicked", G_CALLBACK(message_delet),gp_client);
     //g_signal_connect(message_s->view, "move-cursor", G_CALLBACK(del_message), (gpointer)message_s->buffer);
 
 }
+gboolean is_edit_delet(gpointer m) {
+    client_t *client = (client_t *)m;
 
+    if(gtk_list_box_get_selected_row (client->m->box_message)){
+        gtk_widget_show(GTK_WIDGET(client->m->b_box));
+        gtk_widget_show(client->m->edit_b);
+        gtk_widget_show(client->m->delet_b);
+    }
+    else
+    {
+        gtk_widget_hide(GTK_WIDGET(client->m->b_box));
+        gtk_widget_hide(client->m->edit_b);
+        gtk_widget_hide(client->m->delet_b);
+    }
+    if (client-> exit == 1 )
+        return FALSE;
+    return TRUE;
+}
+void message_delet(GtkWidget *widget, gpointer data){
+    UNUSED(widget);
+    gint index;
+    client_t *client = (client_t *)data;
+    gtk_container_remove(GTK_CONTAINER(client->m->box_message),
+            GTK_WIDGET(gtk_list_box_get_selected_row (client->m->box_message)));
+    index = gtk_list_box_row_get_index(gtk_list_box_get_selected_row (client->m->box_message));
+    //gtk_list_box_get_row_at_index(index + 1);
+    //printf("%s\n", );
+    gtk_list_box_unselect_all(client->m->box_message);
+}
 gboolean message_show(gpointer m) {
     received_messages *received_mess = (received_messages *)m;
-    GtkTextView *view ;
-    GtkTextBuffer *buffer;
-    GtkTextIter end;
+    GtkTextView *view, *view_d ;
+    GtkTextBuffer *buffer, *buffer_d;
+    GtkTextIter end, end_d;
     view = GTK_TEXT_VIEW(gtk_text_view_new ());
     buffer =gtk_text_buffer_new(NULL);
     gtk_text_view_set_wrap_mode ( view, GTK_WRAP_WORD_CHAR);
     gtk_text_view_set_buffer(view, buffer);
+    view_d = GTK_TEXT_VIEW(gtk_text_view_new ());
+    buffer_d =gtk_text_buffer_new(NULL);
+    gtk_text_view_set_buffer(view_d, buffer_d);
     gtk_text_buffer_get_iter_at_offset(buffer, &end, 0);
+    gtk_text_buffer_get_iter_at_offset(buffer_d, &end_d, 0);
     if (received_mess->message[0] != 0) {
         gtk_text_buffer_insert_interactive (buffer, &end, received_mess->sender_name, -1, TRUE );
         gtk_text_buffer_insert_interactive (buffer, &end, ": ", -1, TRUE );
         gtk_text_buffer_insert_interactive (buffer, &end, received_mess->message, -1, TRUE );
+        gtk_text_buffer_insert_interactive (buffer_d, &end_d, "some data", -1, TRUE );
         //gtk_text_buffer_insert_interactive (received_mess->client->m->buffer, &received_mess->client->m->end, "\n", -1, TRUE );
     }
     gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view));
+    gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view_d));
+    row_num_list_gtk +=2 ;
+    gtk_list_box_row_set_activatable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,
+                                                        row_num_list_gtk), FALSE);
     gtk_widget_show (GTK_WIDGET(view));
     memset(received_mess->message, 0, sizeof(received_mess->message));
     memset(received_mess->sender_name, 0, sizeof(received_mess->sender_name));
@@ -194,26 +240,33 @@ void message_send(GtkWidget *widget, gpointer data) {
 
 void show_my_msg(GtkWidget *widget, gpointer m) {
     UNUSED(widget);
-    message_t *mess = (message_t *)m;
+    gtk_utils_t *mess = (gtk_utils_t *)m;
     (void)(widget);
 
-    GtkTextView *view ;
-    GtkTextBuffer *buffer;
-    GtkTextIter end;
-	GtkTextMark* mark;
+    GtkTextView *view, *view_d ;
+    GtkTextBuffer *buffer, *buffer_d;
+    GtkTextIter end, end_d;
     view = GTK_TEXT_VIEW(gtk_text_view_new ());
     buffer =gtk_text_buffer_new(NULL);
-    //gtk_text_view_set_left_margin(view, 300);
-    //gtk_text_view_set_right_margin(view, 10);
     gtk_text_view_set_wrap_mode ( view, GTK_WRAP_WORD_CHAR);
     gtk_text_view_set_buffer(view, buffer);
+    view_d = GTK_TEXT_VIEW(gtk_text_view_new ());
+    buffer_d =gtk_text_buffer_new(NULL);
+    gtk_text_view_set_buffer(view_d, buffer_d);
     gtk_text_buffer_get_iter_at_offset(buffer, &end, 0);
+    gtk_text_buffer_get_iter_at_offset(buffer_d, &end_d, 0);
     gtk_text_buffer_insert_interactive (buffer, &end, "you: ", -1, TRUE );
     gtk_text_buffer_insert_interactive (buffer, &end, message_str, -1, TRUE );
+    gtk_text_buffer_insert_interactive (buffer_d, &end_d, "some data", -1, TRUE );
     gtk_container_add (GTK_CONTAINER(mess->box_message), GTK_WIDGET(view));
+    gtk_container_add (GTK_CONTAINER(mess->box_message), GTK_WIDGET(view_d));
+    row_num_list_gtk +=2;
+
+    gtk_list_box_row_set_activatable(gtk_list_box_get_row_at_index (mess->box_message,
+                                                    row_num_list_gtk-1), FALSE);
+    gtk_list_box_row_set_selectable (gtk_list_box_get_row_at_index (mess->box_message,
+                                                    row_num_list_gtk-1), FALSE);
     gtk_widget_show (GTK_WIDGET(view));
-    mark = gtk_text_buffer_create_mark (buffer, NULL, &end, 1);
-    gtk_text_view_scroll_to_mark (view, mark, 0.0, 0, 0.0, 1.0);
 }
 
 void message_clear() {

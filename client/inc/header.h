@@ -41,7 +41,10 @@ typedef struct
 	GtkTextIter end;
 	GtkTextMark* mark;
 	GtkListBox *box_message;
-} message_t;
+	GtkButtonBox *b_box;
+    GtkWidget *edit_b;
+    GtkWidget *delet_b;
+} gtk_utils_t;
 
 	typedef struct chat_info {
 		int chat_id;
@@ -56,7 +59,7 @@ typedef struct
 		char name[NAME_SZ];
 		char *login;
 		char *pass;
-		message_t *m;
+		gtk_utils_t *m;
 		int is_connected;
 		int exit;
 		chat_info_t *chat_list_head;

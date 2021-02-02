@@ -45,6 +45,8 @@
     void r_pass_s_changed();
     void del_message();
     gboolean message_show();
+    gboolean is_edit_delet();
+    void message_delet();
     //////////////////////////
 
 #endif

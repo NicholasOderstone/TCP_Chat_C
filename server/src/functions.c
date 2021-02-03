@@ -3,8 +3,8 @@
 
 void f_chat_msg(char *params, buff_t *Info) {
 	char *p_chat_id = param_1(params);
-	char *p_text = param_2(params);
-	char *p_time = param_3(params);
+	//char *p_text = param_2(params);
+	//char *p_time = param_3(params);
 
 	char buff_out[BUFFER_SZ];
 	char buff_temp[BUFFER_SZ];
@@ -133,19 +133,21 @@ void f_login(char *params, buff_t *Info) {
 
 void f_send(char *params, buff_t *Info) {
 	char *p_chat_id = param_1(params);
+	printf("%s\n", p_chat_id);
 	char *p_text = param_2(params);
-	char *p_time = param_3(params);
+	char *p_time = "param_3(params)";
 
 	struct command cmd;
 	char buff_out[BUFFER_SZ];
-
-	insertMessage(p_chat_id, getIdUserByUserName(Info->client->name), char* message, char* date, char* is_read)
+	char buff_temp[BUFFER_SZ];
+	char buff_temp2[BUFFER_SZ];
 
 	cmd.command = "<SEND>";
 	strcat(buff_out, " <");
 	strcat(buff_out, p_chat_id);
 	strcat(buff_out, "> <");
 	//msg_id
+	strcat(buff_out, itoa(insertMessage(p_chat_id, itoa(getIdUserByUserName(Info->client->name), buff_temp2, 10), p_text, atoi(p_time), "NOT_READ"), buff_temp, 10));
 	strcat(buff_out, "> <");
 	strcat(buff_out, Info->client->name);
 	strcat(buff_out, "> <");
@@ -154,19 +156,20 @@ void f_send(char *params, buff_t *Info) {
 	strcat(buff_out, p_text);
 	strcat(buff_out, ">");
 
-
+	/*p_text = itoa(atoi(p_text), buff_temp2, 10);
+	p_time = itoa(atoi(p_tp_timeext), buff_temp2, 10);*/
 	printf("%s\n", buff_out);
-	cmd.params = strdup(strcat(buff_out, params));
-	bzero(buff_out, BUFFER_SZ);
+	cmd.params = strdup(buff_out);
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 	for(int i=0; i<MAX_CLIENTS; ++i){
 		if(Info->serv_inf->clients[i]){
-			if(Info->serv_inf->clients[i]->uid != Info->uid){
-				send_cmd(cmd, Info->serv_inf->clients[i]);
-			}
+			send_cmd(cmd, Info->serv_inf->clients[i]);
 		}
 	}
 	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
+	bzero(buff_out, BUFFER_SZ);
+	bzero(buff_temp, BUFFER_SZ);
+	bzero(buff_temp2, BUFFER_SZ);
 }
 
 void f_register(char *params, buff_t *Info) {

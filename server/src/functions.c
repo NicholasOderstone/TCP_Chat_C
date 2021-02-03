@@ -41,7 +41,7 @@ void f_chat_msg(char *params, buff_t *Info) {
 		bzero(buff_out, BUFFER_SZ);
 		bzero(buff_temp, BUFFER_SZ);
 	}
-	
+
 
 }
 
@@ -135,7 +135,7 @@ void f_send(char *params, buff_t *Info) {
 	char *p_chat_id = param_1(params);
 	printf("%s\n", p_chat_id);
 	char *p_text = param_2(params);
-	char *p_time = "param_3(params)";
+	char *p_time = param_3(params);
 
 	struct command cmd;
 	char buff_out[BUFFER_SZ];

@@ -34,3 +34,17 @@ void display(chat_info_t **chat_list_head) {
     }
     printf("\n");
 }
+
+int chat_list_size(chat_info_t **chat_list_head) {
+    chat_info_t *current = *chat_list_head;
+    int size = 0;
+    if (current == NULL) {
+        return 0;
+    }
+    while (current != NULL)
+    {
+        current = current->next;
+        size++;
+    }
+    return size;
+}

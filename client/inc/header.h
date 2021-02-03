@@ -42,6 +42,7 @@ typedef struct
 	GtkTextMark* mark;
 	GtkListBox *box_message;
 	GtkButtonBox *b_box;
+	GtkWidget *cancel_b;
     GtkWidget *edit_b;
     GtkWidget *delet_b;
 } gtk_utils_t;

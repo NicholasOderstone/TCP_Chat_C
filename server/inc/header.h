@@ -16,6 +16,7 @@
     #include <netdb.h>
     #include <fcntl.h>
     #include <sys/stat.h>
+    
 
     /* DATA_BASE */
     #include <stdlib.h>
@@ -24,7 +25,6 @@
 
 /* DEFINES */
     #define MAX_CLIENTS 100
-    #define BUFFER_SZ 2048
     #define BUFFER_SZ 2048
     #define NAME_SZ 32
     #define AMOUNT_OF_CMD 4
@@ -180,14 +180,23 @@
 
 
     // --- Data Base functions ---
-    void initDB();
+    int initDB();
     char* getOneUser(int id, char* rez);
-    void insertUser(char* login, char* password, char* nick, char* status);
+    int insertUser(char* login, char* password, char* nick, char* status);
     int getIdUserByUserName(char* login);
     char* getAllUsers(char* rez);
     void deleteUser(char* id);
     char* getUserName(int id, char* rez);
     char* getUserPassword(int id, char* rez);
+    char* getUserChats(int id, char* rez);
+    int insertChat(char* name, char* description);
+    void insertInUserInChats(int user_id, int chat_id);
+    int getIdChatByName(char* chat);
+    char* getOneChats(int id, char* rez);
+    char* getChatName(int id, char* rez);
+    void deleteChat(char* id);
+    void deleteFromChat(int user_id, int chat_id);
+    int insertMessage(char* chat_id, char* user_id, char* message, int date, char* is_read);
 
 
     // --- Daemonize ---

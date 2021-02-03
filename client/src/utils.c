@@ -24,7 +24,6 @@ void send_client_info_to_server(client_t *client) {
     while (sw_login == -1) { }
     switch(sw_login) {
         case 0:
-            //open_main_page(NULL, data);
             sw_login = -1;
             break;
         case 1:

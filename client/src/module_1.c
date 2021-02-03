@@ -30,6 +30,7 @@ void input_pump(struct read_msg_info_s *Info) {
 	while ( (line_end = (char*)memchr((void*)line_start, '\n', inbuf_used - (line_start - inbuf))))
 	{
 		*line_end = 0;
+		printf("input: %s\n", line_start);
 		to_msg_q(line_start, Info->msg_q_front, Info->lock);
 		line_start = line_end + 1;
 	}
@@ -40,7 +41,6 @@ void input_pump(struct read_msg_info_s *Info) {
 
 void *read_msg(void *arg) {
 	struct read_msg_info_s *Info = (struct read_msg_info_s *)arg;
-	//char msg_buf[BUFFER_SZ];
 
 	if (pthread_mutex_init(&Info->lock, NULL) != 0)
 	{

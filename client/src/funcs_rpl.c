@@ -90,7 +90,7 @@ void func_rpl_send(char *params, void *p) {
     gdk_threads_add_idle(message_show, (gpointer)received_mess);
 }
 
-void func_rpl_chat_list(char *params, void *p) {
+void func_rpl_add_chat(char *params, void *p) {
     client_t *client = (client_t *)p;
     int p_id = atoi(take_param(params, 1));
     char *p_name = take_param(params, 2);
@@ -103,7 +103,7 @@ void init_funcs(cmd_func arr_cmd_func[]) {
     char *arr_func_names[AMOUNT_OF_CMD] = { "<LOGIN>", "<REGISTER>", "<CHANGE_NAME>",
                                 "<CHANGE_PASS>", "<SEARCH_USER>", "<ADD_CONTACT>",
                                 "<DEL_CONTACT>", "<BLOCK_USER>", "<UNBLOCK_USER>",
-                                "<NEW_CHNL>", "<SEND>", "<CHAT_LIST>"};
+                                "<NEW_CHNL>", "<SEND>", "<ADD_CHAT>"};
 
     arr_cmd_func[0].func = &func_rpl_login;
     arr_cmd_func[1].func = &func_rpl_register;
@@ -116,7 +116,7 @@ void init_funcs(cmd_func arr_cmd_func[]) {
     arr_cmd_func[8].func = &func_rpl_unblock_user;
     arr_cmd_func[9].func = &func_rpl_new_chnl;
     arr_cmd_func[10].func = &func_rpl_send;
-    arr_cmd_func[11].func = &func_rpl_chat_list;
+    arr_cmd_func[11].func = &func_rpl_add_chat;
 
     for (int i = 0; i < AMOUNT_OF_CMD; i++)
         arr_cmd_func[i].name = strdup(arr_func_names[i]);

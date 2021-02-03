@@ -16,7 +16,7 @@
     #include <netdb.h>
     #include <fcntl.h>
     #include <sys/stat.h>
-    
+
 
     /* DATA_BASE */
     #include <stdlib.h>
@@ -27,7 +27,7 @@
     #define MAX_CLIENTS 100
     #define BUFFER_SZ 2048
     #define NAME_SZ 32
-    #define AMOUNT_OF_CMD 5
+    #define AMOUNT_OF_CMD 4
 
 
 /* STRUCTURES */

@@ -1,13 +1,5 @@
 #include "../inc/header.h"
 
-char* itoa(int val, int base){
-	static char buf[32] = {0};
-	int i = 30;
-	for(; val && i ; --i, val /= base)
-		buf[i] = "0123456789abcdef"[val % base];
-	return &buf[i+1];
-}
-
 void func_login(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
 	client_t *client = (client_t *)data;
@@ -72,18 +64,4 @@ void func_register(GtkWidget *widget, gpointer data) {
         default:
             break;
     }
-}
-
-void get_msg_request(GtkWidget *widget, gpointer data) {
-    UNUSED(widget);
-    get_messages_request_s *get_messages_request = (get_messages_request_s *)data;
-	get_messages_request->client->active_chat_id = get_messages_request->chat->chat_id;
-
-	command cmd;
-	char buffer[BUFFER_SZ];
-	snprintf(buffer, BUFFER_SZ, "<%d>", get_messages_request->chat->chat_id);
-	cmd.command = "<CHAT_MSG>";
-	cmd.params = strdup(buffer);
-	send_cmd(cmd, get_messages_request->client);
-	bzero(buffer, BUFFER_SZ);
 }

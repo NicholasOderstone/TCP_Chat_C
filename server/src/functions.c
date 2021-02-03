@@ -27,7 +27,7 @@ void f_chat_msg(char *params, buff_t *Info) {
 		strcat(buff_out, new_mess->text);
 		strcat(buff_out, ">");
 		cmd.params = strdup(buff_out);
-		//printf("%s\n", cmd.params);
+		printf("chat_msg: %s\n", cmd.params);
 		pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 		for(int i=0; i<MAX_CLIENTS; ++i){
 			if(Info->serv_inf->clients[i]){
@@ -51,7 +51,7 @@ void f_new_chat(char *params, buff_t *Info) {
 
 	char *buff_temp = getAllChats();
 	printf("%s\n", buff_temp);
-	
+
 }
 
 void f_login(char *params, buff_t *Info) {
@@ -129,10 +129,10 @@ void f_login(char *params, buff_t *Info) {
 		bzero(buff_out, BUFFER_SZ);
 		strcat(buff_temp, ">");
 		arr_of_chats[j].params = buff_temp;
-		printf("%s%s\n",arr_of_chats[j].command, arr_of_chats[j].params);
-		/*pthread_mutex_lock(&Info->serv_inf->clients_mutex);
+		//printf("%s%s\n",arr_of_chats[j].command, arr_of_chats[j].params);
+		pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 		send_cmd(arr_of_chats[j], Info->client);
-		pthread_mutex_unlock(&Info->serv_inf->clients_mutex);*/
+		pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
 		bzero(buff_temp, BUFFER_SZ);
 	}
 
@@ -221,13 +221,13 @@ void f_register(char *params, buff_t *Info) {
 }
 
 void initialize_functions(cmd_func arr_cmd_func[]) {
-    char *arr_func_names[AMOUNT_OF_CMD] = { "LOGIN", "SEND", "REGISTER", "CHAT_MSG", "NEW_CHAT"};
+    char *arr_func_names[AMOUNT_OF_CMD] = { "LOGIN", "SEND", "REGISTER", "CHAT_MSG"};
 
     arr_cmd_func[0].func = &f_login;
     arr_cmd_func[1].func = &f_send;
 	arr_cmd_func[2].func = &f_register;
 	arr_cmd_func[3].func = &f_chat_msg;
-	arr_cmd_func[4].func = &f_new_chat;
+
 
 
     for (int i = 0; i < AMOUNT_OF_CMD; i++)

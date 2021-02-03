@@ -27,7 +27,6 @@
 // DEFINES
 	#define MAX_CLIENTS 100
 	#define BUFFER_SZ 2048
-	#define LENGTH 2048
 	#define NAME_SZ 32
 	#define AMOUNT_OF_CMD 12
 //////////////////////////
@@ -63,13 +62,25 @@ typedef struct
 		gtk_utils_t *m;
 		int is_connected;
 		int exit;
+		int active_chat_id;
 		chat_info_t *chat_list_head;
 		pthread_mutex_t mutex;
 	} client_t;
 
+
+	typedef struct {
+		GtkWidget **chat;
+		client_t *client;
+	} get_messages_info_s;
+
+	typedef struct {
+		chat_info_t *chat;
+		client_t *client;
+	} get_messages_request_s;
+
 	typedef struct received_s {
 		client_t *client;
-		char message[LENGTH];
+		char message[BUFFER_SZ];
 		char sender_name[NAME_SZ];
 	}	received_messages;
 
@@ -181,11 +192,7 @@ typedef struct
 	// --- Utility functions ---
 
 	command msg_to_cmd(char *msg);
-	char *param_1(char *params);
-	char *param_2(char *params);
-	char *param_3(char *params);
-	char *param_4(char *params);
-	char *param_5(char *params);
+	char *take_param(char *params, int number);
 
 	void display(chat_info_t **chat_list_head);
 	int chat_list_size(chat_info_t **chat_list_head);
@@ -194,6 +201,9 @@ typedef struct
 	void *init_threads(void *client);
 	void func_login(GtkWidget *widget, gpointer data);
 	void func_register(GtkWidget *widget, gpointer data);
+
+	void get_msg_request(GtkWidget *widget, gpointer data);
+	char* itoa(int val, int base);
 
 
 //////////////////////////

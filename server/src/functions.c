@@ -17,17 +17,16 @@ void f_chat_msg(char *params, buff_t *Info) {
 		strcat(buff_out, ">");
 		cmd_arr[i].params = buff_out;
 		//Вывод
-		pthread_mutex_lock(&Info->serv_inf->clients_mutex);
+		printf("%s%s\n", cmd_arr[i].command, cmd_arr[i].params);
+		/*pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 		for(int i=0; i<MAX_CLIENTS; ++i){
 			if(Info->serv_inf->clients[i]){
 				if(Info->serv_inf->clients[i]->uid == Info->uid){
-					for(int i = 0; i < 50; i++) {
-						send_cmd(cmd_arr[i], Info->serv_inf->clients[i]);
-					}
+					send_cmd(cmd_arr[i], Info->serv_inf->clients[i]);
 				}
 			}
 		}
-		pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
+		pthread_mutex_unlock(&Info->serv_inf->clients_mutex);*/
 		//printf("%s%s\n", cmd_arr[i].command, cmd_arr[i].params);
 		bzero(buff_out, BUFFER_SZ);
 		bzero(buff_temp, BUFFER_SZ);
@@ -77,13 +76,13 @@ void f_login(char *params, buff_t *Info) {
 		}
 	}
 	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
-
+	f_chat_msg(params, Info);
 
 
 
 
 	/* OTHER */
-	getUserChats(getIdUserByUserName(p_login), buff_out);
+	/*getUserChats(getIdUserByUserName(p_login), buff_out);
 	printf("%s\n", buff_out);
 	int mass_of_chats[128];
 	int i = 0;
@@ -114,14 +113,12 @@ void f_login(char *params, buff_t *Info) {
 		bzero(buff_out, BUFFER_SZ);
 		strcat(buff_temp, ">");
 		arr_of_chats[j].params = buff_temp;
-		/*printf("%s", arr_of_chats[j].command);
-		printf("%s\n", arr_of_chats[j].params);*/
 
 		pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 		send_cmd(arr_of_chats[j], Info->client);
 		pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
 		bzero(buff_temp, BUFFER_SZ);
-	}
+	}*/
 }
 
 void f_send(char *params, buff_t *Info) {

@@ -67,6 +67,7 @@ sql = "CREATE TABLE IF NOT EXISTS CHATS("  \
   
 //USER_IN_CHAT
   sql = "CREATE TABLE IF NOT EXISTS USER_IN_CHAT("  \
+      "ID INTEGER PRIMARY KEY     AUTOINCREMENT," \
       "USER_ID       INT     NOT NULL," \
       "LOGIN         TEXT    NOT NULL," \
       "CHAT_ID       INT     NOT NULL," \

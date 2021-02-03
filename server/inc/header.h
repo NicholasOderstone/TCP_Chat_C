@@ -196,6 +196,7 @@
     char* getChatName(int id, char* rez);
     void deleteChat(char* id);
     void deleteFromChat(int user_id, int chat_id);
+    void insertMessage(char* chat_id, char* user_id, char* message, char* date, char* is_read);
 
 
     // --- Daemonize ---

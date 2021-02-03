@@ -2,22 +2,32 @@
 
 
 void f_chat_msg(char *params, buff_t *Info) {
+	char *p_chat_id = param_1(params);
+	char *p_text = param_2(params);
+	char *p_time = param_3(params);
+
 	char buff_out[BUFFER_SZ];
 	char buff_temp[BUFFER_SZ];
 	struct command cmd_arr[50];
-	Info->uid++;
-	Info->uid--;
 	printf("%s\n", params);
 	for(int i = 0; i < 50; i++) {
 		cmd_arr[i].command = "<SEND>";
-		strcat(buff_out, " <SUCCESS>");
 		strcat(buff_out, " <");
+		strcat(buff_out, p_chat_id);
+		strcat(buff_out, "> <");
+		//msg_id
+		strcat(buff_out, "> <");
+		strcat(buff_out, Info->client->name);
+
+
+
+
 		//Получения сообщения
 		strcat(buff_out, itoa(i, buff_temp, 10));
 		strcat(buff_out, ">");
 		cmd_arr[i].params = buff_out;
 		//Вывод
-		printf("%s%s\n", cmd_arr[i].command, cmd_arr[i].params);
+		//printf("%s%s\n", cmd_arr[i].command, cmd_arr[i].params);
 		/*pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 		for(int i=0; i<MAX_CLIENTS; ++i){
 			if(Info->serv_inf->clients[i]){
@@ -122,14 +132,29 @@ void f_login(char *params, buff_t *Info) {
 }
 
 void f_send(char *params, buff_t *Info) {
+	char *p_chat_id = param_1(params);
+	char *p_text = param_2(params);
+	char *p_time = param_3(params);
+
 	struct command cmd;
 	char buff_out[BUFFER_SZ];
+
+	insertMessage(p_chat_id, getIdUserByUserName(Info->client->name), char* message, char* date, char* is_read)
+
 	cmd.command = "<SEND>";
-	strcat(buff_out, " <SUCCES> ");
-	strcat(buff_out, params);
 	strcat(buff_out, " <");
+	strcat(buff_out, p_chat_id);
+	strcat(buff_out, "> <");
+	//msg_id
+	strcat(buff_out, "> <");
 	strcat(buff_out, Info->client->name);
+	strcat(buff_out, "> <");
+	strcat(buff_out, p_time);
+	strcat(buff_out, "> <");
+	strcat(buff_out, p_text);
 	strcat(buff_out, ">");
+
+
 	printf("%s\n", buff_out);
 	cmd.params = strdup(strcat(buff_out, params));
 	bzero(buff_out, BUFFER_SZ);

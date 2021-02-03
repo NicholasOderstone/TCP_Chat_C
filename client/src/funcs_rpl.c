@@ -82,13 +82,9 @@ void func_rpl_new_chnl(char *params, void *p) {
 
 void func_rpl_send(char *params, void *p) {
     UNUSED(p);
-    char *p_rpl = take_param(params, 1);
-    if (strcmp(p_rpl, "ERROR") == 0) {
-        printf("SEND: error\n");
-    }
-    else if (strcmp(p_rpl, "SUCCESS") == 0) {
-        sw_send = 0;
-    }
+    char *p_rpl = take_param(params, 2);
+    printf("## send: %s ##\n", p_rpl);
+    // chat_id, msg_id, sender_name, time, text
 }
 
 void func_rpl_chat_list(char *params, void *p) {

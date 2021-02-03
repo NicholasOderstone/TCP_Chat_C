@@ -116,17 +116,18 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
 
     int i = 0;
     GtkWidget **chat = malloc(chat_list_size(&client->chat_list_head) * sizeof(GtkWidget *));
-    printf("### chat_list size %d ###\n", chat_list_size(&client->chat_list_head));
     chat_info_t *current = client->chat_list_head;
-    get_messages_request_s *get_messages_request = (get_messages_request_s *)malloc(sizeof(get_messages_request_s));
+
     while (current != NULL)
     {
+        get_messages_request_s *get_messages_request = (get_messages_request_s *)malloc(sizeof(get_messages_request_s));
         chat[i] = gtk_button_new_with_label(current->chat_name);
         gtk_widget_show(GTK_WIDGET(chat[i]));
         gtk_list_box_insert(box, GTK_WIDGET(chat[i]), -1);
         get_messages_request->chat = current;
         get_messages_request->client = client;
-        g_signal_connect(get_messages_info->chat[i], "clicked", G_CALLBACK(get_msg_request), (gpointer)get_messages_request);
+        get_messages_request_s *get_msg_buf = get_messages_request;
+        g_signal_connect(chat[i], "clicked", G_CALLBACK(get_msg_request), (gpointer)get_msg_buf);
         current = current->next;
         i++;
     }
@@ -142,7 +143,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
 
     gtk_text_buffer_get_iter_at_offset(message_s->buffer, &message_s->end, 0);
     message_entry = GTK_ENTRY(gtk_builder_get_object(builder, "message_entry"));
-    g_signal_connect(send_b, "clicked", G_CALLBACK(send_message), (gpointer)message_s);
+    //g_signal_connect(send_b, "clicked", G_CALLBACK(send_message), (gpointer)message_s);
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_send), gp_client);
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_clear), NULL);
 }
@@ -186,12 +187,12 @@ void message_send(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
     client_t *client = (client_t *)data;
     char buffer[BUFFER_SZ + 32];
-    snprintf(buffer, BUFFER_SZ, "<SEND> <%s>", message_str);
+    snprintf(buffer, BUFFER_SZ, "<SEND> <%d> <%s>", client->active_chat_id, message_str);
     send(client->sockfd, buffer, strlen(buffer), 0);
     bzero(buffer, BUFFER_SZ + 32);
 }
 
-void send_message(GtkWidget *widget, gpointer m) {
+/*void send_message(GtkWidget *widget, gpointer m) {
     UNUSED(widget);
     gtk_utils_t *mess = (gtk_utils_t *)m;
     (void)(widget);
@@ -200,7 +201,7 @@ void send_message(GtkWidget *widget, gpointer m) {
     gtk_text_buffer_insert_interactive (mess->buffer, &mess->end, "\n", -1, TRUE );
     mess->mark = gtk_text_buffer_create_mark (mess->buffer, NULL, &mess->end, 1);
     gtk_text_view_scroll_to_mark (mess->view, mess->mark, 0.0, 0, 0.0, 1.0);
-}
+}*/
 
 void message_clear() {
     gtk_entry_set_text(GTK_ENTRY(message_entry), "");

@@ -1,5 +1,33 @@
 #include "../inc/header.h"
 
+
+void f_chat_msg(char *params, buff_t *Info) {
+	struct command cmd;
+	char buff_out[BUFFER_SZ];
+	cmd.command = "<SEND>";
+	strcat(buff_out, params);
+	strcat(buff_out, " <");
+	strcat(buff_out, Info->client->name);
+	strcat(buff_out, ">");
+	strcat(buff_out, " <message>");
+	printf("%s\n", buff_out);
+	cmd.params = strdup(strcat(buff_out, params));
+	bzero(buff_out, BUFFER_SZ);
+	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
+	for(int i=0; i<MAX_CLIENTS; ++i){
+		if(Info->serv_inf->clients[i]){
+			if(Info->serv_inf->clients[i]->uid == Info->uid) {
+                for (int j = 0; j < 50; j++) {
+				    send_cmd(cmd, Info->serv_inf->clients[i]);
+                }
+                break;
+			}
+		}
+	}
+	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
+}
+
+
 void f_login(char *params, buff_t *Info) {
     char buff_out[BUFFER_SZ];
 	struct command cmd;
@@ -66,20 +94,20 @@ void f_send(char *params, buff_t *Info) {
 	struct command cmd;
 	char buff_out[BUFFER_SZ];
 	cmd.command = "<SEND>";
-	strcat(buff_out, " <SUCCES> ");
-	strcat(buff_out, params);
-	strcat(buff_out, " <");
+    strcat(buff_out, " <");
+	strcat(buff_out, param_1(params));
+    strcat(buff_out, "> <");
 	strcat(buff_out, Info->client->name);
-	strcat(buff_out, ">");
+	strcat(buff_out, "> <");
+    strcat(buff_out, param_2(params));
+    strcat(buff_out, ">");
 	printf("%s\n", buff_out);
 	cmd.params = strdup(strcat(buff_out, params));
 	bzero(buff_out, BUFFER_SZ);
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 	for(int i=0; i<MAX_CLIENTS; ++i){
 		if(Info->serv_inf->clients[i]){
-			if(Info->serv_inf->clients[i]->uid != Info->uid){
-				send_cmd(cmd, Info->serv_inf->clients[i]);
-			}
+			send_cmd(cmd, Info->serv_inf->clients[i]);
 		}
 	}
 	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
@@ -128,11 +156,12 @@ void f_register(char *params, buff_t *Info) {
 
 
 void initialize_functions(cmd_func arr_cmd_func[]) {
-    char *arr_func_names[AMOUNT_OF_CMD] = { "LOGIN", "SEND", "REGISTER"};
+    char *arr_func_names[AMOUNT_OF_CMD] = { "LOGIN", "SEND", "REGISTER", "CHAT_MSG"};
 
     arr_cmd_func[0].func = &f_login;
     arr_cmd_func[1].func = &f_send;
 	arr_cmd_func[2].func = &f_register;
+    arr_cmd_func[3].func = &f_chat_msg;
 
     for (int i = 0; i < AMOUNT_OF_CMD; i++)
         arr_cmd_func[i].name = strdup(arr_func_names[i]);

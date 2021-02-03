@@ -56,6 +56,7 @@
 		gtk_utils_t *m;
 		int is_connected;
 		int exit;
+		int active_chat_id;
 		chat_info_t *chat_list_head;
 		pthread_mutex_t mutex;
 	} client_t;
@@ -196,6 +197,7 @@
 	void func_register(GtkWidget *widget, gpointer data);
 
 	void get_msg_request(GtkWidget *widget, gpointer data);
+	char* itoa(int val, int base);
 
 
 //////////////////////////

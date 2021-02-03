@@ -18,6 +18,7 @@ int main(int argc, char **argv){
 		server.clients[i] = NULL;
 	}
 	
+
 	int option = 1;
 	int connfd = 0;
   	struct sockaddr_in cli_addr;
@@ -48,14 +49,10 @@ int main(int argc, char **argv){
 	if (listen(server.listenfd, 10) < 0) {
 		perror("ERROR: Socket listening failed");
 		return EXIT_FAILURE;
-	}
+		}
 
 	printf("=== WELCOME TO THE CHATROOM ===\n");
 
-	/* Data Base */
-	initDB();
-	//daemonize();
-	//insertUser("8798894654", "789", "fsdfsdf", "sdasdasdasd");
 	while(1){
 		socklen_t clilen = sizeof(cli_addr);
 		/* Accept incoming connection */

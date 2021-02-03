@@ -1084,35 +1084,32 @@ char* getAllMesFromChat(int id, char* rez){
 
 
 int getLastId(int id){
-
     sqlite3 *db;
     sqlite3_stmt *res;
+    int rez;
     int rc = sqlite3_open("data.db", &db);
     char sql[500];
     sprintf(sql, "SELECT MAX(ID) FROM MESSAGES WHERE CHAT_ID = '%d'", id);
     rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);    
     rc = sqlite3_step(res);
-    int rez = sqlite3_column_int(res, 0);
-
+    rez = sqlite3_column_int(res, 0);
     sqlite3_finalize(res);
     sqlite3_close(db);
-
     return rez;
 }
 
+
 msg_t *packMsg(int id){
+    if (getLastId(id) == 0) return NULL;
     char sql_req[500];
     char buffer[4096];
     msg_t *new_msg = (msg_t *)malloc(sizeof(msg_t));
-    //sprintf (sql,"select group_concat(MyColumn, '') from (select id || ',' || CHAT_ID || ',' || USER_ID || ',' || MESSAGE || ',' || DATE || ';' as MyColumn from MESSAGES where CHAT_ID = %d and id between %d and %d);",id, from, from);
     int last_msg_from_chat_id = getLastId(id);
     static int from = 1;
-
     if (from == 0) {
         from = 1;
         return NULL;
     }
-
     sqlite3 *db;
     sqlite3_stmt *res;
    
@@ -1141,7 +1138,6 @@ msg_t *packMsg(int id){
         }
     }
     
-
     sqlite3_finalize(res);
     sqlite3_close(db);
     

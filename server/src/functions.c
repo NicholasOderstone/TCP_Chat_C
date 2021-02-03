@@ -6,12 +6,14 @@ void f_chat_msg(char *params, buff_t *Info) {
 
 	struct command cmd;
 	char buff_out[BUFFER_SZ];
+	char buff_temp[BUFFER_SZ];
 	//struct command cmd_arr[50];
 	printf("%s\n", params);
 
 	while(1) {
 		msg_t *new_mess = packMsg(atoi(p_chat_id));
 		if(new_mess == NULL) {
+			printf("No messages in chat\n");
 			break;
 		}
 		cmd.command = "<SEND>";
@@ -20,7 +22,9 @@ void f_chat_msg(char *params, buff_t *Info) {
 		strcat(buff_out, "> <");
 		strcat(buff_out, new_mess->msg_id);
 		strcat(buff_out, "> <");
-		strcat(buff_out, new_mess->sender);
+		getUserName(atoi(new_mess->sender), buff_temp);
+		str_trim_lf(buff_temp, strlen(buff_temp));
+		strcat(buff_out, buff_temp);
 		strcat(buff_out, "> <");
 		strcat(buff_out, new_mess->time);
 		strcat(buff_out, "> <");
@@ -38,6 +42,7 @@ void f_chat_msg(char *params, buff_t *Info) {
 		}
 		pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
 		bzero(buff_out, BUFFER_SZ);
+		bzero(buff_temp, BUFFER_SZ);
 	}
 }
 

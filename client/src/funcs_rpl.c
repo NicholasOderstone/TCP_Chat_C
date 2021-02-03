@@ -81,10 +81,13 @@ void func_rpl_new_chnl(char *params, void *p) {
 }
 
 void func_rpl_send(char *params, void *p) {
-    UNUSED(p);
-    char *p_rpl = take_param(params, 2);
-    printf("## send: %s ##\n", p_rpl);
-    // chat_id, msg_id, sender_name, time, text
+    received_messages *received_mess = (received_messages *)malloc(sizeof(received_messages));
+    client_t *client = (client_t *)p;
+    received_mess->client = client;
+    strcpy(received_mess->message, take_param(params, 5));
+    strcpy(received_mess->time, take_param(params, 4));
+    strcpy(received_mess->sender_name, take_param(params, 3));
+    gdk_threads_add_idle(message_show, (gpointer)received_mess);
 }
 
 void func_rpl_chat_list(char *params, void *p) {

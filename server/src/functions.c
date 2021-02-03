@@ -6,9 +6,9 @@ void f_chat_msg(char *params, buff_t *Info) {
 	char buff_out[BUFFER_SZ];
 	cmd.command = "<SEND>";
 	strcat(buff_out, params);
-	strcat(buff_out, " <");
+	strcat(buff_out, " <msg_id> <");
 	strcat(buff_out, Info->client->name);
-	strcat(buff_out, ">");
+	strcat(buff_out, "> <878675457>");
 	strcat(buff_out, " <message>");
 	printf("%s\n", buff_out);
 	cmd.params = strdup(strcat(buff_out, params));
@@ -96,11 +96,13 @@ void f_send(char *params, buff_t *Info) {
 	cmd.command = "<SEND>";
     strcat(buff_out, " <");
 	strcat(buff_out, param_1(params));
-    strcat(buff_out, "> <");
+    strcat(buff_out, "> <msg_id> <");
 	strcat(buff_out, Info->client->name);
 	strcat(buff_out, "> <");
-    strcat(buff_out, param_2(params));
-    strcat(buff_out, ">");
+    strcat(buff_out, param_3(params));
+	strcat(buff_out, "> <");
+	strcat(buff_out, param_2(params));
+	strcat(buff_out, ">");
 	printf("%s\n", buff_out);
 	cmd.params = strdup(strcat(buff_out, params));
 	bzero(buff_out, BUFFER_SZ);

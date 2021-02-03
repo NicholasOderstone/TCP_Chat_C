@@ -81,6 +81,7 @@ typedef struct
 	typedef struct received_s {
 		client_t *client;
 		char message[BUFFER_SZ];
+		char time[BUFFER_SZ];
 		char sender_name[NAME_SZ];
 	}	received_messages;
 
@@ -192,6 +193,7 @@ typedef struct
 	// --- Utility functions ---
 
 	command msg_to_cmd(char *msg);
+	char *cmd_to_msg(command cmd);
 	char *take_param(char *params, int number);
 
 	void display(chat_info_t **chat_list_head);

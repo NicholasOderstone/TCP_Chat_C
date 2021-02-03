@@ -1100,14 +1100,6 @@ int getLastId(int id){
     return rez;
 }
 
-typedef struct message_s {
-        char chat_id[10];
-        char msg_id[10];
-        char sender[32];
-        char text[BUFFER_SZ];
-        char time[50];
-    } msg_t;
-
 msg_t *packMsg(int id){
     char sql_req[500];
     char buffer[4096];

@@ -44,6 +44,7 @@ typedef struct
 	GtkWidget *cancel_b;
     GtkWidget *edit_b;
     GtkWidget *delet_b;
+	gint row_num_list_gtk;
 } gtk_utils_t;
 
 	typedef struct chat_info {

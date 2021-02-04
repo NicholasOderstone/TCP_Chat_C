@@ -201,15 +201,14 @@ gboolean is_edit_delet(gpointer m) {
 }
 void message_delet(GtkWidget *widget, gpointer data){
     UNUSED(widget);
-    gint index;
-
     client_t *client = (client_t *)data;
-    index = gtk_list_box_row_get_index(gtk_list_box_get_selected_row (client->m->box_message));
+
     gtk_container_remove(GTK_CONTAINER(client->m->box_message),
             GTK_WIDGET(gtk_list_box_get_selected_row (client->m->box_message)));
-    gtk_container_remove(GTK_CONTAINER(client->m->box_message),
-                    GTK_WIDGET(gtk_list_box_get_row_at_index (client->m->box_message, index)));
-    client->m->row_num_list_gtk -=2 ;
+
+    //printf("result: %d\n", client->m->last_msg_id);
+
+    client->m->row_num_list_gtk--;
 }
 gboolean clean_listbox(gpointer data){
     GtkListBox *box = (GtkListBox *)data;
@@ -237,19 +236,15 @@ void cancel_ch(GtkWidget *widget, gpointer data){
 }
 gboolean message_show(gpointer m) {
     received_messages *received_mess = (received_messages *)m;
-    GtkTextView *view, *view_d ;
-    GtkTextBuffer *buffer, *buffer_d;
-    GtkTextIter end, end_d;
+    GtkTextView *view ;
+    GtkTextBuffer *buffer;
+    GtkTextIter end;
     view = GTK_TEXT_VIEW(gtk_text_view_new ());
     gtk_text_view_set_editable (view, FALSE);
-    buffer =gtk_text_buffer_new(NULL);
+    buffer = gtk_text_buffer_new(NULL);
     gtk_text_view_set_wrap_mode ( view, GTK_WRAP_WORD_CHAR);
     gtk_text_view_set_buffer(view, buffer);
-    view_d = GTK_TEXT_VIEW(gtk_text_view_new ());
-    buffer_d =gtk_text_buffer_new(NULL);
-    gtk_text_view_set_buffer(view_d, buffer_d);
     gtk_text_buffer_get_iter_at_offset(buffer, &end, 0);
-    gtk_text_buffer_get_iter_at_offset(buffer_d, &end_d, 0);
     char time_buf[BUFFER_SZ];
     if (received_mess->message[0] != 0) {
         time_t time = (time_t)(atoi(received_mess->time));
@@ -264,21 +259,18 @@ gboolean message_show(gpointer m) {
         gtk_text_buffer_insert_interactive (buffer, &end, received_mess->sender_name, -1, TRUE );
         gtk_text_buffer_insert_interactive (buffer, &end, ": ", -1, TRUE );
         gtk_text_buffer_insert_interactive (buffer, &end, received_mess->message, -1, TRUE );
-        gtk_text_buffer_insert_interactive (buffer_d, &end_d, "some data", -1, TRUE );
         bzero(time_buf, BUFFER_SZ);
-        //gtk_text_buffer_insert_interactive (received_mess->client->m->buffer, &received_mess->client->m->end, "\n", -1, TRUE );
+        gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view));
+        received_mess->client->m->row_num_list_gtk++;
+        received_mess->client->m->last_msg_id = received_mess->msg_id;
+        gtk_widget_show (GTK_WIDGET(view));
+        memset(received_mess->message, 0, sizeof(received_mess->message));
+        memset(received_mess->sender_name, 0, sizeof(received_mess->sender_name));
     }
-    gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view));
-    gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view_d));
-    received_mess->client->m->row_num_list_gtk +=2 ;
-    gtk_list_box_row_set_activatable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,
-                                    received_mess->client->m->row_num_list_gtk), FALSE);
-    gtk_list_box_row_set_selectable (gtk_list_box_get_row_at_index (received_mess->client->m->box_message,
-                                    received_mess->client->m->row_num_list_gtk), FALSE);
-    gtk_widget_show (GTK_WIDGET(view));
-    memset(received_mess->message, 0, sizeof(received_mess->message));
-    memset(received_mess->sender_name, 0, sizeof(received_mess->sender_name));
-    return FALSE;
+
+    if (received_mess->client->exit == 1)
+        return FALSE;
+    return TRUE;
 }
 
 void message_changed(GtkEntry *e){

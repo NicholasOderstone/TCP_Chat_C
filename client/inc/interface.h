@@ -49,6 +49,7 @@
     void message_delet();
     void cancel_ch();
     gboolean clean_listbox();
+    void my_popup_handler();
     //////////////////////////
 
 #endif

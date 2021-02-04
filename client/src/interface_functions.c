@@ -117,8 +117,9 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
 
     menu_b = GTK_BUTTON(gtk_builder_get_object (builder, "main_menu"));
     gtk_button_set_image (menu_b, menu_b_image);
-    gtk_menu_attach (menu, menu_item, 1, 1, 1, 1);
+    gtk_menu_attach (menu, menu_item, 0, 0, 0, 0);
     box = GTK_LIST_BOX(gtk_builder_get_object(builder, "chat_list"));
+
 
     int i = 0;
     GtkWidget **chat = malloc(chat_list_size(&client->chat_list_head) * sizeof(GtkWidget *));
@@ -163,8 +164,20 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     gtk_widget_hide(message_s->delet_b);
     g_signal_connect(message_s->delet_b, "clicked", G_CALLBACK(message_delet),gp_client);
     g_signal_connect(message_s->cancel_b, "clicked", G_CALLBACK(cancel_ch),gp_client);
+    g_signal_connect_swapped (menu_b, "clicked", G_CALLBACK (my_popup_handler), menu);
     //g_signal_connect(message_s->view, "move-cursor", G_CALLBACK(del_message), (gpointer)message_s->buffer);
 
+}
+void my_popup_handler (GtkWidget *widget)
+{
+  GtkMenu *menu;
+
+
+  // The "widget" is the menu that was supplied when
+  // g_signal_connect_swapped() was called.
+  menu = GTK_MENU (widget);
+ gtk_menu_popup_at_widget(menu, NULL, NULL, NULL, NULL,
+                          event_button->button, event_button->time);
 }
 gboolean is_edit_delet(gpointer m) {
     client_t *client = (client_t *)m;
@@ -189,6 +202,7 @@ gboolean is_edit_delet(gpointer m) {
 void message_delet(GtkWidget *widget, gpointer data){
     UNUSED(widget);
     gint index;
+
     client_t *client = (client_t *)data;
     index = gtk_list_box_row_get_index(gtk_list_box_get_selected_row (client->m->box_message));
     gtk_container_remove(GTK_CONTAINER(client->m->box_message),
@@ -257,7 +271,6 @@ gboolean message_show(gpointer m) {
     gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view));
     gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view_d));
     received_mess->client->m->row_num_list_gtk +=2 ;
-    printf("%d\n", received_mess->client->m->row_num_list_gtk);
     gtk_list_box_row_set_activatable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,
                                     received_mess->client->m->row_num_list_gtk), FALSE);
     gtk_list_box_row_set_selectable (gtk_list_box_get_row_at_index (received_mess->client->m->box_message,

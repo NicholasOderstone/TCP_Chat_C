@@ -48,7 +48,6 @@
     gboolean is_edit_delet();
     void message_delet();
     void cancel_ch();
-    gboolean clean_listbox();
     //////////////////////////
 
 #endif

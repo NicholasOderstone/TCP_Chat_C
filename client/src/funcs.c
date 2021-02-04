@@ -76,16 +76,3 @@ void func_register(GtkWidget *widget, gpointer data) {
     }
 }
 
-void get_msg_request(GtkWidget *widget, gpointer data) {
-    UNUSED(widget);
-    get_messages_request_s *get_messages_request = (get_messages_request_s *)data;
-    char buffer[BUFFER_SZ + 32];
-	get_messages_request->client->active_chat_id = get_messages_request->chat->chat_id;
-    snprintf(buffer, BUFFER_SZ, "<CHAT_MSG> <%s>", itoa(get_messages_request->chat->chat_id, 10));
-    send(get_messages_request->client->sockfd, buffer, strlen(buffer), 0);
-    bzero(buffer, BUFFER_SZ + 32);
-	while (clean_listbox((gpointer)get_messages_request->client->m->box_message) == TRUE){
-	}
-	get_messages_request->client->m->row_num_list_gtk = -1;
-		//gtk_container_foreach(get_messages_request->client->m->box_message, clean_listbox, data);
-}

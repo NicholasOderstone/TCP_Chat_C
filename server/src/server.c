@@ -54,6 +54,8 @@ int main(int argc, char **argv){
 
 	/* Data Base */
 	initDB();
+	//insertChat("Chat_test", "Description3");
+
 	//daemonize();
 	//insertUser("8798894654", "789", "fsdfsdf", "sdasdasdasd");
 	while(1){
@@ -84,10 +86,10 @@ int main(int argc, char **argv){
 		client_add(cli, &server);
 
 		pthread_create(&tid, NULL, &handle_client, (void*)clnt);
-
 		/* Reduce CPU usage */
 		sleep(1);
 	}
+	printf("1\n");
 	free(server.clients);
 	close(server.listenfd);
 

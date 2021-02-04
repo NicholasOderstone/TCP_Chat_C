@@ -1,87 +1,59 @@
-#include "../inc/header.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <sqlite3.h> 
+#include <string.h>
+#include <math.h>
+#include <unistd.h>
+#include <time.h>
+#define BUFFER_SZ 2048
 
-static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
-   (void)(NotUsed);
-   int i;
-   for(i = 0; i<argc; i++) {
-      printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-   }
-   printf("\n");
-   return 0;
+char* itoa(int num, char* buffer, int base) {
+    int curr = 0;
+ 
+    if (num == 0) {
+        // Base case
+        buffer[curr++] = '0';
+        buffer[curr] = '\0';
+        return buffer;
+    }
+ 
+    int num_digits = 0;
+ 
+    if (num < 0) {
+        if (base == 10) {
+            num_digits ++;
+            buffer[curr] = '-';
+            curr ++;
+            // Make it positive and finally add the minus sign
+            num *= -1;
+        }
+        else
+            // Unsupported base. Return NULL
+            return NULL;
+    }
+ 
+    num_digits += (int)floor(log(num) / log(base)) + 1;
+ 
+    // Go through the digits one by one
+    // from left to right
+    while (curr < num_digits) {
+        // Get the base value. For example, 10^2 = 1000, for the third digit
+        int base_val = (int) pow(base, num_digits-1-curr);
+ 
+        // Get the numerical value
+        int num_val = num / base_val;
+ 
+        char value = num_val + '0';
+        buffer[curr] = value;
+ 
+        curr ++;
+        num -= base_val * num_val;
+    }
+    buffer[curr] = '\0';
+    return buffer;
 }
 
-int initDB(){
-   sqlite3 *db;
-   char *zErrMsg = 0;
-   int rc;
-   char *sql;
 
-   /* Open database */
-   rc = sqlite3_open("data.db", &db);
-   
-   if( rc ) {
-      fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
-      return(0);
-   } else {
-      fprintf(stdout, "Opened database successfully\n");
-   }
-   
-
-//USERS
-   sql = "CREATE TABLE IF NOT EXISTS USERS("  \
-      "ID INTEGER PRIMARY KEY     AUTOINCREMENT," \
-      "LOGIN          TEXT    NOT NULL," \
-      "PASSWORD       TEXT    NOT NULL," \
-      "NICK           TEXT    NOT NULL," \
-      "STATUS         TEXT );";
-  rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-      
-  
-//CHATS
-sql = "CREATE TABLE IF NOT EXISTS CHATS("  \
-      "ID INTEGER PRIMARY KEY     AUTOINCREMENT," \
-      "NAME           TEXT    NOT NULL," \
-      "DESCRIPTION         TEXT);";
-  rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-
-
-//MESSAGES
-  sql = "CREATE TABLE IF NOT EXISTS MESSAGES("  \
-      "ID INTEGER PRIMARY KEY     AUTOINCREMENT," \
-      "CHAT_ID             INT     NOT NULL," \
-      "USER_ID             INT     NOT NULL," \
-      "MESSAGE             TEXT    NOT NULL," \
-      "DATE                INT    NOT NULL," \
-      "IS_READ             INT     NOT NULL );";
-  rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-   
-   
-//BLOCK_LIST
-  sql = "CREATE TABLE IF NOT EXISTS BLOCK_LIST("  \
-      "USER_ID             INT     NOT NULL," \
-      "BLOCK_USER_ID       INT     NOT NULL);";
-  rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-  
-  
-//USER_IN_CHAT
-  sql = "CREATE TABLE IF NOT EXISTS USER_IN_CHAT("  \
-      "USER_ID       INT     NOT NULL," \
-      "LOGIN         TEXT    NOT NULL," \
-      "CHAT_ID       INT     NOT NULL," \
-      "NAME          TEXT    NOT NULL);";
-  rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg); 
-   
-   
-   if( rc != SQLITE_OK ){
-      fprintf(stderr, "SQL error: %s\n", zErrMsg);
-      sqlite3_free(zErrMsg);
-   } else {
-      fprintf(stdout, "All OK\n");
-   }
-   sqlite3_close(db);
-   
-   return 0;
-}
 char* getAllUsers(char* rez){
    sqlite3 *db;
     sqlite3_stmt *res;
@@ -1084,32 +1056,44 @@ char* getAllMesFromChat(int id, char* rez){
 
 
 int getLastId(int id){
+
     sqlite3 *db;
     sqlite3_stmt *res;
-    int rez;
     int rc = sqlite3_open("data.db", &db);
     char sql[500];
     sprintf(sql, "SELECT MAX(ID) FROM MESSAGES WHERE CHAT_ID = '%d'", id);
     rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);    
     rc = sqlite3_step(res);
-    rez = sqlite3_column_int(res, 0);
+    int rez = sqlite3_column_int(res, 0);
+
     sqlite3_finalize(res);
     sqlite3_close(db);
+
     return rez;
 }
 
+typedef struct message_s {
+        char chat_id[10];
+        char msg_id[10];
+        char sender[32];
+        char text[BUFFER_SZ];
+        char time[50];
+    } msg_t;
 
 msg_t *packMsg(int id){
-    if (getLastId(id) == 0) return NULL;
     char sql_req[500];
     char buffer[4096];
     msg_t *new_msg = (msg_t *)malloc(sizeof(msg_t));
+    //sprintf (sql,"select group_concat(MyColumn, '') from (select id || ',' || CHAT_ID || ',' || USER_ID || ',' || MESSAGE || ',' || DATE || ';' as MyColumn from MESSAGES where CHAT_ID = %d and id between %d and %d);",id, from, from);
     int last_msg_from_chat_id = getLastId(id);
+    // printf("last_msg_from_chat_id: %d\n", last_msg_from_chat_id);
     static int from = 1;
+
     if (from == 0) {
         from = 1;
         return NULL;
     }
+
     sqlite3 *db;
     sqlite3_stmt *res;
    
@@ -1121,26 +1105,121 @@ msg_t *packMsg(int id){
         sprintf (sql_req,"select group_concat(MyColumn, '') from (select id || ' , ' || CHAT_ID || ' , ' || USER_ID || ' , ' || DATE || ' , ' || MESSAGE || '\n' as MyColumn from MESSAGES where CHAT_ID = %d and id = %d);",id, from);
         rc = sqlite3_prepare_v2(db, sql_req, -1, &res, 0);    
         rc = sqlite3_step(res);
+        // printf("sqlite3_column_text: %s\n", sqlite3_column_text(res, 0));
         if (sqlite3_column_text(res, 0) != NULL){
             if (sqlite3_column_int(res, 0) == last_msg_from_chat_id) {
                 from = 0;
                 sprintf(buffer, "%s\n", sqlite3_column_text(res, 0));
                 sscanf(buffer, "%s , %s , %s , %s , %[^\n]", new_msg->msg_id, new_msg->chat_id, new_msg->sender, new_msg->time, new_msg->text);
+                // printf("BUFFER: %s\n", buffer);
+                /* printf("MSG_T: ");
+                printf("%s, ", new_msg->chat_id);
+                printf("%s, ", new_msg->msg_id);
+                printf("%s, ", new_msg->sender);
+                printf("%s, ", new_msg->text);
+                printf("%s, ", new_msg->time); */
+                // printf("MSG_T: chat_id: %s, msg_id: %s, sender: %s, text: \"%s\", time: %s;\n", new_msg->chat_id, new_msg->msg_id, new_msg->sender, new_msg->text, new_msg->time);
                 break;
             }
             from = sqlite3_column_int(res, 0) + 1;
             sprintf(buffer, "%s\n", sqlite3_column_text(res, 0));
             sscanf(buffer, "%s , %s , %s , %s , %[^\n]", new_msg->msg_id, new_msg->chat_id, new_msg->sender, new_msg->time, new_msg->text);
+            // printf("BUFFER: %s\n", buffer);
+            /* printf("MSG_T: ");
+                printf("%s, ", new_msg->chat_id);
+                printf("%s, ", new_msg->msg_id);
+                printf("%s, ", new_msg->sender);
+                printf("%s, ", new_msg->text);
+                printf("%s, ", new_msg->time); */
+            // printf("MSG_T: chat_id: %s, msg_id: %s, sender: %s, text: \"%s\", time: %s;\n", new_msg->chat_id, new_msg->msg_id, new_msg->sender, new_msg->text, new_msg->time);
             break;
         }
         else {
             from++;
         }
+
     }
     
+
     sqlite3_finalize(res);
     sqlite3_close(db);
     
     return new_msg;
 }
 
+
+int main() {
+    //  char rez[10000];
+
+
+    //GET
+
+    //getAllUsers(&rez);  //work
+    //getOneUser(1, &rez);//work
+    //getOneChats(2, &rez); // work
+    //getOneMessage(1, &rez);//work
+    //getChatName(1, &rez);
+    //getUserChats(1, &rez);//work
+    //getBlockList(1, &rez);//work
+    //getAllMesFromChat(1, &rez);//work
+        //printf("%d", getIdUserByUserName("THEBESTUSER"));//work
+        //printf("%d", getIdChatByName("New chat"));//work
+        //printf("%d", getIdUserByUserName("AAA"));
+    //getUserName(1, rez);//work
+    //getUserPassword(1, rez);//work
+    //getIdUserByNick("3", rez);
+//printf("%d", );
+//getLastId(1);
+
+
+    //INSERT
+
+    //insertUser("AAA", "2", "3", "4");//work
+    //insertChat("New chat", "des0");//work
+    /* insertMessage("7","2","something tam", (int)time(NULL), "0");
+    insertMessage("6","2","something tam", (int)time(NULL), "0");
+    insertMessage("6","2","something tam", (int)time(NULL), "0");
+    insertMessage("43","2","something tam", (int)time(NULL), "0");
+    insertMessage("5","2","something tam", (int)time(NULL), "0");
+    insertMessage("9","2","something tam", (int)time(NULL), "0");
+    
+    insertMessage("8","2","something tam", (int)time(NULL), "0");
+    insertMessage("9","324","something tam", (int)time(NULL), "0");
+    insertMessage("7","4","something tam", (int)time(NULL), "0");
+    insertMessage("6","67","something tam", (int)time(NULL), "0");
+    insertMessage("3","3","something tam", (int)time(NULL), "0"); */
+    //work
+        //printf("%d", insertUser("AAA", "2", "3", "4"));
+        //printf("%d", insertChat("New chat", "des0"));
+        //printf("%d", insertMessage("1","2","something tam", "2010 02 13:11:00", "0"));
+    //insertInBlockList(1, 3);//work
+    //insertInUserInChats(1, 3);//work
+
+    //insertUSER_TO_CHAT("1", "1");//допиши
+
+
+    //DELETE
+
+    //deleteUser("7"); //work
+    //deleteChat("7");//work
+    //deleteMessage("4");//work
+    //deleteFromBlock(1,3);//work
+    //deleteFromChat(1,3);//work
+
+
+    //UPDATE
+
+    //updateNameUser(1, "WOOOOORK");//work
+    //updatePasswordUser(1, "NEW Pawssword");//work
+    //updateStatusUser(1, "mew se");
+    //updateTextMessage(1, "new mess");
+    msg_t *new_msg = NULL;
+    int chat_id = 6;
+    new_msg = packMsg(chat_id);
+    while (new_msg != NULL) {
+        printf("\n\t\t\tNEW_MSG: chat_id: %s, msg_id: %s, sender: %s, text: \"%s\", time: %s;\n", new_msg->chat_id, new_msg->msg_id, new_msg->sender, new_msg->text, new_msg->time);
+        new_msg = packMsg(chat_id);
+    }
+
+// printf("%s", rez);
+}

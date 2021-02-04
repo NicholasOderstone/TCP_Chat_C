@@ -13,13 +13,6 @@ void *process_cmd(void *arg) {
 			for (int j = 0; j < AMOUNT_OF_CMD; j++) {
 				analyse_cmd(fst_cmd, Info->arr_cmd_func[j], Info->client);
 			}
-			if (strcmp(fst_cmd.command, Info->arr_cmd_func[10].name) == 0) {
-				received_messages *received_mess = (received_messages *)malloc(sizeof(received_messages));
-				received_mess->client = Info->client;
-				strcpy(received_mess->message, take_param(fst_cmd.params, 3));
-				strcpy(received_mess->sender_name, take_param(fst_cmd.params, 2));
-			    gdk_threads_add_idle(message_show, (gpointer)received_mess);
-			}
 		}
 	}
 	int ret_val = 1;

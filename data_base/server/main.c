@@ -624,8 +624,6 @@ int insertUser(char* login, char* password, char* nick, char* status){
 
 int insertChat(char* name, char* description){
     char sql[500];
-    sprintf (sql,"INSERT INTO CHATS (name, description) VALUES ('%s','%s');",name,description);
-
 
     sqlite3 *db;
     sqlite3_stmt *res;
@@ -633,7 +631,16 @@ int insertChat(char* name, char* description){
    
     
     int rc = sqlite3_open("data.db", &db);
-    
+    sprintf (sql,"select id from CHATS where name = '%s'",name);
+    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);    
+    rc = sqlite3_step(res);
+
+    if(sqlite3_column_int(res, 0) > 0) 
+        return sqlite3_column_int(res, 0);
+
+
+
+    sprintf (sql,"INSERT INTO CHATS (name, description) VALUES ('%s','%s');",name,description);
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
 
     rc = sqlite3_prepare_v2(db, "select max(id) from CHATS;", -1, &res, 0);    
@@ -646,26 +653,47 @@ int insertChat(char* name, char* description){
     return rez;
 }
 
-int insertMessage(char* chat_id, char* user_id, char* message, int date, char* is_read){
-    char sql[500];
-    sprintf (sql,"INSERT INTO MESSAGES (chat_id, user_id, message, date, is_read) VALUES ('%s','%s','%s','%d','%s');",chat_id,user_id,message,date,is_read);
-    
+int insertMessage(int chat_id, int user_id, char* message, int date, char* is_read){
+    char sql[500];  
+
     sqlite3 *db;
     sqlite3_stmt *res;
-    char *err_msg = 0;
+    char *err_msg = NULL;
    
     int rc = sqlite3_open("data.db", &db);
+
+    sprintf(sql, "SELECT MAX(ID) FROM USER_IN_CHAT WHERE CHAT_ID = '%d'", chat_id);
+    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);    
+    rc = sqlite3_step(res);
+    if (sqlite3_column_int(res, 0) == 0){
+        sqlite3_finalize(res);
+        sqlite3_close_v2(db);
+        return -1;
+    }
+    sqlite3_finalize(res);
+
+    sprintf(sql, "SELECT MAX(ID) FROM USER_IN_CHAT WHERE USER_ID = '%d'", user_id);
+    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);    
+    rc = sqlite3_step(res);
+    if (sqlite3_column_int(res, 0) == 0){
+        sqlite3_finalize(res);
+        sqlite3_close_v2(db);
+        return -1;
+    }
+    sqlite3_finalize(res);
+
+
+
    
-
+    sprintf (sql,"INSERT INTO MESSAGES (chat_id, user_id, message, date, is_read) VALUES ('%d','%d','%s','%d','%s');",chat_id,user_id,message,date,is_read);
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
-
     
     rc = sqlite3_prepare_v2(db, "select max(id) from MESSAGES;", -1, &res, 0);    
     rc = sqlite3_step(res);
 
     int rez = sqlite3_column_int(res, 0);
     sqlite3_finalize(res);
-    sqlite3_close(db);
+    sqlite3_close_v2(db);
     return rez;
 }
 
@@ -831,28 +859,11 @@ void insertInUserInChats(int user_id, int chat_id){
    
     
     int rc = sqlite3_open("data.db", &db);
-    
-    if (rc != SQLITE_OK) {
-        
-        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
-        sqlite3_close(db);
-        
-        return;
-    }
+    rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     
    
 
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
-    
-    if (rc != SQLITE_OK ) {
-        
-        fprintf(stderr, "SQL error: %s\n", err_msg);
-        
-        sqlite3_free(err_msg);        
-        sqlite3_close(db);
-        
-        return;
-    } 
     
     sqlite3_close(db);
     
@@ -1041,17 +1052,14 @@ void insertUSER_TO_CHAT(int user_id, int chat_id){
     sqlite3_bind_text(res, 1, login, strlen(login), NULL);
     rc = sqlite3_step(res);
     sprintf(login, "%s", sqlite3_column_text(res, 0));
-    printf("%s", login);
 
     sprintf (sql, "select NAME from CHATS WHERE ID = '%d';", chat_id);
     rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);    
     sqlite3_bind_text(res, 1, name, strlen(name), NULL);
     rc = sqlite3_step(res);
     sprintf(name, "%s", sqlite3_column_text(res, 0));
-    printf("%s", name);
 
     sprintf (sql,"INSERT INTO USER_IN_CHAT (USER_ID, LOGIN, CHAT_ID, NAME) VALUES ('%d','%s','%d','%s');",user_id,login,chat_id,name);
-    printf("%s", sql);
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     sqlite3_finalize(res);
     sqlite3_close(db);
@@ -1071,6 +1079,29 @@ void insertUSER_TO_CHAT2(int user_id, char* login, int chat_id, char* name){
     return;
 }
 
+int createChat(int creator_id, char *name)  {
+
+    char sql[500];  
+
+    sqlite3 *db;
+    sqlite3_stmt *res;
+   
+    int rc = sqlite3_open("data.db", &db);
+    sprintf(sql, "SELECT MAX(ID) FROM CHATS WHERE NAME = '%s'", name);
+    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);    
+    rc = sqlite3_step(res);
+    if (sqlite3_column_int(res, 0) > 0){
+        sqlite3_finalize(res);
+        sqlite3_close_v2(db);
+        return -1;
+    }
+    sqlite3_finalize(res);
+
+    int new_chat_id = insertChat(name, NULL);
+    insertUSER_TO_CHAT(creator_id,  new_chat_id);
+
+    return new_chat_id;
+}
 
 int getLastId(int id){
 
@@ -1108,6 +1139,8 @@ msg_t *pack_msg_from_chat(int id){
 
     if (from == 0) {
         from = 1;
+        /*sqlite3_finalize(res);
+        sqlite3_close(db);*/
         return NULL;
     }
 
@@ -1137,6 +1170,7 @@ msg_t *pack_msg_from_chat(int id){
         else {
             from++;
         }
+        sqlite3_finalize(res);
     }
     
     sqlite3_finalize(res);
@@ -1305,42 +1339,42 @@ int main() {
 //printf("%d", );
 //getLastId(1);
 
-
+ printf("%d", createChat(4, "chatName!"));
     //INSERT
 
-    insertUser("test1", "pass1", "3", "4");//work
-    insertUser("test2", "pass2", "3", "4");
-    insertUser("test3", "pass3", "3", "4");
-    insertUser("test4", "pass4", "3", "4");
-    insertUser("test5", "pass5", "3", "4");
+    // insertUser("test1", "pass1", "3", "4");//work
+    // insertUser("test2", "pass2", "3", "4");
+    // insertUser("test3", "pass3", "3", "4");
+    // insertUser("test4", "pass4", "3", "4");
+    // insertUser("test5", "pass5", "3", "4");
 
-    insertChat("chat1", "des0");
-    insertChat("chat2", "des0");
-    insertChat("chat3", "des0");
-    insertChat("chat4", "des0");
-    insertChat("chat5", "des0");
+     //printf("%d", insertChat("chat78", "des0"));
+    // insertChat("chat2", "des0");
+    // insertChat("chat3", "des0");
+    // insertChat("chat4", "des0");
+    // insertChat("chat5", "des0");
 
 
-    //insertChat("New chat", "des0");//work
-    /* insertMessage("3","2","something tam", (int)time(NULL), "0");
-    insertMessage("2","2","something tam", (int)time(NULL), "0");
-    insertMessage("3","2","something tam", (int)time(NULL), "0");
-    insertMessage("3","2","something tam", (int)time(NULL), "0");
-    insertMessage("1","2","something tam", (int)time(NULL), "0");
-    insertMessage("2","2","something tam", (int)time(NULL), "0");
+    //printf("%d", insertChat("chat6", "des0"));//work
+    //pirntf("%d", insertMessage(3,2,"something tam", (int)time(NULL), "0"));
+    // insertMessage("2","2","something tam", (int)time(NULL), "0");
+    // insertMessage("3","2","something tam", (int)time(NULL), "0");
+    // insertMessage("3","2","something tam", (int)time(NULL), "0");
+    // insertMessage("1","2","something tam", (int)time(NULL), "0");
+    // insertMessage("2","2","something tam", (int)time(NULL), "0");
     
-    insertMessage("3","2","something tam", (int)time(NULL), "0");
-    insertMessage("2","5","something tam", (int)time(NULL), "0");
-    insertMessage("1","4","something tam", (int)time(NULL), "0");
-    insertMessage("2","3","something tam", (int)time(NULL), "0");
-    insertMessage("3","3","something tam", (int)time(NULL), "0"); */
+    // insertMessage("3","2","something tam", (int)time(NULL), "0");
+    // insertMessage("2","5","something tam", (int)time(NULL), "0");
+    // insertMessage("1","4","something tam", (int)time(NULL), "0");
+    // insertMessage("2","3","something tam", (int)time(NULL), "0");
+    // insertMessage("3","3","something tam", (int)time(NULL), "0"); */
     //work
         //printf("%d", insertUser("AAA", "2", "3", "4"));
         //printf("%d", insertChat("New chat", "des0"));
         //printf("%d", insertMessage("1","2","something tam", "2010 02 13:11:00", "0"));
     //insertInBlockList(1, 3);//work
     //insertInUserInChats(1, 3);//work
-        
+        //printf("%d", insertMessage(1,1,"!!!!! tam", (int)time(NULL), "0"));
 
     //insertUSER_TO_CHAT(1,  1);//допиши - дописал
     // insertUSER_TO_CHAT2(1, "test1", 1, "chat1");
@@ -1348,12 +1382,10 @@ int main() {
     // insertUSER_TO_CHAT2(3, "test3", 1, "chat1");
     // insertUSER_TO_CHAT2(4, "test4", 1, "chat1");
     // insertUSER_TO_CHAT2(5, "test5", 1, "chat1");
-
     // insertUSER_TO_CHAT2(1, "test1", 2, "chat2");
     // insertUSER_TO_CHAT2(2, "test2", 2, "chat2");
     // insertUSER_TO_CHAT2(3, "test3", 2, "chat2");
     // insertUSER_TO_CHAT2(4, "test4", 2, "chat2");
-
     // insertUSER_TO_CHAT2(5, "test5", 3, "chat3");
     // insertUSER_TO_CHAT2(1, "test1", 3, "chat3");
     // insertUSER_TO_CHAT2(2, "test2", 3, "chat3");
@@ -1364,7 +1396,7 @@ int main() {
 
     //deleteUser("7"); //work
     //deleteChat("7");//work
-    //deleteMessage("4");//work
+    //deleteMessage("45");//work
     //deleteFromBlock(1,3);//work
     //deleteFromChat(1,3);//work
 
@@ -1378,15 +1410,20 @@ int main() {
 
 
 
+    // msg_t *new_msg = NULL;
+    // int chat_id = 3;
+    // new_msg = pack_msg_from_chat(chat_id);
+    // while (new_msg != NULL) {
+    //     printf("\n\t\t\tMSG from CHAT %d: chat_id: %s, msg_id: %s, sender: %s, text: \"%s\", time: %s;\n", chat_id, new_msg->chat_id, new_msg->msg_id, new_msg->sender, new_msg->text, new_msg->time);
+    //     new_msg = pack_msg_from_chat(chat_id);
+    // }
 
 
-//     msg_t *new_msg = NULL;
-//     int chat_id = 3;
-//     new_msg = pack_msg_from_chat(chat_id);
-//     while (new_msg != NULL) {
-//         printf("\n\t\t\tMSG from CHAT %d: chat_id: %s, msg_id: %s, sender: %s, text: \"%s\", time: %s;\n", chat_id, new_msg->chat_id, new_msg->msg_id, new_msg->sender, new_msg->text, new_msg->time);
-//         new_msg = pack_msg_from_chat(chat_id);
-//     }
+
+// printf("%d", insertMessage(1,1,"!!!!! tam", (int)time(NULL), "0"));
+// printf("%d", insertMessage(1,1,"!!!!! tam", (int)time(NULL), "0"));
+// printf("%d", insertMessage(1,1,"!!!!! tam", (int)time(NULL), "0"));
+
 
 //     chat_t *new_chat = NULL;
 //     int user_id = 3;

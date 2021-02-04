@@ -7,10 +7,25 @@
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="accel-group">accelgroup1</property>
+    <property name="rect-anchor-dy">1</property>
+  </object>
+  <object class="GtkAction" id="action1">
+    <property name="label" translatable="yes">add_chat</property>
+  </object>
+  <object class="GtkTextBuffer" id="message_text_buffer"/>
+  <object class="GtkAdjustment" id="scroll_chats">
+    <property name="upper">100</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="scroll_messeges">
+    <property name="upper">100</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
   </object>
   <object class="GtkWindow" id="connect_window">
     <property name="can-focus">False</property>
-    <property name="window-position">center</property>
+    <property name="window-position">center-always</property>
     <signal name="destroy" handler="destroy" swapped="no"/>
     <child>
       <object class="GtkFixed">
@@ -76,10 +91,14 @@
         </child>
       </object>
     </child>
+    <accessibility>
+      <relation type="parent-window-of" target="signup_window"/>
+      <relation type="parent-window-of" target="login_window"/>
+    </accessibility>
   </object>
   <object class="GtkWindow" id="login_window">
     <property name="can-focus">False</property>
-    <property name="window-position">center</property>
+    <property name="window-position">center-always</property>
     <signal name="destroy" handler="destroy" swapped="no"/>
     <child>
       <object class="GtkFixed" id="fix">
@@ -173,21 +192,13 @@
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkTextBuffer" id="message_text_buffer"/>
-  <object class="GtkAdjustment" id="scroll_chats">
-    <property name="upper">100</property>
-    <property name="step-increment">1</property>
-    <property name="page-increment">10</property>
-  </object>
-  <object class="GtkAdjustment" id="scroll_messeges">
-    <property name="upper">100</property>
-    <property name="step-increment">1</property>
-    <property name="page-increment">10</property>
+    <accessibility>
+      <relation type="parent-window-of" target="main_window"/>
+    </accessibility>
   </object>
   <object class="GtkWindow" id="main_window">
     <property name="can-focus">False</property>
-    <property name="window-position">center</property>
+    <property name="window-position">center-always</property>
     <signal name="destroy" handler="destroy" swapped="no"/>
     <child>
       <object class="GtkFixed">
@@ -244,15 +255,20 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="vadjustment">scroll_messeges</property>
+            <property name="hscrollbar-policy">never</property>
             <property name="window-placement">bottom-left</property>
             <property name="shadow-type">in</property>
             <child>
-              <object class="GtkTextView" id="message_field">
+              <object class="GtkViewport" id="message_viewport">
                 <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="vadjustment">scroll_messeges</property>
-                <property name="editable">False</property>
-                <property name="buffer">message_text_buffer</property>
+                <property name="can-focus">False</property>
+                <child>
+                  <object class="GtkListBox" id="message_list">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="selection-mode">multiple</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -296,17 +312,78 @@
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
             <property name="popup">menu</property>
+            <property name="align-widget">menu</property>
+            <property name="use-popover">False</property>
+            <property name="popover">popup_menu</property>
             <child>
               <placeholder/>
             </child>
           </object>
         </child>
+        <child>
+          <object class="GtkButtonBox" id="ed_del_box">
+            <property name="width-request">94</property>
+            <property name="height-request">47</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="layout-style">start</property>
+            <child>
+              <object class="GtkButton" id="cancel_b">
+                <property name="label" translatable="yes">cancel</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="ed_b">
+                <property name="label" translatable="yes">edit</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="del_b">
+                <property name="label" translatable="yes">delete</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="x">198</property>
+          </packing>
+        </child>
       </object>
+    </child>
+  </object>
+  <object class="GtkPopoverMenu" id="popup_menu">
+    <property name="can-focus">False</property>
+    <property name="relative-to">main_menu</property>
+    <child>
+      <placeholder/>
     </child>
   </object>
   <object class="GtkWindow" id="signup_window">
     <property name="can-focus">False</property>
-    <property name="window-position">center</property>
+    <property name="window-position">center-always</property>
     <signal name="destroy" handler="destroy" swapped="no"/>
     <child>
       <object class="GtkFixed">
@@ -431,5 +508,8 @@
         </child>
       </object>
     </child>
+    <accessibility>
+      <relation type="parent-window-of" target="main_window"/>
+    </accessibility>
   </object>
 </interface>

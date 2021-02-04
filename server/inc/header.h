@@ -17,6 +17,7 @@
     #include <fcntl.h>
     #include <sys/stat.h>
 
+
     /* DATA_BASE */
     #include <stdlib.h>
     #include <sqlite3.h>
@@ -25,9 +26,8 @@
 /* DEFINES */
     #define MAX_CLIENTS 100
     #define BUFFER_SZ 2048
-    #define LENGTH 2048
     #define NAME_SZ 32
-    #define AMOUNT_OF_CMD 3
+    #define AMOUNT_OF_CMD 4
 
 
 /* STRUCTURES */
@@ -39,12 +39,12 @@
         int uid;
         char name[32];
         int exit_flag;
-    } client_t; 
+    } client_t;
 
     /* Handles all neccessary info about server*/
     typedef struct
     {
-        char *ipv4; /* IP in char* format. Standard 127.0.0.1*/ 
+        char *ipv4; /* IP in char* format. Standard 127.0.0.1*/
         int port; /* Port in int format*/
         struct sockaddr_in address; /*Server IP, Port and ip format */
         int listenfd; /* Main server socket*/
@@ -55,14 +55,14 @@
 
         _Atomic unsigned int cli_count; /* Client count. _Atomic is used as a built-in mutex */
 
-    } server_info_t; 
+    } server_info_t;
 
     /* Buffer that is used to transfer info to the new thread*/
     typedef struct {
         server_info_t *serv_inf; /* Server info*/
-        int uid; /* uid of client which connection is handled in this thread*/ 
+        int uid; /* uid of client which connection is handled in this thread*/
         client_t *client;
-    } buff_t; 
+    } buff_t;
 
 
     pthread_mutex_t cmd_lock; //Mutex for commands
@@ -73,7 +73,7 @@
         char *params;
     };
 
-    //A queue for commands 
+    //A queue for commands
     struct cmd_q {
         struct command data;
         struct cmd_q *link;
@@ -98,7 +98,15 @@
 		cmd_func arr_cmd_func[AMOUNT_OF_CMD];
         buff_t *buff_m;
 	};
-    
+
+    // DB structure
+    typedef struct message_s {
+        char chat_id[10];
+        char msg_id[10];
+        char sender[32];
+        char text[BUFFER_SZ];
+        char time[50];
+    } msg_t;
 
 
 //////////////////////////
@@ -144,8 +152,8 @@
     /* add "> " at the beginning of the new line*/
     void str_overwrite_stdout();
     /* trim /n*/
-    void str_trim_lf (char* arr, int length); 
-    /* Print client ipv4 address*/ 
+    void str_trim_lf (char* arr, int length);
+    /* Print client ipv4 address*/
     void print_client_addr(struct sockaddr_in addr);
     /* CONBERT INT TO CHAR* */
     char* itoa(int num, char* buffer, int base);
@@ -180,17 +188,30 @@
 
 
     // --- Data Base functions ---
-    void initDB();
-    char* getOneUser(int id, char* rez);
-    void insertUser(char* login, char* password, char* nick, char* status);
-    int getIdUserByUserName(char* login);
-    char* getAllUsers(char* rez);
-    void deleteUser(char* id);  
-    char* getUserName(int id, char* rez);
-    char* getUserPassword(int id, char* rez);
+    int initDB();
+    char* getOneUser(int id, char* rez); // Получить всю инфу по выбранному пользователю (по id)
+    int insertUser(char* login, char* password, char* nick, char* status); // Создать юзера
+    int getIdUserByUserName(char* login); // Получить id юзера по логину юзера
+    char* getAllUsers(char* rez); // Получить всех пользователей
+    void deleteUser(char* id); // Удалить выбранного пользователя с выбранный id
+    char* getUserName(int id, char* rez); // Получить имя пользователя по id
+    char* getUserPassword(int id, char* rez); // Получить пароль пользователя по id
+    char* getUserChats(int id, char* rez); // Получить все чаты пользователя
+    int insertChat(char* name, char* description); // Создать чат с именем и описанием
+    void insertInUserInChats(int user_id, int chat_id); // Поместить выбранного пользователя в выбранный чат
+    int getIdChatByName(char* chat); // Получить id чата по имени чата
+    char* getOneChats(int id, char* rez); // Возвращает все поля выбранного чата
+    char* getChatName(int id, char* rez); // Получить имя чата по id
+    void deleteChat(char* id); // Удалить выбранный чат
+    void deleteFromChat(int user_id, int chat_id); //Удалить выбранного пользователя с выбранног чата
+    int insertMessage(char* chat_id, char* user_id, char* message, int date, char* is_read); // Поместить сообщение в выбранный чат
+    char* getAllChats(); //Получить все чаты
+    msg_t *packMsg(int id); // Some useful functions
 
 
     // --- Daemonize ---
     void daemonize();
+
+    pthread_mutex_t send_cmd_lock;
 
 #endif

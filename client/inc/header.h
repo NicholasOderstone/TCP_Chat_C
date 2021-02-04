@@ -20,6 +20,7 @@
 	#include <ctype.h>
 	#include <sqlite3.h>
 	#include <time.h>
+
     #include "interface.h"
 
 //////////////////////////
@@ -27,22 +28,36 @@
 // DEFINES
 	#define MAX_CLIENTS 100
 	#define BUFFER_SZ 2048
-	#define LENGTH 2048
 	#define NAME_SZ 32
-	#define AMOUNT_OF_CMD 11
+	#define AMOUNT_OF_CMD 12
 //////////////////////////
-typedef struct message_struct
-{
-    GtkTextView *view ;
-    GtkTextBuffer *buffer;
-	GtkTextIter start;
-	GtkTextIter end;
-	GtkTextMark* mark;
-} message_t;
-
 
 // STRUCTURES
-	// Handles all neccesary info about client
+
+// --- GTK structure ---
+	typedef struct
+	{
+		GtkTextView *view ;
+		GtkTextBuffer *buffer;
+		GtkTextIter start;
+		GtkTextIter end;
+		GtkTextMark* mark;
+		GtkListBox *box_message;
+		GtkButtonBox *b_box;
+		GtkWidget *cancel_b;
+		GtkWidget *edit_b;
+		GtkWidget *delet_b;
+		gint row_num_list_gtk;
+	} gtk_utils_t;
+
+// --- CHAT ---
+	typedef struct chat_info {
+		int chat_id;
+		char *chat_name;
+		struct chat_info *next;
+	} chat_info_t;
+
+// --- CLIENT ---
 	typedef struct{
 		struct sockaddr_in address; // Stores ip (sin_addr.s_addr), port (sin_port) and ip format (sin_family = AF_INET)
 		int sockfd;
@@ -50,15 +65,30 @@ typedef struct message_struct
 		char name[NAME_SZ];
 		char *login;
 		char *pass;
-		message_t *m;
+		gtk_utils_t *m;
 		int is_connected;
 		int exit;
+		int active_chat_id;
+		chat_info_t *chat_list_head;
 		pthread_mutex_t mutex;
 	} client_t;
 
+// --- REQUEST structures ---
+	typedef struct {
+		chat_info_t *chat;
+		client_t *client;
+	} get_messages_request_s;
+
+	typedef struct {
+		char *new_chat_name;
+		client_t *client;
+	} new_chat_request_s;
+
+// --- msg, command, cmd function ---
 	typedef struct received_s {
 		client_t *client;
-		char message[LENGTH];
+		char message[BUFFER_SZ];
+		char time[BUFFER_SZ];
 		char sender_name[NAME_SZ];
 	}	received_messages;
 
@@ -69,14 +99,10 @@ typedef struct message_struct
 
 	typedef struct {
 	    char *name;
-	    void (*func)(char *params);
+	    void (*func)(char *params, void *p);
 	} cmd_func;
 
-	typedef struct {
-		client_t *client;
-		char *message;
-	} msg_t;
-
+// --- QUEUES ---
 	struct msg_q {
 	    char *data;
 	    struct msg_q *link;
@@ -87,10 +113,7 @@ typedef struct message_struct
 	    struct cmd_q *link;
 	};
 
-	struct send_msg_info_s {
-		client_t *client;
-	};
-
+// --- THREAD INFO structures ---
 	struct recv_msg_info_s {
 		client_t *client;
 		struct msg_q **msg_q_front;
@@ -116,7 +139,6 @@ typedef struct message_struct
 		pthread_mutex_t lock;
 	};
 
-
 //////////////////////////
 
 // FUNCTIONS
@@ -124,10 +146,6 @@ typedef struct message_struct
 	void str_overwrite_stdout();
 	// Trim \n
 	void str_trim_lf (char* arr, int length);
-	// Validate functions
-	int validate_number(char *str);
-	int validate_ip(char *ip);
-	int validate_port(char *port);
 	// Input client name (with correctness check)
 	void get_client_name(char *name);
 	// Init client info and settings
@@ -136,23 +154,23 @@ typedef struct message_struct
 	void init_funcs(cmd_func arr_cmd_func[]);
 	char *mx_strnew(const int size);
 
-	// --- Thread functions ---
 
-	// Handles sending messages
-	void *send_msg_handler(void *arg);
+// --- THREADS ---
+	void *init_threads(void *client);
 	// Handles recieving messages
 	void *recv_msg_handler(void *arg);
-	// Handles reconnect
-	void *connect_to_server(void *cnct_inf);
 	// Handles reading messages
 	void *read_msg(void *p);
 	// Handles making command from message
 	void *make_cmd(void *arg);
 	// Handles processing recieved commands
 	void *process_cmd(void *arg);
+	// Handles connection to server
+	void *th_connect_to_server();
+	// Handles reconnect
+	void *connect_to_server(void *cnct_inf);
 
-	// --- Queue functions ---
-
+// --- QUEUES ---
 	// Inserts the message into the message queue
 	void to_msg_q(char *data, struct msg_q **msg_q_front, pthread_mutex_t msg_lock);
 	// Inserts the command into the command queue
@@ -166,26 +184,34 @@ typedef struct message_struct
 	// Takes first command from cmd_q
 	command take_fst_cmd_in_q(struct cmd_q **cmd_q_front);
 
+// --- CHAT LIST ---
+	// Inserts the chat into the chat list
+	void to_chat_list(int chat_id, char *chat_name, chat_info_t **chat_list_head);
+	// Displays the chat list
+	void display(chat_info_t **chat_list_head);
+	// Gets chat list size
+	int chat_list_size(chat_info_t **chat_list_head);
 
 	void send_cmd(command cmd, client_t *client);
-	void analyse_cmd(command fst_cmd, cmd_func function);
+	void analyse_cmd(command fst_cmd, cmd_func function, client_t *client);
 
-	// --- Utility functions ---
+// --- REQUESTS ---
+	void get_msg_request(GtkWidget *widget, gpointer data);
 
-	command msg_to_cmd(char *msg);
-	char *cmd_to_msg(command cmd);
-	char *param_1(char *params);
-	char *param_2(char *params);
-	char *param_3(char *params);
-	char *param_4(char *params);
-	char *param_5(char *params);
-
-	void *th_connect_to_server();
-	//void *init_threads(GtkWidget *widget, gpointer data);
+// --- SWITCHES ---
 	void init_switches(void);
 	void func_login(GtkWidget *widget, gpointer data);
 	void func_register(GtkWidget *widget, gpointer data);
 
+// --- VALIDATES ---
+	int validate_number(char *str);
+	int validate_ip(char *ip);
+	int validate_port(char *port);
+
+// --- UTILITY ---
+	command msg_to_cmd(char *msg);
+	char *cmd_to_msg(command cmd);
+	char *take_param(char *params, int number);
 
 //////////////////////////
 
@@ -193,6 +219,8 @@ typedef struct message_struct
 	int sw_login;
 	int sw_register;
 	int sw_send;
+
+	pthread_mutex_t chat_lock;
 
 //////////////////////////
 

@@ -36,7 +36,7 @@
     void open_main_page();
     void username_changed();
     void password_changed();
-    void send_message();
+    //void show_my_msg();
     void message_clear();
     void message_send();
     void username_s_changed();
@@ -45,6 +45,10 @@
     void r_pass_s_changed();
     void del_message();
     gboolean message_show();
+    gboolean is_edit_delet();
+    void message_delet();
+    void cancel_ch();
+    gboolean clean_listbox();
     //////////////////////////
 
 #endif

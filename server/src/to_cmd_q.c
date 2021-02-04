@@ -20,8 +20,8 @@ void to_cmd_q(struct command data, struct cmd_q **cmd_q_front) {
         }
         current->link = temp;
     }
-    printf("\t%d: cmd_q: command = %s", counter, data.command);
-    printf("; params = %s\n", data.params);
+    printf("\t%d: cmd_q: command = %s", counter, current->data.command);
+    printf("; params = %s\n", current->data.params);
     counter++;
     pthread_mutex_unlock(&cmd_lock);
 }

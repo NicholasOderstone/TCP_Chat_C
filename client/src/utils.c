@@ -16,15 +16,14 @@ void str_trim_lf(char* arr, int length) {
 }
 
 void send_client_info_to_server(client_t *client) {
-	char buffer[LENGTH];
+	char buffer[BUFFER_SZ];
 	snprintf(buffer, BUFFER_SZ, "<LOGIN> <%s> <%s>", client->login, client->pass);
     send(client->sockfd, buffer, strlen(buffer), 0);
 	printf("%s\n", buffer);
-    bzero(buffer, LENGTH);
+    bzero(buffer, BUFFER_SZ);
     while (sw_login == -1) { }
     switch(sw_login) {
         case 0:
-            //open_main_page(NULL, data);
             sw_login = -1;
             break;
         case 1:
@@ -69,7 +68,7 @@ void *connect_to_server(void *cnct_inf) {
 		}
 	}
     int ret_val = 1;
-	printf("6. Connect to server thread terminated\n");
+	printf("-- Connect to server thread terminated --\n");
 	pthread_exit(&ret_val);
 	return NULL;
 }

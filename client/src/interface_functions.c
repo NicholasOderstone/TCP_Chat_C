@@ -90,9 +90,9 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
 
     GtkListBox *box;
     GtkButton *menu_b;
-    GtkMenu *menu;
-    GtkWidget *menu_item = gtk_menu_item_new_with_label ("Add Chat");
-    menu = GTK_MENU(gtk_builder_get_object (builder, "menu"));
+    //GtkMenu *menu;
+    //GtkWidget *menu_item = gtk_menu_item_new_with_label ("Add Chat");
+    //menu = GTK_MENU(gtk_builder_get_object (builder, "menu"));
     GtkCssProvider *cssProvider = gtk_css_provider_new();
     client->m = (gtk_utils_t *)malloc(sizeof(gtk_utils_t *));
     client->m = message_s;
@@ -114,10 +114,12 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     gtk_widget_show(window);
     //ПЕРЕДЕЛАЙ ОКНА В ОКНА А НЕ ВИДЖЕТЫ
     connection_spin = GTK_SPINNER(gtk_builder_get_object(builder, "connection_spinner"));
-
+    GtkWidget *child = gtk_bin_get_child (GTK_BIN (menu_item));
+    gtk_label_set_markup (GTK_LABEL (child), "<i>new label</i> with <b>markup</b>");
+    gtk_accel_label_set_accel (GTK_ACCEL_LABEL (child), GDK_KEY_1, 0);
     menu_b = GTK_BUTTON(gtk_builder_get_object (builder, "main_menu"));
     gtk_button_set_image (menu_b, menu_b_image);
-    gtk_menu_attach (menu, menu_item, 1, 1, 1, 1);
+    //gtk_menu_attach (menu, menu_item, 1, 1, 1, 1);
     box = GTK_LIST_BOX(gtk_builder_get_object(builder, "chat_list"));
 
     int i = 0;
@@ -167,6 +169,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     gtk_widget_hide(message_s->delet_b);
     g_signal_connect(message_s->delet_b, "clicked", G_CALLBACK(message_delet),gp_client);
     g_signal_connect(message_s->cancel_b, "clicked", G_CALLBACK(cancel_ch),gp_client);
+    g_signal_connect(message_s->edit_b, "clicked", G_CALLBACK(message_edit),gp_client);
     //g_signal_connect(message_s->view, "move-cursor", G_CALLBACK(del_message), (gpointer)message_s->buffer);
 
 }

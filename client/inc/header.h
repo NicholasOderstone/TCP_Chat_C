@@ -29,14 +29,13 @@
 	#define MAX_CLIENTS 100
 	#define BUFFER_SZ 2048
 	#define NAME_SZ 32
-	#define AMOUNT_OF_CMD 12
+	#define AMOUNT_OF_CMD 4
 //////////////////////////
 
 // STRUCTURES
 
 // --- GTK structure ---
-	typedef struct
-	{
+	typedef struct {
 		GtkTextView *view ;
 		GtkTextBuffer *buffer;
 		GtkTextIter start;
@@ -45,8 +44,10 @@
 		GtkListBox *box_message;
 		GtkButtonBox *b_box;
 		GtkWidget *cancel_b;
-	    GtkWidget *edit_b;
-	    GtkWidget *delet_b;
+		GtkWidget *edit_b;
+		GtkWidget *delet_b;
+		gint row_num_list_gtk;
+		int last_msg_id;
 	} gtk_utils_t;
 
 // --- CHAT ---
@@ -83,9 +84,16 @@
 		client_t *client;
 	} new_chat_request_s;
 
+	typedef struct {
+		int chat_id;
+		int msg_id;
+		client_t *client;
+	} change_msg_request_s;
+
 // --- msg, command, cmd function ---
 	typedef struct received_s {
 		client_t *client;
+		int msg_id;
 		char message[BUFFER_SZ];
 		char time[BUFFER_SZ];
 		char sender_name[NAME_SZ];
@@ -196,6 +204,9 @@
 
 // --- REQUESTS ---
 	void get_msg_request(GtkWidget *widget, gpointer data);
+	void new_chat_request(GtkWidget *widget, gpointer data);
+	void delete_msg_request(GtkWidget *widget, gpointer data);
+	void edit_msg_request(GtkWidget *widget, gpointer data);
 
 // --- SWITCHES ---
 	void init_switches(void);
@@ -211,13 +222,13 @@
 	command msg_to_cmd(char *msg);
 	char *cmd_to_msg(command cmd);
 	char *take_param(char *params, int number);
+	char *itoa(int val, int base);
 
 //////////////////////////
 
 // GLOBAL VARIABLES
 	int sw_login;
 	int sw_register;
-	int sw_send;
 
 	pthread_mutex_t chat_lock;
 

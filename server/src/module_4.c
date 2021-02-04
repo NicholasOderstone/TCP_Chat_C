@@ -30,7 +30,7 @@ void *process_cmd(void *arg) {
 			}
 		}
 	}
-	printf("5. Process command thread terminated\n");
+	printf("Client Disconnected!\n");
 	pthread_exit(NULL);
 	return NULL;
 }

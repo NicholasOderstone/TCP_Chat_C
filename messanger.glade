@@ -3,10 +3,15 @@
 <interface>
   <requires lib="gtk+" version="3.24"/>
   <object class="GtkAccelGroup" id="accelgroup1"/>
+  <object class="GtkAction" id="action1">
+    <property name="label" translatable="yes">add_chat</property>
+  </object>
   <object class="GtkMenu" id="menu">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="accel-group">accelgroup1</property>
+    <property name="rect-anchor-dx">1</property>
+    <property name="rect-anchor-dy">3</property>
+    <property name="menu-type-hint">menu</property>
   </object>
   <object class="GtkTextBuffer" id="message_text_buffer"/>
   <object class="GtkAdjustment" id="scroll_chats">
@@ -127,20 +132,6 @@
           </packing>
         </child>
         <child>
-          <object class="GtkMenuButton" id="main_menu">
-            <property name="width-request">41</property>
-            <property name="height-request">34</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="focus-on-click">False</property>
-            <property name="receives-default">True</property>
-            <property name="popup">menu</property>
-            <child>
-              <placeholder/>
-            </child>
-          </object>
-        </child>
-        <child>
           <object class="GtkButtonBox" id="ed_del_box">
             <property name="width-request">94</property>
             <property name="height-request">47</property>
@@ -190,6 +181,19 @@
           <packing>
             <property name="x">198</property>
           </packing>
+        </child>
+        <child>
+          <object class="GtkMenuButton" id="main_menu">
+            <property name="width-request">47</property>
+            <property name="height-request">40</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="focus-on-click">False</property>
+            <property name="receives-default">True</property>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
         </child>
       </object>
     </child>

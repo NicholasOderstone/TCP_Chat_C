@@ -1,22 +1,27 @@
 #include "../inc/header.h"
 
+char *itoa(int val, int base) {
+	static char buf[32] = {0};
+	int i = 30;
+	for(; val && i ; --i, val /= base)
+		buf[i] = "0123456789abcdef"[val % base];
+	return &buf[i+1];
+}
+
 void func_login(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
 	client_t *client = (client_t *)data;
-
-	command cmd;
     char buffer[BUFFER_SZ];
-    snprintf(buffer, BUFFER_SZ, "<%s> <%s>", username_str, passoword_str);
-    cmd.command = "<LOGIN>";
-    cmd.params = strdup(buffer);
-    send_cmd(cmd, client);
+    char *p_login = strdup(username_str);
+    char *p_pass = strdup(passoword_str);
+    snprintf(buffer, BUFFER_SZ, "<LOGIN> <%s> <%s>", p_login, p_pass);
+    send(client->sockfd, buffer, strlen(buffer), 0);
     bzero(buffer, BUFFER_SZ);
-
     while (sw_login == -1) { }
     switch(sw_login) {
         case 0:
-        client->login = strdup(username_str);
-        client->pass = strdup(passoword_str);
+        client->login = strdup(p_login);
+        client->pass = strdup(p_pass);
             open_main_page(NULL, data);
             sw_login = -1;
             break;
@@ -36,20 +41,19 @@ void func_login(GtkWidget *widget, gpointer data) {
 void func_register(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
 	client_t *client = (client_t *)data;
-
-	command cmd;
-	char buffer[BUFFER_SZ];
-	snprintf(buffer, BUFFER_SZ, "<%s> <%s> <%s> <%s>", username_str_s, nick_str_s, pass_str_s, r_pass_str_s);
-	cmd.command = "<REGISTER>";
-	cmd.params = strdup(buffer);
-	send_cmd(cmd, client);
-	bzero(buffer, BUFFER_SZ);
-
+    char buffer[BUFFER_SZ];
+    char *p_login = strdup(username_str_s);
+    char *p_nick = strdup(nick_str_s);
+    char *p_pass = strdup(pass_str_s);
+    char *p_r_pass = strdup(r_pass_str_s);
+    snprintf(buffer, BUFFER_SZ, "<REGISTER> <%s> <%s> <%s> <%s>", p_login, p_nick, p_pass, p_r_pass);
+    send(client->sockfd, buffer, strlen(buffer), 0);
+    bzero(buffer, BUFFER_SZ);
     while (sw_register == -1) { }
     switch(sw_register) {
         case 0:
-            client->login = strdup(username_str_s);
-            client->pass = strdup(pass_str_s);
+            client->login = strdup(p_login);
+            client->pass = strdup(p_pass);
             open_main_page(NULL, data);
             sw_register = -1;
             break;

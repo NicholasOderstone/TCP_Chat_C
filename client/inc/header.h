@@ -83,6 +83,11 @@
 		client_t *client;
 	} new_chat_request_s;
 
+	typedef struct {
+		int msg_id;
+		client_t *client;
+	} delete_msg_request_s;
+
 // --- msg, command, cmd function ---
 	typedef struct received_s {
 		client_t *client;
@@ -196,6 +201,8 @@
 
 // --- REQUESTS ---
 	void get_msg_request(GtkWidget *widget, gpointer data);
+	void new_chat_request(GtkWidget *widget, gpointer data);
+	void delete_msg_request(GtkWidget *widget, gpointer data);
 
 // --- SWITCHES ---
 	void init_switches(void);

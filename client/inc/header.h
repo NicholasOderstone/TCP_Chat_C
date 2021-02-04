@@ -29,7 +29,7 @@
 	#define MAX_CLIENTS 100
 	#define BUFFER_SZ 2048
 	#define NAME_SZ 32
-	#define AMOUNT_OF_CMD 12
+	#define AMOUNT_OF_CMD 4
 //////////////////////////
 
 // STRUCTURES
@@ -47,6 +47,7 @@
 		GtkWidget *edit_b;
 		GtkWidget *delet_b;
 		gint row_num_list_gtk;
+		int last_msg_id;
 	} gtk_utils_t;
 
 // --- CHAT ---
@@ -92,6 +93,7 @@
 // --- msg, command, cmd function ---
 	typedef struct received_s {
 		client_t *client;
+		int msg_id;
 		char message[BUFFER_SZ];
 		char time[BUFFER_SZ];
 		char sender_name[NAME_SZ];
@@ -220,13 +222,13 @@
 	command msg_to_cmd(char *msg);
 	char *cmd_to_msg(command cmd);
 	char *take_param(char *params, int number);
+	char *itoa(int val, int base);
 
 //////////////////////////
 
 // GLOBAL VARIABLES
 	int sw_login;
 	int sw_register;
-	int sw_send;
 
 	pthread_mutex_t chat_lock;
 

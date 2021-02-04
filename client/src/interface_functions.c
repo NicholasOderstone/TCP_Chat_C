@@ -85,15 +85,12 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     static gtk_utils_t m;
     gtk_utils_t *message_s = (gtk_utils_t *)malloc(sizeof(gtk_utils_t *));
     message_s = &m;
-    static menu_t me;
-    menu_t *menu_s = (menu_t *)malloc(sizeof(menu_t *));
-    menu_s = &me;
     GObject *send_b;
     client_t *client = (client_t *)gp_client;
-
+    GtkButton *menu_b;
+    GtkMenu *menu;
+    GtkWidget *menu_item;
     GtkListBox *box;
-    menu_s->menu_item = gtk_menu_item_new_with_label ("Add Chat");
-    menu_s->menu = GTK_MENU(gtk_builder_get_object (builder, "menu"));
     GtkCssProvider *cssProvider = gtk_css_provider_new();
     client->m = (gtk_utils_t *)malloc(sizeof(gtk_utils_t *));
     client->m = message_s;
@@ -116,11 +113,15 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     //ПЕРЕДЕЛАЙ ОКНА В ОКНА А НЕ ВИДЖЕТЫ
     connection_spin = GTK_SPINNER(gtk_builder_get_object(builder, "connection_spinner"));
 
-    menu_s->menu_b = GTK_BUTTON(gtk_builder_get_object (builder, "main_menu"));
-    gtk_button_set_image (menu_s->menu_b, menu_b_image);
-    //gtk_menu_attach (menu_s->menu, menu_s->menu_item, 0, 0, 0, 0);
-    box = GTK_LIST_BOX(gtk_builder_get_object(builder, "chat_list"));
+    menu_b = GTK_BUTTON(gtk_builder_get_object (builder, "main_menu"));
 
+    gtk_button_set_image (menu_b, menu_b_image);
+    menu_item = gtk_menu_item_new_with_label ("Add Chat");
+    menu = GTK_MENU(gtk_builder_get_object (builder, "menu"));
+    gtk_menu_button_set_popup (GTK_MENU_BUTTON(menu_b), GTK_WIDGET(menu));
+    gtk_menu_attach (menu, menu_item, 0, 1, 0, 1);
+    box = GTK_LIST_BOX(gtk_builder_get_object(builder, "chat_list"));
+    gtk_widget_show_all(GTK_WIDGET(menu));
 
     int i = 0;
     GtkWidget **chat = malloc(chat_list_size(&client->chat_list_head) * sizeof(GtkWidget *));
@@ -165,16 +166,8 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     gtk_widget_hide(message_s->delet_b);
     g_signal_connect(message_s->delet_b, "clicked", G_CALLBACK(message_delet),gp_client);
     g_signal_connect(message_s->cancel_b, "clicked", G_CALLBACK(cancel_ch),gp_client);
-    g_signal_connect_swapped (menu_s->menu_b, "clicked", G_CALLBACK (my_popup_handler), (gpointer)menu_s);
     //g_signal_connect(message_s->view, "move-cursor", G_CALLBACK(del_message), (gpointer)message_s->buffer);
 
-}
-void my_popup_handler (GtkWidget *widget, gpointer data)
-{
-    UNUSED(widget);
-    menu_t *menu_s = (menu_t *)data;
- gtk_menu_popup_at_widget(menu_s->menu, GTK_WIDGET(menu_s->menu_b),
-                          GDK_GRAVITY_SOUTH,  GDK_GRAVITY_SOUTH, NULL);
 }
 gboolean is_edit_delet(gpointer m) {
     client_t *client = (client_t *)m;

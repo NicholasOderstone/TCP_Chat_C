@@ -13,11 +13,6 @@
 //////////////////////////
 
 // STRUCTURES
-typedef struct {
-    GtkButton *menu_b;
-    GtkMenu *menu;
-    GtkWidget *menu_item;
-} menu_t;
 
 //////////////////////////
 

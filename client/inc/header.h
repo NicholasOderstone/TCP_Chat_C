@@ -47,15 +47,20 @@
 		GtkWidget *edit_b;
 		GtkWidget *delet_b;
 		gint row_num_list_gtk;
-		int last_msg_id;
 	} gtk_utils_t;
 
-// --- CHAT ---
+// --- CHAT_LIST ---
 	typedef struct chat_info {
 		int chat_id;
 		char *chat_name;
 		struct chat_info *next;
 	} chat_info_t;
+
+// --- MSG_ID_QUEUE ---
+	typedef struct msg_id_q_s {
+		int msg_id;
+		struct msg_id_q_s *next;
+	} msg_id_q;
 
 // --- CLIENT ---
 	typedef struct{
@@ -70,6 +75,7 @@
 		int exit;
 		int active_chat_id;
 		chat_info_t *chat_list_head;
+		msg_id_q *msg_id_q_head;
 		pthread_mutex_t mutex;
 	} client_t;
 
@@ -182,6 +188,15 @@
 	void to_msg_q(char *data, struct msg_q **msg_q_front, pthread_mutex_t msg_lock);
 	// Inserts the command into the command queue
 	void to_cmd_q(command data, struct cmd_q **cmd_q_front, pthread_mutex_t cmd_lock);
+
+	void to_msg_id_q(int msg_id, msg_id_q **msg_id_q_head);
+
+	void clear_msg_id_q(msg_id_q **msg_id_q_head);
+
+	void display_msg_id_q(msg_id_q **msg_id_q_head);
+
+	void del_elem_msg_id_q(msg_id_q **msg_id_q_head, int msg_id);
+	
 	// Deletes the first elememt from the message queue
 	void move_msg_q(struct msg_q **msg_q_front, pthread_mutex_t msg_lock);
 	// Deletes the first elememt from the command queue
@@ -231,6 +246,7 @@
 	int sw_register;
 
 	pthread_mutex_t chat_lock;
+	pthread_mutex_t msg_id_lock;
 
 //////////////////////////
 

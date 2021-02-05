@@ -13,6 +13,7 @@ void get_msg_request(GtkWidget *widget, gpointer data) {
 	send_cmd(cmd, get_messages_request->client);
 	bzero(buffer, BUFFER_SZ);
     while (clean_listbox((gpointer)get_messages_request->client->m->box_message) == TRUE) {}
+    clear_msg_id_q(&get_messages_request->client->msg_id_q_head);
     get_messages_request->client->m->row_num_list_gtk = -1;
 }
 

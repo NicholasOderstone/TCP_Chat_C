@@ -29,7 +29,7 @@
 	#define MAX_CLIENTS 100
 	#define BUFFER_SZ 2048
 	#define NAME_SZ 32
-	#define AMOUNT_OF_CMD 5
+	#define AMOUNT_OF_CMD 6
 //////////////////////////
 
 // STRUCTURES
@@ -91,10 +91,20 @@
 	} new_chat_request_s;
 
 	typedef struct {
-		int chat_id;
 		int msg_id;
 		client_t *client;
-	} change_msg_request_s;
+	} del_msg_request_s;
+
+	typedef struct {
+		int chat_id;
+		client_t *client;
+	} del_chat_request_s;
+
+	typedef struct {
+		int msg_id;
+		char *new_text;
+		client_t *client;
+	} edit_msg_request_s;
 
 // --- msg, command, cmd function ---
 	typedef struct received_s {
@@ -196,7 +206,7 @@
 	void display_msg_id_q(msg_id_q **msg_id_q_head);
 
 	void del_elem_msg_id_q(msg_id_q **msg_id_q_head, int msg_id);
-	
+
 	int get_index_by_msg_id(msg_id_q **msg_id_q_head, int msg_id);
 
 	// Deletes the first elememt from the message queue
@@ -223,8 +233,8 @@
 // --- REQUESTS ---
 	void get_msg_request(GtkWidget *widget, gpointer data);
 	void new_chat_request(GtkWidget *widget, gpointer data);
-	void delete_msg_request(change_msg_request_s *delete_msg_request);
-	void edit_msg_request(GtkWidget *widget, gpointer data);
+	void delete_msg_request(del_msg_request_s *delete_msg_request);
+	void edit_msg_request(edit_msg_request_s *edit_msg_request);
 
 // --- SWITCHES ---
 	void init_switches(void);

@@ -55,6 +55,12 @@ void func_rpl_delete(char *params, void *p) {
     printf("## index in rpl_delete: %d\n", index);
 }
 
+void func_rpl_edit(char *params, void *p) {
+    UNUSED(p);
+
+    printf("## edit params: %s\n", params);
+}
+
 void func_rpl_add_chat(char *params, void *p) {
     client_t *client = (client_t *)p;
     int p_id = atoi(take_param(params, 1));
@@ -68,13 +74,14 @@ void func_rpl_add_chat(char *params, void *p) {
 
 void init_funcs(cmd_func arr_cmd_func[]) {
     char *arr_func_names[AMOUNT_OF_CMD] = { "<LOGIN>", "<REGISTER>", "<SEND>",
-                                            "<ADD_CHAT>", "<DELETE_MSG>"};
+                                            "<ADD_CHAT>", "<DELETE_MSG>", "EDIT_MSG"};
 
     arr_cmd_func[0].func = &func_rpl_login;
     arr_cmd_func[1].func = &func_rpl_register;
     arr_cmd_func[2].func = &func_rpl_send;
     arr_cmd_func[3].func = &func_rpl_add_chat;
     arr_cmd_func[4].func = &func_rpl_delete;
+    arr_cmd_func[5].func = &func_rpl_edit;
 
     for (int i = 0; i < AMOUNT_OF_CMD; i++)
         arr_cmd_func[i].name = strdup(arr_func_names[i]);

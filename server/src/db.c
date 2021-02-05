@@ -41,7 +41,7 @@ int initDB(){
 sql = "CREATE TABLE IF NOT EXISTS CHATS("  \
       "ID INTEGER PRIMARY KEY     AUTOINCREMENT," \
       "NAME           TEXT    NOT NULL," \
-      "DESCRIPTION         TEXT);";
+      "OWNER_ID         INT     NOT NULL);";
   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
 
 
@@ -435,6 +435,34 @@ char* getOneChats(int id, char* rez){
     return rez;
 }
 
+int getChatOwnerId(char *chat_id) {
+    sqlite3 *db;
+    sqlite3_stmt *res;
+    
+    int rc = sqlite3_open("data.db", &db);
+    
+    rc = sqlite3_prepare_v2(db, "select OWNER_ID from CHATS WHERE ID = ?;", -1, &res, 0);    
+    sqlite3_bind_int(res, 1, atoi(chat_id));
+
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return -1;
+    }
+    rc = sqlite3_step(res);
+    char *rez = NULL;
+    sprintf(rez, "%s", sqlite3_column_text(res, 0));
+    
+
+    sqlite3_finalize(res);
+    sqlite3_close(db);
+
+    return atoi(rez);
+}
+
+
 char* getChatName(int id, char* rez){
    sqlite3 *db;
     sqlite3_stmt *res;
@@ -652,7 +680,7 @@ int insertUser(char* login, char* password, char* nick, char* status){
     return rez;
 }
 
-int insertChat(char* name, char* description){
+int insertChat(char* name, int creator_id, char* description){
     char sql[500];
 
     sqlite3 *db;
@@ -670,7 +698,7 @@ int insertChat(char* name, char* description){
 
 
 
-    sprintf (sql,"INSERT INTO CHATS (name, description) VALUES ('%s','%s');",name,description);
+    sprintf (sql,"INSERT INTO CHATS (name, description, onwer_id) VALUES ('%s','%s', %d);",name,description, creator_id);
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
 
     rc = sqlite3_prepare_v2(db, "select max(id) from CHATS;", -1, &res, 0);    
@@ -1126,8 +1154,9 @@ int createChat(int creator_id, char *name)  {
         return -1;
     }
     sqlite3_finalize(res);
+    sqlite3_close_v2(db);
 
-    int new_chat_id = insertChat(name, NULL);
+    int new_chat_id = insertChat(name, creator_id, NULL);
     insertUSER_TO_CHAT(creator_id,  new_chat_id);
 
     return new_chat_id;

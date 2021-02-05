@@ -104,17 +104,7 @@ void chat_list(char *p_login, buff_t *Info) {
 	struct command arr_of_chats[i];
 	for(int j = 0; j < i; j++) {
 		arr_of_chats[j].command = "<ADD_CHAT>";
-/*		strcat(buff_temp, " <");
-		itoa(mass_of_chats[j], buff_out, 10);
-		strcat(buff_temp, buff_out);
-		bzero(buff_out, BUFFER_SZ);
-		strcat(buff_temp, "> <");
-		getChatName(mass_of_chats[j], buff_out);
-		str_trim_lf (buff_out, strlen(buff_out));
-		strcat(buff_temp, buff_out);
-		bzero(buff_out, BUFFER_SZ);
-		strcat(buff_temp, ">");
-*/
+
 		itoa(mass_of_chats[j], buff_temp, 10);
 		getChatName(mass_of_chats[j], buff_temp2);
 		str_trim_lf (buff_temp2, strlen(buff_temp2));
@@ -143,12 +133,33 @@ void f_send(char *params, buff_t *Info) {
 	int new_msg_id = insertMessage(atoi(p_chat_id), getIdUserByUserName(Info->client->name), p_text, atoi(p_time), "0");
 	snprintf(buff_out, BUFFER_SZ, " <%s> <%s> <%s> <%s> <%s>", p_chat_id, itoa(new_msg_id, buff_temp, 10), Info->client->name, p_time, p_text);
 
-	printf("%s\n", buff_out);
+
 	cmd.params = buff_out;
+
+	user_t *user[1024];
+	for(int i = 0; 1; i++ ) {
+		user[i] = pack_chat_members(atoi(p_chat_id));
+		if(user[i] == NULL) {
+			printf("No users in chat\n");
+			break;
+		}
+		printf("chat member id: %s\n", user[i]->user_id);
+	}
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 	for(int i=0; i<MAX_CLIENTS; ++i){
-		if(Info->serv_inf->clients[i]){
-			send_cmd(cmd, Info->serv_inf->clients[i]);
+			if(Info->serv_inf->clients[i] != NULL){
+				for(int j = 0; j < 1024; j++) {
+					if(user[j] != NULL){	
+						str_trim_lf (user[j]->user_name, strlen(user[i]->user_name));
+						if(strcmp(user[j]->user_name, Info->serv_inf->clients[i]->name) == 0) {
+							send_cmd(cmd, Info->serv_inf->clients[i]);
+							break;
+						}
+					}
+					else {
+						break;
+					}
+				}
 		}
 	}
 	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
@@ -260,6 +271,7 @@ void f_new_chat(char *params, buff_t *Info) {
 	bzero(buff_temp, BUFFER_SZ);
 }
 
+
 void f_add_user_to_chat(char *params, buff_t *Info) {
 	char buff_out[BUFFER_SZ];
 	char buff_temp[BUFFER_SZ];
@@ -286,8 +298,15 @@ void f_add_user_to_chat(char *params, buff_t *Info) {
 
 }
 
+void f_delete_chat(char *params, buff_t *Info) {
+	(void)Info;
+	params = NULL;
+}
+
+
+
 void initialize_functions(cmd_func arr_cmd_func[]) {
-    char *arr_func_names[AMOUNT_OF_CMD] = { "LOGIN", "SEND", "REGISTER", "CHAT_MSG", "DELETE_MSG", "EDIT_MSG", "NEW_CHAT", "ADD_USER_TO_CHAT"};
+    char *arr_func_names[AMOUNT_OF_CMD] = { "LOGIN", "SEND", "REGISTER", "CHAT_MSG", "DELETE_MSG", "EDIT_MSG", "NEW_CHAT", "ADD_USER_TO_CHAT", "DELETE_CHAT"};
 
     arr_cmd_func[0].func = &f_login;
     arr_cmd_func[1].func = &f_send;
@@ -297,6 +316,7 @@ void initialize_functions(cmd_func arr_cmd_func[]) {
 	arr_cmd_func[5].func = &f_edit_msg;
 	arr_cmd_func[6].func = &f_new_chat;
 	arr_cmd_func[7].func = &f_add_user_to_chat;
+	arr_cmd_func[8].func = &f_delete_chat;
 
 
 

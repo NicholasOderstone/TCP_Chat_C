@@ -27,7 +27,7 @@
     #define MAX_CLIENTS 100
     #define BUFFER_SZ 2048
     #define NAME_SZ 32
-    #define AMOUNT_OF_CMD 4
+    #define AMOUNT_OF_CMD 8
 
 
 /* STRUCTURES */
@@ -108,6 +108,18 @@
         char time[50];
     } msg_t;
 
+    
+    typedef struct chat_s {
+        char chat_id[10];
+        char chat_name[32];
+    } chat_t;
+
+
+    typedef struct user_s {
+        char user_id[10];
+        char user_name[32];
+    } user_t;
+
 
 //////////////////////////
 
@@ -169,6 +181,8 @@
     char *cmd_to_msg(struct command cmd);
     /* Send command to the client */
     void send_cmd(struct command cmd, client_t *client);
+    /* Chat list */
+    void chat_list(char *p_login, buff_t *Info);
 
 
     // --- Functions that interact with command functions ---
@@ -207,6 +221,10 @@
     int insertMessage(int chat_id, int user_id, char* message, int date, char* is_read); // Поместить сообщение в выбранный чат
     char* getAllChats(); //Получить все чаты
     msg_t *pack_msg_from_chat(int id); // Some useful functions
+    void deleteMessage(char* id); // Delete message
+    void updateTextMessage(int id, char* text); // Edit message
+    int createChat(int creator_id, char *name); // Create chat and add the creator
+    void insertInUserInChats(int user_id, int chat_id); // Insert user in chat
 
 
     // --- Daemonize ---

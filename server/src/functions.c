@@ -201,7 +201,7 @@ void f_register(char *params, buff_t *Info) {
 void f_del_msg(char *params, buff_t *Info) {
 	char buff_out[BUFFER_SZ];
 	struct command cmd;
-	cmd.command = "<DEL_MSG>";
+	cmd.command = "<DELETE_MSG>";
 	char *p_msg_id = param_1(params);
 	deleteMessage(p_msg_id);
 	snprintf(buff_out, BUFFER_SZ, " <%s>", p_msg_id);

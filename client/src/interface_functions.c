@@ -204,11 +204,13 @@ void message_delet(GtkWidget *widget, gpointer data){
         current = current->next;
         index--;
     }
-    printf("result: %d\n", current->msg_id);
+    //printf("result: %d\n", current->msg_id);
+    change_msg_request_s *delete_msg = (change_msg_request_s *)malloc(sizeof(change_msg_request_s));
+    delete_msg->msg_id = current->msg_id;
+    delete_msg->client = client;
+    delete_msg_request(delete_msg);
     del_elem_msg_id_q(&client->msg_id_q_head, current->msg_id);
-    display_msg_id_q(&client->msg_id_q_head);
-    printf("\n");
-
+    //display_msg_id_q(&client->msg_id_q_head);
 
     client->m->row_num_list_gtk--;
 }

@@ -196,7 +196,7 @@
 	void display_msg_id_q(msg_id_q **msg_id_q_head);
 
 	void del_elem_msg_id_q(msg_id_q **msg_id_q_head, int msg_id);
-	
+
 	// Deletes the first elememt from the message queue
 	void move_msg_q(struct msg_q **msg_q_front, pthread_mutex_t msg_lock);
 	// Deletes the first elememt from the command queue
@@ -210,9 +210,10 @@
 	// Inserts the chat into the chat list
 	void to_chat_list(int chat_id, char *chat_name, chat_info_t **chat_list_head);
 	// Displays the chat list
-	void display(chat_info_t **chat_list_head);
+	void display_chat_list(chat_info_t **chat_list_head);
 	// Gets chat list size
 	int chat_list_size(chat_info_t **chat_list_head);
+	void clear_chat_list(chat_info_t **chat_list_head);
 
 	void send_cmd(command cmd, client_t *client);
 	void analyse_cmd(command fst_cmd, cmd_func function, client_t *client);
@@ -220,7 +221,7 @@
 // --- REQUESTS ---
 	void get_msg_request(GtkWidget *widget, gpointer data);
 	void new_chat_request(GtkWidget *widget, gpointer data);
-	void delete_msg_request(GtkWidget *widget, gpointer data);
+	void delete_msg_request(change_msg_request_s *delete_msg_request);
 	void edit_msg_request(GtkWidget *widget, gpointer data);
 
 // --- SWITCHES ---

@@ -44,13 +44,13 @@ void func_rpl_send(char *params, void *p) {
 }
 
 void func_rpl_add_chat(char *params, void *p) {
-
-    // if client->is_connected == 0 delete list!!!
     client_t *client = (client_t *)p;
     int p_id = atoi(take_param(params, 1));
     char *p_name = take_param(params, 2);
+    if (client->is_connected == 0)
+        clear_chat_list(&client->chat_list_head);
     to_chat_list(p_id, p_name, &client->chat_list_head);
-    //display(&client->chat_list_head);
+    //display_chat_list(&client->chat_list_head);
 }
 
 

@@ -61,18 +61,3 @@ void display_msg_id_q(msg_id_q **msg_id_q_head) {
     }
     printf("\n");
 }
-
-/*int chat_list_size(msg_id_q **msg_id_q_head) {
-    msg_id_q *current = *msg_id_q_head;
-    int size = 0;
-    if (current == NULL) {
-        return 0;
-    }
-    while (current != NULL)
-    {
-        current = current->next;
-        size++;
-    }
-    return size;
-}
-*/

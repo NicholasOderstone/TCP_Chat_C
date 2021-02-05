@@ -49,11 +49,14 @@ int chat_list_size(chat_info_t **chat_list_head) {
     return size;
 }
 
-void clear_chat_list(chat_info_t **chat_list_head) {
-    while (*chat_list_head != NULL) {
-        chat_info_t *temp;
-        temp = *chat_list_head;
-        *chat_list_head = temp->next;
-        free(temp);
+int is_chat_exists(chat_info_t **chat_list_head, int chat_id) {
+    chat_info_t *current = *chat_list_head;
+    while (current != NULL)
+    {
+        if (current->chat_id == chat_id) {
+            return 1;
+        }
+        current = current->next;
     }
+    return 0;
 }

@@ -213,7 +213,7 @@
 	void display_chat_list(chat_info_t **chat_list_head);
 	// Gets chat list size
 	int chat_list_size(chat_info_t **chat_list_head);
-	void clear_chat_list(chat_info_t **chat_list_head);
+	int is_chat_exists(chat_info_t **chat_list_head, int chat_id);
 
 	void send_cmd(command cmd, client_t *client);
 	void analyse_cmd(command fst_cmd, cmd_func function, client_t *client);

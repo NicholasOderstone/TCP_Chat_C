@@ -195,21 +195,17 @@ void message_delet(GtkWidget *widget, gpointer data){
     client_t *client = (client_t *)data;
     index = gtk_list_box_row_get_index(gtk_list_box_get_selected_row (client->m->box_message));
 
-    gtk_container_remove(GTK_CONTAINER(client->m->box_message),
-            GTK_WIDGET(gtk_list_box_get_selected_row (client->m->box_message)));
-
     msg_id_q *current = client->msg_id_q_head;
-    //index++;
+
     while (index) {
         current = current->next;
         index--;
     }
-    //printf("result: %d\n", current->msg_id);
+    printf("deleted: msd_id -- %d\n", current->msg_id);
     change_msg_request_s *delete_msg = (change_msg_request_s *)malloc(sizeof(change_msg_request_s));
     delete_msg->msg_id = current->msg_id;
     delete_msg->client = client;
     delete_msg_request(delete_msg);
-    del_elem_msg_id_q(&client->msg_id_q_head, current->msg_id);
     //display_msg_id_q(&client->msg_id_q_head);
 
     client->m->row_num_list_gtk--;

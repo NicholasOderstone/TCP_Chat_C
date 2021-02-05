@@ -29,7 +29,7 @@
 	#define MAX_CLIENTS 100
 	#define BUFFER_SZ 2048
 	#define NAME_SZ 32
-	#define AMOUNT_OF_CMD 4
+	#define AMOUNT_OF_CMD 5
 //////////////////////////
 
 // STRUCTURES
@@ -196,6 +196,8 @@
 	void display_msg_id_q(msg_id_q **msg_id_q_head);
 
 	void del_elem_msg_id_q(msg_id_q **msg_id_q_head, int msg_id);
+	
+	int get_index_by_msg_id(msg_id_q **msg_id_q_head, int msg_id);
 
 	// Deletes the first elememt from the message queue
 	void move_msg_q(struct msg_q **msg_q_front, pthread_mutex_t msg_lock);

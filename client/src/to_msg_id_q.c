@@ -61,3 +61,17 @@ void display_msg_id_q(msg_id_q **msg_id_q_head) {
     }
     printf("\n");
 }
+
+int get_index_by_msg_id(msg_id_q **msg_id_q_head, int msg_id) {
+    msg_id_q *current = *msg_id_q_head;
+    int index = 0;
+    while (current != NULL)
+    {
+        if (current->msg_id == msg_id) {
+            return index;
+        }
+        current = current->next;
+        index++;
+    }
+    return -1;
+}

@@ -43,6 +43,18 @@ void func_rpl_send(char *params, void *p) {
     gdk_threads_add_idle(message_show, (gpointer)received_mess);
 }
 
+void func_rpl_delete(char *params, void *p) {
+    client_t *client = (client_t *)p;
+    GtkListBox *box = client->m->box_message;
+    int msg_id = atoi(take_param(params, 1));
+    int index = get_index_by_msg_id(&client->msg_id_q_head, msg_id);
+
+    gtk_list_box_select_row(box, gtk_list_box_get_row_at_index(box, (gint)index));
+    gtk_container_remove(GTK_CONTAINER(box), GTK_WIDGET(gtk_list_box_get_selected_row (box)));
+    del_elem_msg_id_q(&client->msg_id_q_head, msg_id);
+    printf("## index in rpl_delete: %d\n", index);
+}
+
 void func_rpl_add_chat(char *params, void *p) {
     client_t *client = (client_t *)p;
     int p_id = atoi(take_param(params, 1));
@@ -56,12 +68,13 @@ void func_rpl_add_chat(char *params, void *p) {
 
 void init_funcs(cmd_func arr_cmd_func[]) {
     char *arr_func_names[AMOUNT_OF_CMD] = { "<LOGIN>", "<REGISTER>", "<SEND>",
-                                            "<ADD_CHAT>"};
+                                            "<ADD_CHAT>", "<DELETE_MSG>"};
 
     arr_cmd_func[0].func = &func_rpl_login;
     arr_cmd_func[1].func = &func_rpl_register;
     arr_cmd_func[2].func = &func_rpl_send;
     arr_cmd_func[3].func = &func_rpl_add_chat;
+    arr_cmd_func[4].func = &func_rpl_delete;
 
     for (int i = 0; i < AMOUNT_OF_CMD; i++)
         arr_cmd_func[i].name = strdup(arr_func_names[i]);

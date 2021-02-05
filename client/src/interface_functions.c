@@ -191,12 +191,24 @@ gboolean is_edit_delet(gpointer m) {
 }
 void message_delet(GtkWidget *widget, gpointer data){
     UNUSED(widget);
+    gint index;
     client_t *client = (client_t *)data;
+    index = gtk_list_box_row_get_index(gtk_list_box_get_selected_row (client->m->box_message));
 
     gtk_container_remove(GTK_CONTAINER(client->m->box_message),
             GTK_WIDGET(gtk_list_box_get_selected_row (client->m->box_message)));
 
-    //printf("result: %d\n", client->m->last_msg_id);
+    msg_id_q *current = client->msg_id_q_head;
+    //index++;
+    while (index) {
+        current = current->next;
+        index--;
+    }
+    printf("result: %d\n", current->msg_id);
+    del_elem_msg_id_q(&client->msg_id_q_head, current->msg_id);
+    display_msg_id_q(&client->msg_id_q_head);
+    printf("\n");
+
 
     client->m->row_num_list_gtk--;
 }
@@ -244,7 +256,8 @@ gboolean message_show(gpointer m) {
             puts("The localtime() function failed");
             return FALSE;
         }
-        snprintf(time_buf, BUFFER_SZ, "%02d:%02d:%02d", ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
+        gtk_text_buffer_insert_interactive (buffer, &end, itoa(received_mess->msg_id, 10), -1, TRUE );
+        snprintf(time_buf, BUFFER_SZ, "  --  %02d:%02d:%02d", ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
         gtk_text_buffer_insert_interactive (buffer, &end, time_buf, -1, TRUE );
         gtk_text_buffer_insert_interactive (buffer, &end, "   ", -1, TRUE );
         gtk_text_buffer_insert_interactive (buffer, &end, received_mess->sender_name, -1, TRUE );
@@ -253,7 +266,7 @@ gboolean message_show(gpointer m) {
         bzero(time_buf, BUFFER_SZ);
         gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view));
         received_mess->client->m->row_num_list_gtk++;
-        received_mess->client->m->last_msg_id = received_mess->msg_id;
+        to_msg_id_q(received_mess->msg_id, &received_mess->client->msg_id_q_head);
         gtk_widget_show (GTK_WIDGET(view));
         gtk_container_set_focus_child(GTK_CONTAINER(received_mess->client->m->box_message),
             GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk)));

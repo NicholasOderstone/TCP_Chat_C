@@ -204,9 +204,9 @@
     char* getChatName(int id, char* rez); // Получить имя чата по id
     void deleteChat(char* id); // Удалить выбранный чат
     void deleteFromChat(int user_id, int chat_id); //Удалить выбранного пользователя с выбранног чата
-    int insertMessage(char* chat_id, char* user_id, char* message, int date, char* is_read); // Поместить сообщение в выбранный чат
+    int insertMessage(int chat_id, int user_id, char* message, int date, char* is_read); // Поместить сообщение в выбранный чат
     char* getAllChats(); //Получить все чаты
-    msg_t *packMsg(int id); // Some useful functions
+    msg_t *pack_msg_from_chat(int id); // Some useful functions
 
 
     // --- Daemonize ---

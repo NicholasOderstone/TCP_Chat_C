@@ -13,6 +13,11 @@ int main(int argc, char **argv) {
       printf("Mutex initialization failed.\n");
       return 1;
     }
+    if (pthread_mutex_init(&msg_id_lock, NULL) != 0)
+    {
+      printf("Mutex initialization failed.\n");
+      return 1;
+    }
 
     pthread_t init_threads_thread;
 	if(pthread_create(&init_threads_thread, NULL, init_threads, (void*)p_client) != 0){

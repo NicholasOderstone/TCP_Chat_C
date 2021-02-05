@@ -25,7 +25,7 @@ void to_chat_list(int chat_id, char *chat_name, chat_info_t **chat_list_head) {
     pthread_mutex_unlock(&chat_lock);
 }
 
-void display(chat_info_t **chat_list_head) {
+void display_chat_list(chat_info_t **chat_list_head) {
     chat_info_t *current = *chat_list_head;
     while (current != NULL)
     {
@@ -47,4 +47,16 @@ int chat_list_size(chat_info_t **chat_list_head) {
         size++;
     }
     return size;
+}
+
+int is_chat_exists(chat_info_t **chat_list_head, int chat_id) {
+    chat_info_t *current = *chat_list_head;
+    while (current != NULL)
+    {
+        if (current->chat_id == chat_id) {
+            return 1;
+        }
+        current = current->next;
+    }
+    return 0;
 }

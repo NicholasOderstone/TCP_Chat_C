@@ -50,6 +50,7 @@
     void cancel_ch();
     gboolean clean_listbox();
     void my_popup_handler();
+    void new_chat();
     //////////////////////////
 
 #endif

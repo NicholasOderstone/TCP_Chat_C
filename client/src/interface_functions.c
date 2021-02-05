@@ -166,6 +166,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     gtk_widget_hide(message_s->delet_b);
     g_signal_connect(message_s->delet_b, "clicked", G_CALLBACK(message_delet),gp_client);
     g_signal_connect(message_s->cancel_b, "clicked", G_CALLBACK(cancel_ch),gp_client);
+    g_signal_connect(menu_b, "activate", G_CALLBACK(new_chat),gp_client);
     //g_signal_connect(message_s->view, "move-cursor", G_CALLBACK(del_message), (gpointer)message_s->buffer);
 
 }

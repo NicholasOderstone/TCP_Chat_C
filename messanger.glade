@@ -195,6 +195,19 @@
             </child>
           </object>
         </child>
+        <child>
+          <object class="GtkButton">
+            <property name="label" translatable="yes">button</property>
+            <property name="width-request">72</property>
+            <property name="height-request">36</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+          <packing>
+            <property name="x">50</property>
+          </packing>
+        </child>
       </object>
     </child>
   </object>

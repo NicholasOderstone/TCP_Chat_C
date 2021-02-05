@@ -100,7 +100,21 @@ void cancel_ch(GtkWidget *widget, gpointer data){
     client_t *client = (client_t *)data;
     gtk_list_box_unselect_all(client->m->box_message);
 }
+void new_chat(GtkWidget *widget, gpointer data) {
+    UNUSED(widget);
+    GtkWidget  *chat_name;
+    GtkButton *ch_b;
+    new_chat_request_s *new_chat_r = (new_chat_request_s *)malloc(sizeof(new_chat_r));
+    client_t *client = (client_t*)data;
+    new_chat_r->client = client;
+    chat_name_d  = GTK_WIDGET(gtk_builder_get_object(builder, "chat_name"));
+    gtk_widget_show(chat_name_d);
+    chat_name = GTK_WIDGET(gtk_builder_get_object(builder, "name"));
+    ch_b = GTK_BUTTON(gtk_builder_get_object(builder, "confirm"));
+    g_signal_connect(ch_b, "clicked", G_CALLBACK(new_chat_request), (gpointer)new_chat_r);
 
+
+}
 gboolean destroy() {
     gtk_main_quit();
     return TRUE;

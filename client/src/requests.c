@@ -19,10 +19,13 @@ void get_msg_request(GtkWidget *widget, gpointer data) {
 
 void new_chat_request(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
+    gtk_widget_hide (chat_name_d);
     new_chat_request_s *new_chat_request = (new_chat_request_s *)data;
 
 	command cmd;
 	char buffer[BUFFER_SZ];
+    new_chat_request->new_chat_name = mx_strnew(strlen(chatname_str));
+    strcpy(new_chat_request->new_chat_name, chatname_str);
 	snprintf(buffer, BUFFER_SZ, "<%s>", new_chat_request->new_chat_name);
 	cmd.command = "<NEW_CHAT>";
 	cmd.params = strdup(buffer);

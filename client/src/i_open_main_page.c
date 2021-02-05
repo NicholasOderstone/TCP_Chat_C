@@ -12,7 +12,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     GtkMenu *menu;
     GtkWidget *menu_item;
     GtkListBox *box;
-    GtkCssProvider *cssProvider = gtk_css_provider_new();
+    //GtkCssProvider *cssProvider = gtk_css_provider_new();
     client->m = (gtk_utils_t *)malloc(sizeof(gtk_utils_t *));
     client->m = message_s;
 
@@ -20,10 +20,10 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     GtkWidget *menu_b_image = gtk_image_new_from_file ("client/resources/menu.png");
 
 
-    gtk_css_provider_load_from_path(cssProvider, "client/resources/gtk.css", NULL);
-    gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),
-                               GTK_STYLE_PROVIDER(cssProvider),
-                               GTK_STYLE_PROVIDER_PRIORITY_USER);
+    //gtk_css_provider_load_from_path(cssProvider, "client/resources/gtk.css", NULL);
+    //gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),
+    //                           GTK_STYLE_PROVIDER(cssProvider),
+    //                           GTK_STYLE_PROVIDER_PRIORITY_USER);
 
     gtk_widget_hide(window);
     builder = gtk_builder_new();
@@ -89,10 +89,8 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     g_signal_connect(message_s->edit_b, "clicked", G_CALLBACK(message_edit),gp_client);
     g_signal_connect(message_s->cancel_b, "clicked", G_CALLBACK(cancel_ch),gp_client);
 
-    new_chat_request_s *new_chat_r = (new_chat_request_s *)malloc(sizeof(new_chat_r));
-        new_chat_r->new_chat_name = strdup("Empty_chat");
-    new_chat_r->client = client;
-    g_signal_connect(menu_item, "clicked", G_CALLBACK(new_chat_request), (gpointer)new_chat_r);
+
+    g_signal_connect(menu_item, "activate", G_CALLBACK(new_chat), gp_client);
     //g_signal_connect(message_s->view, "move-cursor", G_CALLBACK(del_message), (gpointer)message_s->buffer);
 
 }

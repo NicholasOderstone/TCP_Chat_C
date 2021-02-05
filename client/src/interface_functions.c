@@ -229,6 +229,7 @@ gboolean message_show(gpointer m) {
     GtkTextView *view ;
     GtkTextBuffer *buffer;
     GtkTextIter end;
+    //GtkAdjistment *adj = gtk_list_box_get_adjustment (received_mess->client->m->box_message);
     view = GTK_TEXT_VIEW(gtk_text_view_new ());
     gtk_text_view_set_editable (view, FALSE);
     buffer = gtk_text_buffer_new(NULL);
@@ -254,6 +255,9 @@ gboolean message_show(gpointer m) {
         received_mess->client->m->row_num_list_gtk++;
         received_mess->client->m->last_msg_id = received_mess->msg_id;
         gtk_widget_show (GTK_WIDGET(view));
+        gtk_container_set_focus_child(GTK_CONTAINER(received_mess->client->m->box_message),
+            GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk)));
+        //gtk_widget_grab_focus (GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk)));
         memset(received_mess->message, 0, sizeof(received_mess->message));
         memset(received_mess->sender_name, 0, sizeof(received_mess->sender_name));
     }

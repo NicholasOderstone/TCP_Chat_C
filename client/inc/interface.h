@@ -47,6 +47,7 @@
     gboolean message_show();
     gboolean is_edit_delet();
     void message_delet();
+    void message_edit();
     void cancel_ch();
     gboolean clean_listbox();
     void my_popup_handler();

@@ -62,17 +62,16 @@ void display_msg_id_q(msg_id_q **msg_id_q_head) {
     printf("\n");
 }
 
-/*int chat_list_size(msg_id_q **msg_id_q_head) {
+int get_index_by_msg_id(msg_id_q **msg_id_q_head, int msg_id) {
     msg_id_q *current = *msg_id_q_head;
-    int size = 0;
-    if (current == NULL) {
-        return 0;
-    }
+    int index = 0;
     while (current != NULL)
     {
+        if (current->msg_id == msg_id) {
+            return index;
+        }
         current = current->next;
-        size++;
+        index++;
     }
-    return size;
+    return -1;
 }
-*/

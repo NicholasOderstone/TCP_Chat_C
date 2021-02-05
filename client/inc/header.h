@@ -29,7 +29,7 @@
 	#define MAX_CLIENTS 100
 	#define BUFFER_SZ 2048
 	#define NAME_SZ 32
-	#define AMOUNT_OF_CMD 4
+	#define AMOUNT_OF_CMD 6
 //////////////////////////
 
 // STRUCTURES
@@ -91,10 +91,20 @@
 	} new_chat_request_s;
 
 	typedef struct {
-		int chat_id;
 		int msg_id;
 		client_t *client;
-	} change_msg_request_s;
+	} del_msg_request_s;
+
+	typedef struct {
+		int chat_id;
+		client_t *client;
+	} del_chat_request_s;
+
+	typedef struct {
+		int msg_id;
+		char *new_text;
+		client_t *client;
+	} edit_msg_request_s;
 
 // --- msg, command, cmd function ---
 	typedef struct received_s {
@@ -196,7 +206,9 @@
 	void display_msg_id_q(msg_id_q **msg_id_q_head);
 
 	void del_elem_msg_id_q(msg_id_q **msg_id_q_head, int msg_id);
-	
+
+	int get_index_by_msg_id(msg_id_q **msg_id_q_head, int msg_id);
+
 	// Deletes the first elememt from the message queue
 	void move_msg_q(struct msg_q **msg_q_front, pthread_mutex_t msg_lock);
 	// Deletes the first elememt from the command queue
@@ -210,9 +222,10 @@
 	// Inserts the chat into the chat list
 	void to_chat_list(int chat_id, char *chat_name, chat_info_t **chat_list_head);
 	// Displays the chat list
-	void display(chat_info_t **chat_list_head);
+	void display_chat_list(chat_info_t **chat_list_head);
 	// Gets chat list size
 	int chat_list_size(chat_info_t **chat_list_head);
+	int is_chat_exists(chat_info_t **chat_list_head, int chat_id);
 
 	void send_cmd(command cmd, client_t *client);
 	void analyse_cmd(command fst_cmd, cmd_func function, client_t *client);
@@ -220,8 +233,8 @@
 // --- REQUESTS ---
 	void get_msg_request(GtkWidget *widget, gpointer data);
 	void new_chat_request(GtkWidget *widget, gpointer data);
-	void delete_msg_request(GtkWidget *widget, gpointer data);
-	void edit_msg_request(GtkWidget *widget, gpointer data);
+	void delete_msg_request(del_msg_request_s *delete_msg_request);
+	void edit_msg_request(edit_msg_request_s *edit_msg_request);
 
 // --- SWITCHES ---
 	void init_switches(void);

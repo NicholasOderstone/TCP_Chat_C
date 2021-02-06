@@ -27,6 +27,7 @@
 
 // DEFINES
 	#define MAX_CLIENTS 100
+	#define MAX_CHATS 1000
 	#define BUFFER_SZ 2048
 	#define NAME_SZ 32
 	#define AMOUNT_OF_CMD 6
@@ -42,6 +43,8 @@
 		GtkTextIter end;
 		GtkTextMark* mark;
 		GtkListBox *box_message;
+		GtkListBox *box_chat_list;
+		GtkWidget *chat[MAX_CHATS];
 		GtkButtonBox *b_box;
 		GtkWidget *cancel_b;
 		GtkWidget *edit_b;
@@ -74,6 +77,7 @@
 		int is_connected;
 		int exit;
 		int active_chat_id;
+		int last_chat_index;
 		chat_info_t *chat_list_head;
 		msg_id_q *msg_id_q_head;
 		pthread_mutex_t mutex;
@@ -266,6 +270,7 @@
 	int sw_register;
 
 	pthread_mutex_t chat_lock;
+	pthread_mutex_t add_chat_lock;
 	pthread_mutex_t msg_id_lock;
 
 //////////////////////////

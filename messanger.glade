@@ -6,8 +6,49 @@
   <object class="GtkAction" id="action1">
     <property name="label" translatable="yes">add_chat</property>
   </object>
+  <object class="GtkDialog" id="add_user_chat">
+    <property name="can-focus">False</property>
+    <property name="type-hint">dialog</property>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox">
+            <property name="can-focus">False</property>
+            <property name="layout-style">end</property>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSearchEntry" id="search_user">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="primary-icon-name">edit-find-symbolic</property>
+            <property name="primary-icon-activatable">False</property>
+            <property name="primary-icon-sensitive">False</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
   <object class="GtkDialog" id="chat_name">
     <property name="can-focus">False</property>
+    <property name="window-position">center-on-parent</property>
+    <property name="destroy-with-parent">True</property>
     <property name="type-hint">dialog</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="chat_nam">
@@ -44,8 +85,48 @@
           <object class="GtkEntry" id="name">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="max-width-chars">32</property>
             <property name="placeholder-text" translatable="yes">Entry name chat</property>
             <signal name="changed" handler="chatname_changed" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkDialog" id="join_chat">
+    <property name="can-focus">False</property>
+    <property name="type-hint">dialog</property>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox">
+            <property name="can-focus">False</property>
+            <property name="layout-style">end</property>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSearchEntry" id="search_chat">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="primary-icon-name">edit-find-symbolic</property>
+            <property name="primary-icon-activatable">False</property>
+            <property name="primary-icon-sensitive">False</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -59,7 +140,7 @@
   <object class="GtkMenu" id="menu">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="rect-anchor-dx">1</property>
+    <property name="rect-anchor-dx">2</property>
     <property name="rect-anchor-dy">3</property>
     <property name="menu-type-hint">menu</property>
   </object>
@@ -76,7 +157,8 @@
   </object>
   <object class="GtkWindow" id="main_window">
     <property name="can-focus">False</property>
-    <property name="window-position">center-always</property>
+    <property name="window-position">center-on-parent</property>
+    <property name="gravity">static</property>
     <signal name="destroy" handler="destroy" swapped="no"/>
     <child>
       <object class="GtkFixed">
@@ -246,13 +328,15 @@
           </object>
         </child>
         <child>
-          <object class="GtkButton">
-            <property name="label" translatable="yes">button</property>
-            <property name="width-request">72</property>
+          <object class="GtkButton" id="add_user">
+            <property name="width-request">48</property>
             <property name="height-request">36</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
+            <child>
+              <placeholder/>
+            </child>
           </object>
           <packing>
             <property name="x">50</property>
@@ -260,10 +344,15 @@
         </child>
       </object>
     </child>
+    <accessibility>
+      <relation type="parent-window-of" target="join_chat"/>
+      <relation type="parent-window-of" target="chat_name"/>
+      <relation type="parent-window-of" target="add_user_chat"/>
+    </accessibility>
   </object>
   <object class="GtkWindow" id="login_window">
     <property name="can-focus">False</property>
-    <property name="window-position">center-always</property>
+    <property name="gravity">static</property>
     <signal name="destroy" handler="destroy" swapped="no"/>
     <child>
       <object class="GtkFixed" id="fix">
@@ -363,7 +452,7 @@
   </object>
   <object class="GtkWindow" id="signup_window">
     <property name="can-focus">False</property>
-    <property name="window-position">center-always</property>
+    <property name="gravity">static</property>
     <signal name="destroy" handler="destroy" swapped="no"/>
     <child>
       <object class="GtkFixed">

@@ -27,6 +27,7 @@ void message_edit(GtkWidget *widget, gpointer data){
     gint index;
     client_t *client = (client_t *)data;
     GTK_WIDGET(gtk_list_box_get_selected_row (client->m->box_message));
+    gtk_entry_set_text(GTK_ENTRY(message_entry), "");
     index = gtk_list_box_row_get_index(gtk_list_box_get_selected_row (client->m->box_message));
 
     msg_id_q *current = client->msg_id_q_head;
@@ -113,7 +114,9 @@ void message_send(GtkWidget *widget, gpointer data) {
 void message_clear() {
     gtk_entry_set_text(GTK_ENTRY(message_entry), "");
 }
-
+void chatname_clear() {
+    gtk_entry_set_text(GTK_ENTRY(chatname_entry), "");
+}
 void del_message(GtkTextBuffer *m){
     GtkTextMark * del_mark;
     GtkTextBuffer *mess = (GtkTextBuffer *)m;

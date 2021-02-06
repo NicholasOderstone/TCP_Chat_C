@@ -40,7 +40,9 @@ void func_rpl_send(char *params, void *p) {
     strcpy(received_mess->time, take_param(params, 4));
     strcpy(received_mess->sender_name, take_param(params, 3));
     received_mess->msg_id = atoi(take_param(params, 2));
-    gdk_threads_add_idle(message_show, (gpointer)received_mess);
+    received_mess->chat_id = atoi(take_param(params, 1));
+    if (received_mess->chat_id == received_mess->client->active_chat_id)
+        gdk_threads_add_idle(message_show, (gpointer)received_mess);
 }
 
 void func_rpl_delete(char *params, void *p) {
@@ -65,9 +67,36 @@ void func_rpl_add_chat(char *params, void *p) {
     client_t *client = (client_t *)p;
     int p_id = atoi(take_param(params, 1));
     char *p_name = take_param(params, 2);
+    if (p_id == -1) {
+        return;
+    }
     if (!is_chat_exists(&client->chat_list_head, p_id)) {
         to_chat_list(p_id, p_name, &client->chat_list_head);
     }
+    static int i = 0;
+    //while (clean_listbox((gpointer)box_chat_list) == TRUE) {}
+
+    chat_info_t *current = client->chat_list_head;
+    chat_info_t *prev = client->chat_list_head;
+    while (current != NULL)
+    {
+        prev = current;
+        current = current->next;
+    }
+
+    chat[i] = gtk_button_new_with_label(prev->chat_name);
+    gtk_container_add(GTK_CONTAINER(box_chat_list), GTK_WIDGET(chat[i]));
+    gtk_widget_show(GTK_WIDGET(chat[i]));
+
+    chat_show_info_s *chat_show_info = (chat_show_info_s *)malloc(sizeof(chat_show_info_s));
+    chat_show_info->chat = prev;
+    chat_show_info->client = client;
+    chat_show_info->counter = i;
+    chat_show((gpointer)chat_show_info);
+    //gtk_widget_show(GTK_WIDGET(box_chat_list));
+
+    //printf("#### i: %d    chat_name: %s #####\n", i, prev->chat_name);
+    i++;
     display_chat_list(&client->chat_list_head);
 }
 

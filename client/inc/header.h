@@ -110,6 +110,7 @@
 	typedef struct received_s {
 		client_t *client;
 		int msg_id;
+		int chat_id;
 		char message[BUFFER_SZ];
 		char time[BUFFER_SZ];
 		char sender_name[NAME_SZ];
@@ -161,6 +162,12 @@
 		struct cmd_q **cmd_q_front;
 		pthread_mutex_t lock;
 	};
+
+	typedef struct {
+		chat_info_t *chat;
+		client_t *client;
+		int counter;
+	} chat_show_info_s;
 
 //////////////////////////
 

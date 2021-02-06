@@ -82,7 +82,7 @@ gboolean message_show(gpointer m) {
         memset(received_mess->message, 0, sizeof(received_mess->message));
         memset(received_mess->sender_name, 0, sizeof(received_mess->sender_name));
     }
-
+    
     if (received_mess->client->exit == 1)
         return FALSE;
     return TRUE;

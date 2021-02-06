@@ -101,7 +101,34 @@ void cancel_ch(GtkWidget *widget, gpointer data){
     gtk_list_box_unselect_all(client->m->box_message);
 }
 
+void new_chat() {
+    GtkWidget  *chat_name;
+    static int i = 0;
+    printf("index new_chat: %d\n", i);
+    i++;
+
+    chat_name_d  = GTK_WIDGET(gtk_builder_get_object(builder, "chat_name"));
+    gtk_widget_show(chat_name_d);
+    chat_name = GTK_WIDGET(gtk_builder_get_object(builder, "name"));
+}
 gboolean destroy() {
     gtk_main_quit();
+    return TRUE;
+}
+
+gboolean chat_show(gpointer m) {
+    static int i = -1;
+    chat_show_info_s *chat_show_info = (chat_show_info_s *)m;
+
+    if (chat_show_info->counter > i) {
+        get_messages_request_s *get_messages_request = (get_messages_request_s *)malloc(sizeof(get_messages_request_s));
+        get_messages_request->chat = chat_show_info->chat;
+        get_messages_request->client = chat_show_info->client;
+        g_signal_connect(chat[chat_show_info->counter], "clicked", G_CALLBACK(get_msg_request), (gpointer)get_messages_request);
+        i++;
+    }
+
+    if (chat_show_info->client->exit == 1)
+        return FALSE;
     return TRUE;
 }

@@ -41,7 +41,8 @@ int initDB(){
 sql = "CREATE TABLE IF NOT EXISTS CHATS("  \
       "ID INTEGER PRIMARY KEY     AUTOINCREMENT," \
       "NAME           TEXT    NOT NULL," \
-      "DESCRIPTION         TEXT);";
+      "DESCRIPTION         TEXT," \
+      "OWNER_ID           INT     NOT NULL );";
   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
 
 
@@ -82,6 +83,85 @@ sql = "CREATE TABLE IF NOT EXISTS CHATS("  \
    sqlite3_close(db);
 
    return 0;
+}
+
+
+char* getChat_Id_By_Msg_Id(int id, char* rez){
+   sqlite3 *db;
+    sqlite3_stmt *res;
+
+    int rc = sqlite3_open("data.db", &db);
+
+    if (rc != SQLITE_OK) {
+
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+
+        return "-1";
+    }
+
+    rc = sqlite3_prepare_v2(db, "select CHAT_ID from Messages WHERE ID = ?;", -1, &res, 0);
+    sqlite3_bind_int(res, 1, id);
+
+    if (rc != SQLITE_OK) {
+
+        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+
+        return "-1";
+    }
+
+    rc = sqlite3_step(res);
+
+     if (rc == SQLITE_ROW) {
+       // printf("%s\n", sqlite3_column_text(res, 0));
+     }
+    sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
+
+
+    sqlite3_finalize(res);
+    sqlite3_close(db);
+
+    return rez;
+}
+
+char* getOwner_Id_By_Chat_Id(int id, char* rez){
+   sqlite3 *db;
+    sqlite3_stmt *res;
+
+    int rc = sqlite3_open("data.db", &db);
+
+    if (rc != SQLITE_OK) {
+
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+
+        return "-1";
+    }
+
+    rc = sqlite3_prepare_v2(db, "select OWNER_ID from Chats WHERE ID = ?;", -1, &res, 0);
+    sqlite3_bind_int(res, 1, id);
+
+    if (rc != SQLITE_OK) {
+
+        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+
+        return "-1";
+    }
+
+    rc = sqlite3_step(res);
+
+     if (rc == SQLITE_ROW) {
+       // printf("%s\n", sqlite3_column_text(res, 0));
+     }
+    sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
+
+
+    sqlite3_finalize(res);
+    sqlite3_close(db);
+
+    return rez;
 }
 
 char* getAllUsers(char* rez){
@@ -652,7 +732,7 @@ int insertUser(char* login, char* password, char* nick, char* status){
     return rez;
 }
 
-int insertChat(char* name, char* description){
+int insertChat(char* name, int creator_id, char* description){
     char sql[500];
 
     sqlite3 *db;
@@ -678,7 +758,7 @@ int insertChat(char* name, char* description){
 
 
     printf("Inserting new chat\n");
-    sprintf (sql,"INSERT INTO CHATS (name, description) VALUES ('%s','%s');",name,description);
+    sprintf (sql,"INSERT INTO CHATS (name, description, owner_id) VALUES ('%s','%s', %d);",name,description,creator_id);
 
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     if( rc != SQLITE_OK ){
@@ -1146,7 +1226,7 @@ int createChat(int creator_id, char *name)  {
     sqlite3_finalize(res);
     sqlite3_close_v2(db);
 
-    int new_chat_id = insertChat(name, NULL);
+    int new_chat_id = insertChat(name, creator_id, NULL);
     insertUSER_TO_CHAT(creator_id,  new_chat_id);
 
     return new_chat_id;

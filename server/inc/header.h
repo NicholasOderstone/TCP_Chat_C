@@ -27,7 +27,8 @@
     #define MAX_CLIENTS 100
     #define BUFFER_SZ 2048
     #define NAME_SZ 32
-    #define AMOUNT_OF_CMD 9
+    #define AMOUNT_OF_CMD 10
+    #define MAX_CHAT_USERS 1024
 
 
 /* STRUCTURES */
@@ -171,6 +172,8 @@
     char* itoa(int num, char* buffer, int base);
     /* DELETE EVERYONE FROM DB */
     void Delete_From_DB();
+    /* SEND TO ALL CHAT MEMBERS */
+    void send_to_all_members(char *p_chat_id, struct command cmd, buff_t *Info);
 
 
     // --- Functions that interact with messages and commands ---
@@ -226,6 +229,9 @@
     int createChat(int creator_id, char *name); // Create chat and add the creator
     void insertInUserInChats(int user_id, int chat_id); // Insert user in chat
     user_t *pack_chat_members(int id); // 
+    char* getChat_Id_By_Msg_Id(int id, char* rez); // Get chat_id by msg_id
+    void deleteChat(char* id); // Delete chat by chat_id
+    char* getOwner_Id_By_Chat_Id(int id, char* rez); // Получить id создателя чата по id этого чата
 
 
     // --- Daemonize ---

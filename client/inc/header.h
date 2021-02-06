@@ -163,6 +163,12 @@
 		pthread_mutex_t lock;
 	};
 
+	typedef struct {
+		chat_info_t *chat;
+		client_t *client;
+		int counter;
+	} chat_show_info_s;
+
 //////////////////////////
 
 // FUNCTIONS

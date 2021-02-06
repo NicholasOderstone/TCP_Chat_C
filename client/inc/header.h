@@ -47,8 +47,9 @@
 		GtkWidget *edit_b;
 		GtkWidget *delet_b;
 		gint row_num_list_gtk;
+		gint root_x ;
+		gint root_y ;
 	} gtk_utils_t;
-
 // --- CHAT_LIST ---
 	typedef struct chat_info {
 		int chat_id;

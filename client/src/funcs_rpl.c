@@ -66,18 +66,19 @@ void func_rpl_edit(char *params, void *p) {
 void func_rpl_add_chat(char *params, void *p) {
     client_t *client = (client_t *)p;
     int p_id = atoi(take_param(params, 1));
-    if (p_id == -1) {
-        return;
-    }
     char *p_name = take_param(params, 2);
     if (p_id == -1) {
         return;
     }
-    if (!is_chat_exists(&client->chat_list_head, p_id)) {
-        to_chat_list(p_id, p_name, &client->chat_list_head);
+
+    if (is_chat_exists(&client->chat_list_head, p_id)) {
+        return;
     }
-    static int i = 0;
+
+    to_chat_list(p_id, p_name, &client->chat_list_head);
     //while (clean_listbox((gpointer)box_chat_list) == TRUE) {}
+    //pthread_mutex_lock(&add_chat_lock);
+    //int i = client->last_chat_index;
 
     chat_info_t *current = client->chat_list_head;
     chat_info_t *prev = client->chat_list_head;
@@ -87,21 +88,18 @@ void func_rpl_add_chat(char *params, void *p) {
         current = current->next;
     }
 
-    chat[i] = gtk_button_new_with_label(prev->chat_name);
-    gtk_container_add(GTK_CONTAINER(box_chat_list), GTK_WIDGET(chat[i]));
-    gtk_widget_show(GTK_WIDGET(chat[i]));
-
+    //gtk_widget_show(GTK_WIDGET(chat[i]));
     chat_show_info_s *chat_show_info = (chat_show_info_s *)malloc(sizeof(chat_show_info_s));
     chat_show_info->chat = prev;
     chat_show_info->client = client;
-    chat_show_info->counter = i;
-    chat_show((gpointer)chat_show_info);
+    chat_show_info->counter = ++client->last_chat_index;
+    printf("rpl #### counter: %d  client->last_chat_index: %d  chat: %s #####\n", chat_show_info->counter, client->last_chat_index, chat_show_info->chat->chat_name);
+    gdk_threads_add_idle(chat_show, (gpointer)chat_show_info);
     //gtk_widget_show(GTK_WIDGET(box_chat_list));
 
-    //printf("#### i: %d    chat_name: %s #####\n", i, prev->chat_name);
-    i++;
-    display_chat_list(&client->chat_list_head);
-
+    //client->last_chat_index++;
+    //display_chat_list(&client->chat_list_head);
+    //pthread_mutex_unlock(&add_chat_lock);
 }
 
 

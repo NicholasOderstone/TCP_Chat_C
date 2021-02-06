@@ -72,9 +72,11 @@ gboolean message_show(gpointer m) {
         gtk_text_buffer_insert_interactive (buffer, &end, ": ", -1, TRUE );
         gtk_text_buffer_insert_interactive (buffer, &end, received_mess->message, -1, TRUE );
         bzero(time_buf, BUFFER_SZ);
+
         gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view));
         received_mess->client->m->row_num_list_gtk++;
         to_msg_id_q(received_mess->msg_id, &received_mess->client->msg_id_q_head);
+        
         gtk_widget_show (GTK_WIDGET(view));
         gtk_container_set_focus_child(GTK_CONTAINER(received_mess->client->m->box_message),
             GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk)));

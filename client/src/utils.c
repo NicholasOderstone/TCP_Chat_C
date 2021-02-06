@@ -96,7 +96,7 @@ void init_client(client_t *client, char *ip, char *port) {
 	client->is_connected = 0;
 	client->login = NULL;
 	client->pass = NULL;
-    client->last_chat_index = 0;
+    client->last_chat_index = -1;
 	pthread_mutex_init(&client->mutex, NULL);
     //get_client_name(client->name);
     strcpy(client->name, "");

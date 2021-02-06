@@ -119,24 +119,24 @@ gboolean destroy() {
 gboolean chat_show(gpointer m) {
     static int last_added_chat_index = -1;
     chat_show_info_s *chat_show_info = (chat_show_info_s *)m;
-    GtkListBox *box_chat_l = chat_show_info->client->m->box_chat_list;
+    //GtkListBox *box_chat_l = chat_show_info->client->m->box_chat_list;
 
     //box_chat_list = GTK_LIST_BOX(gtk_builder_get_object(builder, "chat_list"));
     int new_chat_index = chat_show_info->counter;
-    printf("new_chat_index: %d\nlast_added_chat_index: %d\n", new_chat_index, last_added_chat_index);
+    // printf("new_chat_index: %d\nlast_added_chat_index: %d\n", new_chat_index, last_added_chat_index);
 
     if (new_chat_index > last_added_chat_index) {
         printf("adding new chat %d with index %d\n", chat_show_info->chat->chat_id, new_chat_index);
-        chat[new_chat_index] = gtk_button_new_with_label(chat_show_info->chat->chat_name);
-        gtk_container_add(GTK_CONTAINER(box_chat_l), GTK_WIDGET(chat[new_chat_index]));
-        gtk_widget_show(GTK_WIDGET(chat[new_chat_index]));
+        chat_show_info->client->m->chat[new_chat_index] = gtk_button_new_with_label(chat_show_info->chat->chat_name);
+        gtk_container_add(GTK_CONTAINER(chat_show_info->client->m->box_chat_list), GTK_WIDGET(chat_show_info->client->m->chat[new_chat_index]));
+        gtk_widget_show(GTK_WIDGET(chat_show_info->client->m->chat[new_chat_index]));
         get_messages_request_s *get_messages_request = (get_messages_request_s *)malloc(sizeof(get_messages_request_s));
         get_messages_request->chat = chat_show_info->chat;
         get_messages_request->client = chat_show_info->client;
-        get_messages_request_s *get_msg_buf = (get_messages_request_s *)malloc(sizeof(get_messages_request_s));
-        get_msg_buf = get_messages_request;
-        g_signal_connect(chat[new_chat_index], "clicked", G_CALLBACK(get_msg_request), (gpointer)get_msg_buf);
-        last_added_chat_index++;
+        // get_messages_request_s *get_msg_buf = (get_messages_request_s *)malloc(sizeof(get_messages_request_s));
+        get_messages_request_s *get_msg_buf = get_messages_request;
+        g_signal_connect(chat_show_info->client->m->chat[new_chat_index], "clicked", G_CALLBACK(get_msg_request), (gpointer)get_msg_buf);
+        last_added_chat_index = new_chat_index;
     }
 
     if (chat_show_info->client->exit == 1)

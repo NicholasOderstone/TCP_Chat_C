@@ -27,6 +27,7 @@
 
 // DEFINES
 	#define MAX_CLIENTS 100
+	#define MAX_CHATS 1000
 	#define BUFFER_SZ 2048
 	#define NAME_SZ 32
 	#define AMOUNT_OF_CMD 6
@@ -43,6 +44,7 @@
 		GtkTextMark* mark;
 		GtkListBox *box_message;
 		GtkListBox *box_chat_list;
+		GtkWidget *chat[MAX_CHATS];
 		GtkButtonBox *b_box;
 		GtkWidget *cancel_b;
 		GtkWidget *edit_b;

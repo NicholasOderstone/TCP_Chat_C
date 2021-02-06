@@ -32,7 +32,7 @@ void f_chat_msg(char *params, buff_t *Info) {
 		bzero(sender, BUFFER_SZ);
 		free(new_mess);
 		new_mess = NULL;
-	} 
+	}
 }
 
 void f_login(char *params, buff_t *Info) {
@@ -242,9 +242,10 @@ void f_new_chat(char *params, buff_t *Info) {
 	cmd.command = "<ADD_CHAT>";
 	char *p_new_chat_name = param_1(params);
 	int chat_id = createChat(getIdUserByUserName(Info->client->name), p_new_chat_name);
-	/*if(chat_id == -1) {
-		snprintf(buff_out, BUFFER_SZ, " <CHAT_NAME>", p_msg_id, p_new_text);
-	}*/
+	if(chat_id == -1) {
+		//snprintf(buff_out, BUFFER_SZ, " <CHAT_NAME>", p_msg_id, p_new_text);
+		return;
+	}
 	snprintf(buff_out, BUFFER_SZ, " <%s> <%s>", itoa(chat_id, buff_temp, 10), p_new_chat_name);
 	cmd.params = buff_out;
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);

@@ -19,7 +19,9 @@ void port_changed(GtkEntry *e){
 void username_changed(GtkEntry *e){
     sprintf(username_str,"%s", gtk_entry_get_text(e));
 }
-
+void chatname_changed(GtkEntry *e){
+    sprintf(chatname_str,"%s", gtk_entry_get_text(e));
+}
 void password_changed(GtkEntry *e){
     //gtk_entry_set_visibility (e, FALSE);
     sprintf(passoword_str, "%s", gtk_entry_get_text(e));

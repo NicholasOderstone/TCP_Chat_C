@@ -64,11 +64,42 @@ void func_rpl_edit(char *params, void *p) {
 void func_rpl_add_chat(char *params, void *p) {
     client_t *client = (client_t *)p;
     int p_id = atoi(take_param(params, 1));
+    if (p_id == -1) {
+        return;
+    }
     char *p_name = take_param(params, 2);
     if (!is_chat_exists(&client->chat_list_head, p_id)) {
         to_chat_list(p_id, p_name, &client->chat_list_head);
     }
+    int chat_list_sz = chat_list_size(&client->chat_list_head);
+    printf("## chat_list_size: %d\n", chat_list_sz);
+    int i = 0;
+    GtkWidget **chat = malloc(chat_list_sz * sizeof(GtkWidget *));
+    chat_info_t *current = client->chat_list_head;
     display_chat_list(&client->chat_list_head);
+    printf("\n" );
+    box1 = GTK_LIST_BOX(gtk_builder_get_object(builder, "chat_list"));
+    while (gtk_list_box_get_row_at_index(box1, (gint)0) != NULL)
+    {
+        gtk_container_remove(GTK_CONTAINER(box1), GTK_WIDGET(gtk_list_box_get_row_at_index(box1, (gint)0)));
+    }
+
+    i = 0;
+    current = client->chat_list_head;
+    while (current != NULL)
+    {
+        get_messages_request_s *get_messages_request = (get_messages_request_s *)malloc(sizeof(get_messages_request_s));
+        chat[i] = gtk_button_new_with_label(current->chat_name);
+        gtk_widget_show(GTK_WIDGET(chat[i]));
+        gtk_list_box_insert(box1, GTK_WIDGET(chat[i]), -1);
+        get_messages_request->chat = current;
+        get_messages_request->client = client;
+        get_messages_request_s *get_msg_buf = get_messages_request;
+        g_signal_connect(chat[i], "clicked", G_CALLBACK(get_msg_request), (gpointer)get_msg_buf);
+        current = current->next;
+        i++;
+    }
+
 }
 
 

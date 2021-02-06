@@ -8,22 +8,23 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     message_s = &m;
     GObject *send_b;
     client_t *client = (client_t *)gp_client;
-    GtkButton *menu_b;
+    GtkButton *menu_b, *add_user_b;
     GtkMenu *menu;
-    GtkWidget *menu_item;
-    GtkListBox *box;
-    GtkCssProvider *cssProvider = gtk_css_provider_new();
+    GtkWidget *menu_new_chat, *menu_join_chat;
+    //GtkListBox *box;
+    //GtkCssProvider *cssProvider = gtk_css_provider_new();
     client->m = (gtk_utils_t *)malloc(sizeof(gtk_utils_t *));
     client->m = message_s;
 
     GtkWidget *send_b_image = gtk_image_new_from_file ("client/resources/send_b_img.png");
     GtkWidget *menu_b_image = gtk_image_new_from_file ("client/resources/menu.png");
+    GtkWidget *add_user_b_image = gtk_image_new_from_file ("client/resources/add_user.png");
 
 
-    gtk_css_provider_load_from_path(cssProvider, "client/resources/gtk.css", NULL);
-    gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),
-                               GTK_STYLE_PROVIDER(cssProvider),
-                               GTK_STYLE_PROVIDER_PRIORITY_USER);
+    //gtk_css_provider_load_from_path(cssProvider, "client/resources/gtk.css", NULL);
+    //gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),
+    //                           GTK_STYLE_PROVIDER(cssProvider),
+    //                           GTK_STYLE_PROVIDER_PRIORITY_USER);
 
     gtk_widget_hide(window);
     builder = gtk_builder_new();
@@ -35,16 +36,20 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     connection_spin = GTK_SPINNER(gtk_builder_get_object(builder, "connection_spinner"));
 
     menu_b = GTK_BUTTON(gtk_builder_get_object (builder, "main_menu"));
+    add_user_b = GTK_BUTTON(gtk_builder_get_object (builder, "add_user"));
+    add_user_b = GTK_BUTTON(gtk_builder_get_object (builder, "add_user"));
 
     gtk_button_set_image (menu_b, menu_b_image);
-    menu_item = gtk_menu_item_new_with_label ("Add Chat");
+    gtk_button_set_image (add_user_b, add_user_b_image);
+    menu_new_chat = gtk_menu_item_new_with_label ("Add Chat");
+    menu_join_chat = gtk_menu_item_new_with_label ("Join Chat");
     menu = GTK_MENU(gtk_builder_get_object (builder, "menu"));
     gtk_menu_button_set_popup (GTK_MENU_BUTTON(menu_b), GTK_WIDGET(menu));
-    gtk_menu_attach (menu, menu_item, 0, 1, 0, 1);
-    box = GTK_LIST_BOX(gtk_builder_get_object(builder, "chat_list"));
+    gtk_menu_attach (menu, menu_new_chat, 0, 1, 0, 1);
+    gtk_menu_attach (menu, menu_join_chat, 0, 1, 1, 2);
     gtk_widget_show_all(GTK_WIDGET(menu));
 
-    int i = 0;
+    /*int i = 0;
     GtkWidget **chat = malloc(chat_list_size(&client->chat_list_head) * sizeof(GtkWidget *));
     chat_info_t *current = client->chat_list_head;
 
@@ -62,7 +67,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
         current = current->next;
         i++;
     }
-
+*/
     send_b = gtk_builder_get_object (builder, "send_buttom");
     gtk_button_set_image (GTK_BUTTON (send_b), send_b_image);
 
@@ -89,10 +94,8 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     g_signal_connect(message_s->edit_b, "clicked", G_CALLBACK(message_edit),gp_client);
     g_signal_connect(message_s->cancel_b, "clicked", G_CALLBACK(cancel_ch),gp_client);
 
-    new_chat_request_s *new_chat_r = (new_chat_request_s *)malloc(sizeof(new_chat_r));
-        new_chat_r->new_chat_name = strdup("Empty_chat");
-    new_chat_r->client = client;
-    g_signal_connect(menu_item, "clicked", G_CALLBACK(new_chat_request), (gpointer)new_chat_r);
+
+    g_signal_connect(menu_new_chat, "activate", G_CALLBACK(new_chat), gp_client);
     //g_signal_connect(message_s->view, "move-cursor", G_CALLBACK(del_message), (gpointer)message_s->buffer);
 
 }

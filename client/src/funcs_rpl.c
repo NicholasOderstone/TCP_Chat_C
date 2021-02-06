@@ -99,8 +99,10 @@ void func_rpl_add_chat(char *params, void *p) {
     {
         get_messages_request_s *get_messages_request = (get_messages_request_s *)malloc(sizeof(get_messages_request_s));
         chat[i] = gtk_button_new_with_label(current->chat_name);
-        gtk_widget_show(GTK_WIDGET(chat[i]));
+        printf("Chat name: %s, Chat id: %d, Chat i: %d\n", current->chat_name, current->chat_id, i);
         gtk_list_box_insert(box1, GTK_WIDGET(chat[i]), -1);
+
+        gtk_widget_show(GTK_WIDGET(chat[i]));
         get_messages_request->chat = current;
         get_messages_request->client = client;
         get_messages_request_s *get_msg_buf = get_messages_request;
@@ -108,7 +110,7 @@ void func_rpl_add_chat(char *params, void *p) {
 
         current = current->next;
         i++;
-    }*/
+    }
     display_chat_list(&client->chat_list_head);
     printf("\n" );
     box1 = GTK_LIST_BOX(gtk_builder_get_object(builder, "chat_list"));
@@ -131,7 +133,7 @@ void func_rpl_add_chat(char *params, void *p) {
         g_signal_connect(chat[i], "clicked", G_CALLBACK(get_msg_request), (gpointer)get_msg_buf);
         current = current->next;
         i++;
-    }
+    }*/
 
 }
 

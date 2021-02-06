@@ -49,16 +49,16 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     gtk_menu_attach (menu, menu_join_chat, 0, 1, 1, 2);
     gtk_widget_show_all(GTK_WIDGET(menu));
 
-    /*int i = 0;
+    int i = 0;
     GtkWidget **chat = malloc(chat_list_size(&client->chat_list_head) * sizeof(GtkWidget *));
     chat_info_t *current = client->chat_list_head;
-
+    box1 = GTK_LIST_BOX(gtk_builder_get_object(builder, "chat_list"));
     while (current != NULL)
     {
         get_messages_request_s *get_messages_request = (get_messages_request_s *)malloc(sizeof(get_messages_request_s));
         chat[i] = gtk_button_new_with_label(current->chat_name);
         gtk_widget_show(GTK_WIDGET(chat[i]));
-        gtk_list_box_insert(box, GTK_WIDGET(chat[i]), -1);
+        gtk_list_box_insert(box1, GTK_WIDGET(chat[i]), -1);
         get_messages_request->chat = current;
         get_messages_request->client = client;
         get_messages_request_s *get_msg_buf = get_messages_request;
@@ -67,7 +67,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
         current = current->next;
         i++;
     }
-*/
+
     send_b = gtk_builder_get_object (builder, "send_buttom");
     gtk_button_set_image (GTK_BUTTON (send_b), send_b_image);
 
@@ -75,6 +75,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     //gtk_text_buffer_create_tag(message_s->buffer, "gray_bg", "background","gray", NULL);
     //gtk_text_buffer_insert_with_tags_by_name (message_s->buffer, &message_s->end, "name", -1, "gray_bg", NULL);
     message_entry = GTK_ENTRY(gtk_builder_get_object(builder, "message_entry"));
+    chatname_entry = GTK_ENTRY(gtk_builder_get_object(builder, "name"));
     //g_signal_connect(send_b, "clicked", G_CALLBACK(show_my_msg), (gpointer)message_s);
     //gtk_binding_entry_add_signall()
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_send), gp_client);

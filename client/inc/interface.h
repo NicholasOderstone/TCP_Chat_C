@@ -23,7 +23,7 @@
                 ipv_str[16], username_str_s[32], nick_str_s[32], pass_str_s[32],
                 r_pass_str_s[32], chatname_str[32];
     int is_exit;
-    GtkEntry *message_entry, *ipv_entry, *port_entry;
+    GtkEntry *message_entry, *ipv_entry, *port_entry, *chatname_entry;
     GtkSpinner *connection_spin;
     GtkListBox *box1;
 //////////////////////////
@@ -53,6 +53,7 @@
     gboolean clean_listbox();
     void my_popup_handler();
     void new_chat();
+    void chatname_clear();
     //////////////////////////
 
 #endif

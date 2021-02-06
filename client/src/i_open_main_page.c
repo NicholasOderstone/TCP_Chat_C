@@ -12,9 +12,8 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     GtkMenu *menu;
     GtkWidget *menu_item;
     //GtkCssProvider *cssProvider = gtk_css_provider_new();
-    client->m = (gtk_utils_t *)malloc(sizeof(gtk_utils_t *));
+    client->m = (gtk_utils_t *)malloc(sizeof(gtk_utils_t));
     client->m = message_s;
-
     GtkWidget *send_b_image = gtk_image_new_from_file ("client/resources/send_b_img.png");
     GtkWidget *menu_b_image = gtk_image_new_from_file ("client/resources/menu.png");
 
@@ -42,21 +41,11 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     gtk_menu_attach (menu, menu_item, 0, 1, 0, 1);
     gtk_widget_show_all(GTK_WIDGET(menu));
 
-    box_chat_list = GTK_LIST_BOX(gtk_builder_get_object(builder, "chat_list"));
-    //get_messages_request_s *get_messages_request = (get_messages_request_s *)malloc(sizeof(get_messages_request_s));
-    /*chat[0] = gtk_button_new_with_label("name");
-    gtk_container_add(GTK_CONTAINER(box_chat_list), GTK_WIDGET(chat[0]));
-    gtk_widget_show(GTK_WIDGET(chat[0]));
-    //gtk_widget_show(GTK_WIDGET(box_chat_list));
-    get_messages_request->chat = current;
-    get_messages_request->client = client;
-    get_messages_request_s *get_msg_buf = get_messages_request;
-    g_signal_connect(chat[i], "clicked", G_CALLBACK(get_msg_request), (gpointer)get_msg_buf);*/
-
     send_b = gtk_builder_get_object (builder, "send_buttom");
     gtk_button_set_image (GTK_BUTTON (send_b), send_b_image);
 
     message_s->box_message = GTK_LIST_BOX(gtk_builder_get_object(builder, "message_list"));
+    message_s->box_chat_list = GTK_LIST_BOX(gtk_builder_get_object(builder, "chat_list"));
     //gtk_text_buffer_create_tag(message_s->buffer, "gray_bg", "background","gray", NULL);
     //gtk_text_buffer_insert_with_tags_by_name (message_s->buffer, &message_s->end, "name", -1, "gray_bg", NULL);
     message_entry = GTK_ENTRY(gtk_builder_get_object(builder, "message_entry"));

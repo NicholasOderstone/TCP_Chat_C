@@ -110,6 +110,7 @@
 	typedef struct received_s {
 		client_t *client;
 		int msg_id;
+		int chat_id;
 		char message[BUFFER_SZ];
 		char time[BUFFER_SZ];
 		char sender_name[NAME_SZ];

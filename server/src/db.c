@@ -657,33 +657,43 @@ int insertChat(char* name, char* description){
 
     sqlite3 *db;
     sqlite3_stmt *res;
-    char *err_msg = 0;
-
+    char *err_msg = NULL;
 
     int rc = sqlite3_open("data.db", &db);
-    sprintf (sql,"select id from CHATS where name = '%s'",name);
+
+
+    // sprintf (sql,"select id from CHATS where name = '%s'",name);
+    sprintf (sql, "SELECT MAX(ID) FROM CHATS WHERE NAME = '%s'", name);
     rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
     rc = sqlite3_step(res);
 
-    if(sqlite3_column_int(res, 0) > 0) {
-        int id = sqlite3_column_int(res, 0);
+    int rez;
+    if((rez = sqlite3_column_int(res, 0)) > 0) {
         sqlite3_finalize(res);
         sqlite3_close(db);
-        return id;
+        printf("insertChat -> %s chat already exists\n id = %d", name, rez);
+        return rez;
     }
+    sqlite3_finalize(res);
 
 
-
+    printf("Inserting new chat\n");
     sprintf (sql,"INSERT INTO CHATS (name, description) VALUES ('%s','%s');",name,description);
+
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+    if( rc != SQLITE_OK ){
+      fprintf(stderr, "SQL error: %s\n", err_msg);
+      sqlite3_free(err_msg);
+    }
 
     rc = sqlite3_prepare_v2(db, "select max(id) from CHATS;", -1, &res, 0);
     rc = sqlite3_step(res);
 
-
-    int rez = sqlite3_column_int(res, 0);
+    rez = sqlite3_column_int(res, 0);
     sqlite3_finalize(res);
     sqlite3_close(db);
+    write(1, "1\n", 2);
+    printf("insertChat -> New chat inserted. Chat name: %s; chat id: %d\n", name, rez);
     return rez;
 }
 
@@ -1086,6 +1096,7 @@ void insertUSER_TO_CHAT(int user_id, int chat_id){
     sqlite3_bind_text(res, 1, login, strlen(login), NULL);
     rc = sqlite3_step(res);
     sprintf(login, "%s", sqlite3_column_text(res, 0));
+
     sqlite3_finalize(res);
 
     sprintf (sql, "select NAME from CHATS WHERE ID = '%d';", chat_id);
@@ -1093,10 +1104,10 @@ void insertUSER_TO_CHAT(int user_id, int chat_id){
     sqlite3_bind_text(res, 1, name, strlen(name), NULL);
     rc = sqlite3_step(res);
     sprintf(name, "%s", sqlite3_column_text(res, 0));
-
+    sqlite3_finalize(res);
+    
     sprintf (sql,"INSERT INTO USER_IN_CHAT (USER_ID, LOGIN, CHAT_ID, NAME) VALUES ('%d','%s','%d','%s');",user_id,login,chat_id,name);
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
-    sqlite3_finalize(res);
     sqlite3_close(db);
     return;
     //INSERT INTO USER_IN_CHAT (USER_ID, LOGIN, CHAT_ID, NAME) VALUES ('1','test1','1','chat1');
@@ -1128,13 +1139,15 @@ int createChat(int creator_id, char *name)  {
     if (sqlite3_column_int(res, 0) > 0){
         sqlite3_finalize(res);
         sqlite3_close_v2(db);
+        printf("createChat -> %s chat already exists\n", name);
         return -1;
     }
+
     sqlite3_finalize(res);
     sqlite3_close_v2(db);
+
     int new_chat_id = insertChat(name, NULL);
     insertUSER_TO_CHAT(creator_id,  new_chat_id);
-
 
     return new_chat_id;
 }

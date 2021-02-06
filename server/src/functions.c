@@ -242,8 +242,8 @@ void f_new_chat(char *params, buff_t *Info) {
 	cmd.command = "<ADD_CHAT>";
 	char *p_new_chat_name = param_1(params);
 	int chat_id = createChat(getIdUserByUserName(Info->client->name), p_new_chat_name);
+	printf("f_new_chat -> createChat: %d\n", chat_id);
 	if(chat_id == -1) {
-		//snprintf(buff_out, BUFFER_SZ, " <CHAT_NAME>", p_msg_id, p_new_text);
 		return;
 	}
 	snprintf(buff_out, BUFFER_SZ, " <%s> <%s>", itoa(chat_id, buff_temp, 10), p_new_chat_name);

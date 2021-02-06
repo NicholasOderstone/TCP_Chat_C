@@ -108,7 +108,7 @@ void f_login(char *params, buff_t *Info) {
     char buff_out[BUFFER_SZ];
 	struct command cmd;
 	cmd.command = "<LOGIN>";
-	printf("%s\n", params);
+	//printf("%s\n", params);
     char *p_login = param_1(params);
     char *p_pass = param_2(params);
 

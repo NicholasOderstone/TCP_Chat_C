@@ -47,6 +47,16 @@ void delete_msg_request(del_msg_request_s *delete_msg_request) {
 	bzero(buffer, BUFFER_SZ);
 }
 
+void delete_chat_request(del_chat_request_s *delete_chat_request) {
+    command cmd;
+    char buffer[BUFFER_SZ];
+    snprintf(buffer, BUFFER_SZ, "<%d>", delete_chat_request->chat_id);
+    cmd.command = "<DELETE_CHAT>";
+    cmd.params = strdup(buffer);
+    send_cmd(cmd, delete_chat_request->client);
+    bzero(buffer, BUFFER_SZ);
+}
+
 void edit_msg_request(edit_msg_request_s *edit_msg_request) {
 	command cmd;
 	char buffer[BUFFER_SZ];

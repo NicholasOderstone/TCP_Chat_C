@@ -71,7 +71,6 @@
 		struct sockaddr_in address; // Stores ip (sin_addr.s_addr), port (sin_port) and ip format (sin_family = AF_INET)
 		int sockfd;
 		int uid;
-		char name[NAME_SZ];
 		char *login;
 		char *pass;
 		gtk_utils_t *m;
@@ -104,6 +103,12 @@
 		int chat_id;
 		client_t *client;
 	} del_chat_request_s;
+
+	typedef struct {
+		int msg_id;
+		char *new_text;
+		client_t *client;
+	} edit_msg_request_s;
 
 	typedef struct {
 		int msg_id;

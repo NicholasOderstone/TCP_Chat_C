@@ -13,13 +13,9 @@ void send_to_all_members(char *p_chat_id, struct command cmd, buff_t *Info) {
 	}
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 	for(int i=0; i<MAX_CLIENTS; ++i){
-		printf("2\n");
 			if(Info->serv_inf->clients[i] != NULL){
-						printf("3\n");
 				for(int j = 0; j < k; j++) {
-					printf("4\n");
 					if(user[j] != NULL){
-						printf("5\n");	
 						str_trim_lf(user[j]->user_name, strlen(user[i]->user_name));
 						if(strcmp(user[j]->user_name, Info->serv_inf->clients[i]->name) == 0) {
 							send_cmd(cmd, Info->serv_inf->clients[i]);
@@ -42,6 +38,7 @@ void chat_list(char *p_login, buff_t *Info) {
 
 
 	getUserChats(getIdUserByUserName(p_login), buff_temp);
+	printf("%s\n", buff_temp);
 	temp = strtok(buff_temp, ",");
 	while(temp != NULL) {
 		mass_of_chats[i] = atoi(temp);

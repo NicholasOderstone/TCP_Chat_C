@@ -30,7 +30,7 @@
 	#define MAX_CHATS 1000
 	#define BUFFER_SZ 2048
 	#define NAME_SZ 32
-	#define AMOUNT_OF_CMD 6
+	#define AMOUNT_OF_CMD 8
 //////////////////////////
 
 // STRUCTURES
@@ -71,7 +71,6 @@
 		struct sockaddr_in address; // Stores ip (sin_addr.s_addr), port (sin_port) and ip format (sin_family = AF_INET)
 		int sockfd;
 		int uid;
-		char name[NAME_SZ];
 		char *login;
 		char *pass;
 		gtk_utils_t *m;
@@ -111,6 +110,12 @@
 		char *new_text;
 		client_t *client;
 	} edit_msg_request_s;
+
+	typedef struct {
+		int chat_id;
+		char *username;
+		client_t *client;
+	} add_user_to_chat_request_s;
 
 // --- msg, command, cmd function ---
 	typedef struct received_s {
@@ -238,15 +243,18 @@
 	void display_chat_list(chat_info_t **chat_list_head);
 	// Gets chat list size
 	int chat_list_size(chat_info_t **chat_list_head);
+
+	int get_index_by_chat_id(chat_info_t **chat_list_head, int chat_id);
+
 	int is_chat_exists(chat_info_t **chat_list_head, int chat_id);
 
-	void send_cmd(command cmd, client_t *client);
-	void analyse_cmd(command fst_cmd, cmd_func function, client_t *client);
+	void del_elem_chat_list(chat_info_t **chat_list_head, int chat_id);
 
 // --- REQUESTS ---
 	void get_msg_request(GtkWidget *widget, gpointer data);
 	void new_chat_request(GtkWidget *widget, gpointer data);
 	void delete_msg_request(del_msg_request_s *delete_msg_request);
+	void delete_chat_request(GtkWidget *widget, gpointer data);
 	void edit_msg_request(edit_msg_request_s *edit_msg_request);
 
 // --- SWITCHES ---
@@ -264,6 +272,9 @@
 	char *cmd_to_msg(command cmd);
 	char *take_param(char *params, int number);
 	char *itoa(int val, int base);
+
+	void send_cmd(command cmd, client_t *client);
+	void analyse_cmd(command fst_cmd, cmd_func function, client_t *client);
 
 //////////////////////////
 

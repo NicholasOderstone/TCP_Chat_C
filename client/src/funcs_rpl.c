@@ -45,7 +45,7 @@ void func_rpl_send(char *params, void *p) {
         gdk_threads_add_idle(message_show, (gpointer)received_mess);
 }
 
-void func_rpl_del_msg(char *params, void *p) {
+void func_rpl_delete(char *params, void *p) {
     client_t *client = (client_t *)p;
     GtkListBox *box = client->m->box_message;
     int msg_id = atoi(take_param(params, 1));
@@ -54,59 +54,13 @@ void func_rpl_del_msg(char *params, void *p) {
     gtk_list_box_select_row(box, gtk_list_box_get_row_at_index(box, (gint)index));
     gtk_container_remove(GTK_CONTAINER(box), GTK_WIDGET(gtk_list_box_get_selected_row (box)));
     del_elem_msg_id_q(&client->msg_id_q_head, msg_id);
-    //printf("## index in rpl_delete: %d\n", index);
-}
-
-void func_rpl_del_chat(char *params, void *p) {
-    client_t *client = (client_t *)p;
-    GtkListBox *box_chat_list = client->m->box_chat_list;
-    int chat_id;
-
-    char *p_rpl = take_param(params, 1);
-    if (strcmp(p_rpl, "NOT_OWNER") == 0) {
-        printf("## NOT_OWNER\n");
-    }
-    else {
-        chat_id = atoi(p_rpl);
-        int index = get_index_by_chat_id(&client->chat_list_head, chat_id);
-
-        gtk_list_box_select_row(box_chat_list, gtk_list_box_get_row_at_index(box_chat_list, (gint)index));
-        gtk_container_remove(GTK_CONTAINER(box_chat_list), GTK_WIDGET(gtk_list_box_get_selected_row (box_chat_list)));
-        del_elem_chat_list(&client->chat_list_head, chat_id);
-        printf("## index in rpl_del_chat: %d\n", index);
-    }
-
+    printf("## index in rpl_delete: %d\n", index);
 }
 
 void func_rpl_edit(char *params, void *p) {
     UNUSED(p);
 
     printf("## edit params: %s\n", params);
-}
-
-void func_rpl_add_user_to_chat(char *params, void *p) {
-    UNUSED(p);
-    GtkTextView *view ;
-    GtkTextBuffer *buffer;
-    GtkTextIter end;
-    int chat_id;
-
-    char *p_rpl = take_param(params, 1);
-    if (strcmp(p_rpl, "INCORRECT_USERNAME") == 0) {
-        printf("## INCORRECT_USERNAME\n");
-    }
-    else {
-        chat_id = atoi(p_rpl);
-        char *p_nick = take_param(params, 2);
-
-        view = GTK_TEXT_VIEW(gtk_text_view_new());
-        gtk_text_view_set_editable (view, FALSE);
-        buffer = gtk_text_buffer_new(NULL);
-        gtk_text_view_set_wrap_mode (view, GTK_WRAP_WORD_CHAR);
-        gtk_text_view_set_buffer(view, buffer);
-        gtk_text_buffer_get_iter_at_offset(buffer, &end, 0);
-        gtk_text_buffer_insert_interactive (buffer, &end, p_nick, -1, TRUE );
-    }
 }
 
 void func_rpl_add_chat(char *params, void *p) {
@@ -139,7 +93,7 @@ void func_rpl_add_chat(char *params, void *p) {
     chat_show_info->chat = prev;
     chat_show_info->client = client;
     chat_show_info->counter = ++client->last_chat_index;
-    //printf("rpl #### counter: %d  client->last_chat_index: %d  chat: %s #####\n", chat_show_info->counter, client->last_chat_index, chat_show_info->chat->chat_name);
+    printf("rpl #### counter: %d  client->last_chat_index: %d  chat: %s #####\n", chat_show_info->counter, client->last_chat_index, chat_show_info->chat->chat_name);
     gdk_threads_add_idle(chat_show, (gpointer)chat_show_info);
     //gtk_widget_show(GTK_WIDGET(box_chat_list));
 
@@ -151,17 +105,14 @@ void func_rpl_add_chat(char *params, void *p) {
 
 void init_funcs(cmd_func arr_cmd_func[]) {
     char *arr_func_names[AMOUNT_OF_CMD] = { "<LOGIN>", "<REGISTER>", "<SEND>",
-                                            "<ADD_CHAT>", "<DELETE_MSG>", "<EDIT_MSG>",
-                                            "<DELETE_CHAT>", "<ADD_USER_TO_CHAT>"};
+                                            "<ADD_CHAT>", "<DELETE_MSG>", "EDIT_MSG"};
 
     arr_cmd_func[0].func = &func_rpl_login;
     arr_cmd_func[1].func = &func_rpl_register;
     arr_cmd_func[2].func = &func_rpl_send;
     arr_cmd_func[3].func = &func_rpl_add_chat;
-    arr_cmd_func[4].func = &func_rpl_del_msg;
+    arr_cmd_func[4].func = &func_rpl_delete;
     arr_cmd_func[5].func = &func_rpl_edit;
-    arr_cmd_func[6].func = &func_rpl_del_chat;
-    arr_cmd_func[7].func = &func_rpl_add_user_to_chat;
 
     for (int i = 0; i < AMOUNT_OF_CMD; i++)
         arr_cmd_func[i].name = strdup(arr_func_names[i]);

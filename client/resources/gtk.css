@@ -1,13 +1,11 @@
 button {
-    background-color: #86C232;
-    background-image: none;
-    color: white;
+  background-image: linear-gradient(#72EDF2, #5151E5);
 }
-label#chat_lbl{
-    color: white;
-}
+/*label {
+  background-image: linear-gradient(to top right, blue 20%, #f0f 80%);
+}*/
 window{
-     background-color: #222629;
+     background-image: linear-gradient(#FFF886, #F072B6);
 }
 @keyframes spin {
   to { -gtk-icon-transform: rotate(1turn); }

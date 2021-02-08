@@ -100,5 +100,6 @@ void init_client(client_t *client, char *ip, char *port) {
     client->active_chat_id = 0;
 	pthread_mutex_init(&client->mutex, NULL);
     //get_client_name(client->name);
+    strcpy(client->name, "");
     client->exit = 0;
 }

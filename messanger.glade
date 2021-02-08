@@ -352,6 +352,7 @@
   </object>
   <object class="GtkWindow" id="login_window">
     <property name="can-focus">False</property>
+    <property name="window-position">center-always</property>
     <property name="gravity">static</property>
     <signal name="destroy" handler="destroy" swapped="no"/>
     <child>
@@ -579,79 +580,6 @@
     </child>
     <accessibility>
       <relation type="parent-window-of" target="main_window"/>
-    </accessibility>
-  </object>
-  <object class="GtkWindow" id="connect_window">
-    <property name="can-focus">False</property>
-    <property name="window-position">center-always</property>
-    <signal name="destroy" handler="destroy" swapped="no"/>
-    <child>
-      <object class="GtkFixed">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="width-request">200</property>
-            <property name="height-request">50</property>
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="label" translatable="yes">Connection to the  server</property>
-          </object>
-          <packing>
-            <property name="x">132</property>
-            <property name="y">11</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="ipv_field">
-            <property name="width-request">100</property>
-            <property name="height-request">40</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="max-length">16</property>
-            <property name="secondary-icon-tooltip-text" translatable="yes">IP is incorrect</property>
-            <property name="placeholder-text" translatable="yes">ipv4</property>
-            <signal name="changed" handler="ipv_changed" swapped="no"/>
-          </object>
-          <packing>
-            <property name="x">157</property>
-            <property name="y">57</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="port_field">
-            <property name="width-request">100</property>
-            <property name="height-request">40</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="max-length">4</property>
-            <property name="placeholder-text" translatable="yes">port</property>
-            <signal name="changed" handler="port_changed" swapped="no"/>
-          </object>
-          <packing>
-            <property name="x">157</property>
-            <property name="y">126</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="connect_b">
-            <property name="label" translatable="yes">connect</property>
-            <property name="width-request">100</property>
-            <property name="height-request">40</property>
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-          </object>
-          <packing>
-            <property name="x">196</property>
-            <property name="y">198</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-    <accessibility>
-      <relation type="parent-window-of" target="signup_window"/>
-      <relation type="parent-window-of" target="login_window"/>
     </accessibility>
   </object>
 </interface>

@@ -20,7 +20,7 @@ int validate_ip(char *ipAddress)
 
 int validate_port(char *port) {
 	int port_len = strlen(port);
-	if (port_len > 5 || port_len < 3) {
+	if (port_len > 6 || port_len < 3) {
 		return 0;
 	}
 	if (!validate_number(port)) {

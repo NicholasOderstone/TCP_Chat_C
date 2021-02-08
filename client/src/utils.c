@@ -39,7 +39,7 @@ void send_client_info_to_server(client_t *client) {
     }
 }
 
-void *connect_to_server(void *cnct_inf) {
+void *reconnect_to_server(void *cnct_inf) {
 	client_t *info = (client_t *)cnct_inf;
 	printf("Reconnect is ready\n");
     // init_client(info, ipv_str, port_str);
@@ -97,6 +97,7 @@ void init_client(client_t *client, char *ip, char *port) {
 	client->login = NULL;
 	client->pass = NULL;
     client->last_chat_index = -1;
+    client->active_chat_id = 0;
 	pthread_mutex_init(&client->mutex, NULL);
     //get_client_name(client->name);
     strcpy(client->name, "");

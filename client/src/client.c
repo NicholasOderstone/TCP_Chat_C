@@ -5,19 +5,31 @@ int main(int argc, char **argv) {
     client_t *p_client = (client_t *)malloc(sizeof(client_t *));
     p_client = &client;
 
-    init_interface(&builder, &argc, &argv, (gpointer) p_client);
+    if (connect_to_server(p_client, argc, argv) == 1)
+        return EXIT_FAILURE;
+
+    init_interface(&argc, &argv, (gpointer) p_client);
     init_switches();
 
-    if (pthread_mutex_init(&chat_lock, NULL) != 0)
-    {
+    if (pthread_mutex_init(&chat_lock, NULL) != 0) {
       printf("Mutex initialization failed.\n");
-      return 1;
+      return EXIT_FAILURE;
+    }
+
+    if (pthread_mutex_init(&msg_id_lock, NULL) != 0) {
+      printf("Mutex initialization failed.\n");
+      return EXIT_FAILURE;
+    }
+
+    if (pthread_mutex_init(&add_chat_lock, NULL) != 0) {
+      printf("Mutex initialization failed.\n");
+      return EXIT_FAILURE;
     }
 
     pthread_t init_threads_thread;
 	if(pthread_create(&init_threads_thread, NULL, init_threads, (void*)p_client) != 0){
 		perror("ERROR: pthread\n");
-		return 1;
+		return EXIT_FAILURE;
 	}
 
     gtk_main();

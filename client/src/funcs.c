@@ -1,17 +1,11 @@
 #include "../inc/header.h"
 
-char* itoa(int val, int base){
-
+char *itoa(int val, int base) {
 	static char buf[32] = {0};
-
 	int i = 30;
-
 	for(; val && i ; --i, val /= base)
-
 		buf[i] = "0123456789abcdef"[val % base];
-
 	return &buf[i+1];
-
 }
 
 void func_login(GtkWidget *widget, gpointer data) {
@@ -26,8 +20,8 @@ void func_login(GtkWidget *widget, gpointer data) {
     while (sw_login == -1) { }
     switch(sw_login) {
         case 0:
-        client->login = strdup(p_login);
-        client->pass = strdup(p_pass);
+	        client->login = strdup(p_login);
+	        client->pass = strdup(p_pass);
             open_main_page(NULL, data);
             sw_login = -1;
             break;
@@ -75,4 +69,3 @@ void func_register(GtkWidget *widget, gpointer data) {
             break;
     }
 }
-

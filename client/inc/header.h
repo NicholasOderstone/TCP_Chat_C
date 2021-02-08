@@ -27,35 +27,44 @@
 
 // DEFINES
 	#define MAX_CLIENTS 100
+	#define MAX_CHATS 1000
 	#define BUFFER_SZ 2048
 	#define NAME_SZ 32
-	#define AMOUNT_OF_CMD 12
+	#define AMOUNT_OF_CMD 6
 //////////////////////////
 
 // STRUCTURES
 
 // --- GTK structure ---
-	typedef struct
-	{
+	typedef struct {
 		GtkTextView *view ;
 		GtkTextBuffer *buffer;
 		GtkTextIter start;
 		GtkTextIter end;
 		GtkTextMark* mark;
 		GtkListBox *box_message;
+		GtkListBox *box_chat_list;
+		GtkWidget *chat[MAX_CHATS];
 		GtkButtonBox *b_box;
 		GtkWidget *cancel_b;
 		GtkWidget *edit_b;
 		GtkWidget *delet_b;
 		gint row_num_list_gtk;
+		gint root_x ;
+		gint root_y ;
 	} gtk_utils_t;
-
-// --- CHAT ---
+// --- CHAT_LIST ---
 	typedef struct chat_info {
 		int chat_id;
 		char *chat_name;
 		struct chat_info *next;
 	} chat_info_t;
+
+// --- MSG_ID_QUEUE ---
+	typedef struct msg_id_q_s {
+		int msg_id;
+		struct msg_id_q_s *next;
+	} msg_id_q;
 
 // --- CLIENT ---
 	typedef struct{
@@ -69,7 +78,9 @@
 		int is_connected;
 		int exit;
 		int active_chat_id;
+		int last_chat_index;
 		chat_info_t *chat_list_head;
+		msg_id_q *msg_id_q_head;
 		pthread_mutex_t mutex;
 	} client_t;
 
@@ -84,9 +95,27 @@
 		client_t *client;
 	} new_chat_request_s;
 
+	typedef struct {
+		int msg_id;
+		client_t *client;
+	} del_msg_request_s;
+
+	typedef struct {
+		int chat_id;
+		client_t *client;
+	} del_chat_request_s;
+
+	typedef struct {
+		int msg_id;
+		char *new_text;
+		client_t *client;
+	} edit_msg_request_s;
+
 // --- msg, command, cmd function ---
 	typedef struct received_s {
 		client_t *client;
+		int msg_id;
+		int chat_id;
 		char message[BUFFER_SZ];
 		char time[BUFFER_SZ];
 		char sender_name[NAME_SZ];
@@ -139,6 +168,12 @@
 		pthread_mutex_t lock;
 	};
 
+	typedef struct {
+		chat_info_t *chat;
+		client_t *client;
+		int counter;
+	} chat_show_info_s;
+
 //////////////////////////
 
 // FUNCTIONS
@@ -166,15 +201,26 @@
 	// Handles processing recieved commands
 	void *process_cmd(void *arg);
 	// Handles connection to server
-	void *th_connect_to_server();
+	int connect_to_server();
 	// Handles reconnect
-	void *connect_to_server(void *cnct_inf);
+	void *reconnect_to_server(void *cnct_inf);
 
 // --- QUEUES ---
 	// Inserts the message into the message queue
 	void to_msg_q(char *data, struct msg_q **msg_q_front, pthread_mutex_t msg_lock);
 	// Inserts the command into the command queue
 	void to_cmd_q(command data, struct cmd_q **cmd_q_front, pthread_mutex_t cmd_lock);
+
+	void to_msg_id_q(int msg_id, msg_id_q **msg_id_q_head);
+
+	void clear_msg_id_q(msg_id_q **msg_id_q_head);
+
+	void display_msg_id_q(msg_id_q **msg_id_q_head);
+
+	void del_elem_msg_id_q(msg_id_q **msg_id_q_head, int msg_id);
+
+	int get_index_by_msg_id(msg_id_q **msg_id_q_head, int msg_id);
+
 	// Deletes the first elememt from the message queue
 	void move_msg_q(struct msg_q **msg_q_front, pthread_mutex_t msg_lock);
 	// Deletes the first elememt from the command queue
@@ -188,15 +234,19 @@
 	// Inserts the chat into the chat list
 	void to_chat_list(int chat_id, char *chat_name, chat_info_t **chat_list_head);
 	// Displays the chat list
-	void display(chat_info_t **chat_list_head);
+	void display_chat_list(chat_info_t **chat_list_head);
 	// Gets chat list size
 	int chat_list_size(chat_info_t **chat_list_head);
+	int is_chat_exists(chat_info_t **chat_list_head, int chat_id);
 
 	void send_cmd(command cmd, client_t *client);
 	void analyse_cmd(command fst_cmd, cmd_func function, client_t *client);
 
 // --- REQUESTS ---
 	void get_msg_request(GtkWidget *widget, gpointer data);
+	void new_chat_request(GtkWidget *widget, gpointer data);
+	void delete_msg_request(del_msg_request_s *delete_msg_request);
+	void edit_msg_request(edit_msg_request_s *edit_msg_request);
 
 // --- SWITCHES ---
 	void init_switches(void);
@@ -212,15 +262,17 @@
 	command msg_to_cmd(char *msg);
 	char *cmd_to_msg(command cmd);
 	char *take_param(char *params, int number);
+	char *itoa(int val, int base);
 
 //////////////////////////
 
 // GLOBAL VARIABLES
 	int sw_login;
 	int sw_register;
-	int sw_send;
 
 	pthread_mutex_t chat_lock;
+	pthread_mutex_t add_chat_lock;
+	pthread_mutex_t msg_id_lock;
 
 //////////////////////////
 

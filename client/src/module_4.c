@@ -23,7 +23,7 @@ void *process_cmd(void *arg) {
 
 void analyse_cmd(command fst_cmd, cmd_func function, client_t *client) {
 	if (strcmp(fst_cmd.command, function.name) == 0) {
-		printf("--- %s ---\n", function.name);
+		//printf("--- %s ---\n", function.name);
 		function.func(fst_cmd.params, client);
 	}
 }

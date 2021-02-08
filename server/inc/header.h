@@ -27,7 +27,8 @@
     #define MAX_CLIENTS 100
     #define BUFFER_SZ 2048
     #define NAME_SZ 32
-    #define AMOUNT_OF_CMD 4
+    #define AMOUNT_OF_CMD 10
+    #define MAX_CHAT_USERS 1024
 
 
 /* STRUCTURES */
@@ -108,6 +109,18 @@
         char time[50];
     } msg_t;
 
+    
+    typedef struct chat_s {
+        char chat_id[10];
+        char chat_name[32];
+    } chat_t;
+
+
+    typedef struct user_s {
+        char user_id[10];
+        char user_name[32];
+    } user_t;
+
 
 //////////////////////////
 
@@ -159,6 +172,8 @@
     char* itoa(int num, char* buffer, int base);
     /* DELETE EVERYONE FROM DB */
     void Delete_From_DB();
+    /* SEND TO ALL CHAT MEMBERS */
+    void send_to_all_members(char *p_chat_id, struct command cmd, buff_t *Info);
 
 
     // --- Functions that interact with messages and commands ---
@@ -169,6 +184,8 @@
     char *cmd_to_msg(struct command cmd);
     /* Send command to the client */
     void send_cmd(struct command cmd, client_t *client);
+    /* Chat list */
+    void chat_list(char *p_login, buff_t *Info);
 
 
     // --- Functions that interact with command functions ---
@@ -197,16 +214,24 @@
     char* getUserName(int id, char* rez); // Получить имя пользователя по id
     char* getUserPassword(int id, char* rez); // Получить пароль пользователя по id
     char* getUserChats(int id, char* rez); // Получить все чаты пользователя
-    int insertChat(char* name, char* description); // Создать чат с именем и описанием
+    int insertChat(char* name, int creator_id, char* description); // Создать чат с именем и описанием
     void insertInUserInChats(int user_id, int chat_id); // Поместить выбранного пользователя в выбранный чат
     int getIdChatByName(char* chat); // Получить id чата по имени чата
     char* getOneChats(int id, char* rez); // Возвращает все поля выбранного чата
     char* getChatName(int id, char* rez); // Получить имя чата по id
     void deleteChat(char* id); // Удалить выбранный чат
     void deleteFromChat(int user_id, int chat_id); //Удалить выбранного пользователя с выбранног чата
-    int insertMessage(char* chat_id, char* user_id, char* message, int date, char* is_read); // Поместить сообщение в выбранный чат
+    int insertMessage(int chat_id, int user_id, char* message, int date, char* is_read); // Поместить сообщение в выбранный чат
     char* getAllChats(); //Получить все чаты
-    msg_t *packMsg(int id); // Some useful functions
+    msg_t *pack_msg_from_chat(int id); // Some useful functions
+    void deleteMessage(char* id); // Delete message
+    void updateTextMessage(int id, char* text); // Edit message
+    int createChat(int creator_id, char *name); // Create chat and add the creator
+    void insertInUserInChats(int user_id, int chat_id); // Insert user in chat
+    user_t *pack_chat_members(int id); // 
+    char* getChat_Id_By_Msg_Id(int id, char* rez); // Get chat_id by msg_id
+    void deleteChat(char* id); // Delete chat by chat_id
+    char* getOwner_Id_By_Chat_Id(int id, char* rez); // Получить id создателя чата по id этого чата
 
 
     // --- Daemonize ---

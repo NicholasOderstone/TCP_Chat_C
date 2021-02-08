@@ -5,7 +5,8 @@ void get_msg_request(GtkWidget *widget, gpointer data) {
     get_messages_request_s *get_messages_request = (get_messages_request_s *)data;
     if (get_messages_request->client->active_chat_id != get_messages_request->chat->chat_id) {
     	get_messages_request->client->active_chat_id = get_messages_request->chat->chat_id;
-
+        gtk_button_set_label(chat_lbl, get_messages_request->chat->chat_name);
+        gtk_label_set_text (chat_label, get_messages_request->chat->chat_name);
     	command cmd;
     	char buffer[BUFFER_SZ];
     	snprintf(buffer, BUFFER_SZ, "<%d>", get_messages_request->chat->chat_id);

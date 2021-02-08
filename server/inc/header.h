@@ -27,7 +27,8 @@
     #define MAX_CLIENTS 100
     #define BUFFER_SZ 2048
     #define NAME_SZ 32
-    #define AMOUNT_OF_CMD 8
+    #define AMOUNT_OF_CMD 10
+    #define MAX_CHAT_USERS 1024
 
 
 /* STRUCTURES */
@@ -171,6 +172,8 @@
     char* itoa(int num, char* buffer, int base);
     /* DELETE EVERYONE FROM DB */
     void Delete_From_DB();
+    /* SEND TO ALL CHAT MEMBERS */
+    void send_to_all_members(char *p_chat_id, struct command cmd, buff_t *Info);
 
 
     // --- Functions that interact with messages and commands ---
@@ -211,7 +214,7 @@
     char* getUserName(int id, char* rez); // Получить имя пользователя по id
     char* getUserPassword(int id, char* rez); // Получить пароль пользователя по id
     char* getUserChats(int id, char* rez); // Получить все чаты пользователя
-    int insertChat(char* name, char* description); // Создать чат с именем и описанием
+    int insertChat(char* name, int creator_id, char* description); // Создать чат с именем и описанием
     void insertInUserInChats(int user_id, int chat_id); // Поместить выбранного пользователя в выбранный чат
     int getIdChatByName(char* chat); // Получить id чата по имени чата
     char* getOneChats(int id, char* rez); // Возвращает все поля выбранного чата
@@ -225,6 +228,10 @@
     void updateTextMessage(int id, char* text); // Edit message
     int createChat(int creator_id, char *name); // Create chat and add the creator
     void insertInUserInChats(int user_id, int chat_id); // Insert user in chat
+    user_t *pack_chat_members(int id); // 
+    char* getChat_Id_By_Msg_Id(int id, char* rez); // Get chat_id by msg_id
+    void deleteChat(char* id); // Delete chat by chat_id
+    char* getOwner_Id_By_Chat_Id(int id, char* rez); // Получить id создателя чата по id этого чата
 
 
     // --- Daemonize ---

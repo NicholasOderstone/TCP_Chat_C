@@ -1390,7 +1390,7 @@ user_t *pack_chat_members(int id){
     char buffer[4096];
     user_t *new_user = (user_t *)malloc(sizeof(user_t));
     static int from = 1;
-
+    sqlite3_finalize(res);
     if (from == 0) {
         from = 1;
         return NULL;

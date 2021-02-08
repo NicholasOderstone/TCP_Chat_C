@@ -48,14 +48,20 @@ void delete_msg_request(del_msg_request_s *delete_msg_request) {
 	bzero(buffer, BUFFER_SZ);
 }
 
-void edit_msg_request(edit_msg_request_s *edit_msg_request) {
+void edit_msg_request(GtkWidget *widget, gpointer data) {
+    UNUSED(widget);
+    gtk_widget_hide(GTK_WIDGET(edit_b));
+    gtk_entry_set_placeholder_text(GTK_ENTRY(message_entry), "");
 	command cmd;
 	char buffer[BUFFER_SZ];
-	snprintf(buffer, BUFFER_SZ, "<%d> <%s>", edit_msg_request->msg_id, edit_msg_request->new_text);
+    edit_msg_request_s *edit_msg = (edit_msg_request_s *)data;
+
+	snprintf(buffer, BUFFER_SZ, "<%d> <%d> <%s>", edit_msg->msg_id, edit_msg->client->active_chat_id, edit_msg->new_text);
 	cmd.command = "<EDIT_MSG>";
 	cmd.params = strdup(buffer);
-	send_cmd(cmd, edit_msg_request->client);
+	send_cmd(cmd, edit_msg->client);
 	bzero(buffer, BUFFER_SZ);
+    //message_clear();
 }
 
 void delete_chat_request(del_chat_request_s *delete_chat_request) {

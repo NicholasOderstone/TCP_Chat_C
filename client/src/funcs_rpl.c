@@ -58,9 +58,19 @@ void func_rpl_delete(char *params, void *p) {
 }
 
 void func_rpl_edit(char *params, void *p) {
-    UNUSED(p);
+    client_t *client = (client_t *)p;
+    char *chat_id = take_param(params, 1);
+    command cmd;
+    char buffer[BUFFER_SZ];
+    snprintf(buffer, BUFFER_SZ, "<%s>", chat_id);
+    cmd.command = "<CHAT_MSG>";
+    cmd.params = strdup(buffer);
+    send_cmd(cmd, client);
+    while (clean_listbox((gpointer)client->m->box_message) == TRUE) {}
+    clear_msg_id_q(&client->msg_id_q_head);
+    client->m->row_num_list_gtk = -1;
 
-    printf("## edit params: %s\n", params);
+    bzero(buffer, BUFFER_SZ);
 }
 
 void func_rpl_add_chat(char *params, void *p) {
@@ -105,7 +115,7 @@ void func_rpl_add_chat(char *params, void *p) {
 
 void init_funcs(cmd_func arr_cmd_func[]) {
     char *arr_func_names[AMOUNT_OF_CMD] = { "<LOGIN>", "<REGISTER>", "<SEND>",
-                                            "<ADD_CHAT>", "<DELETE_MSG>", "EDIT_MSG"};
+                                            "<ADD_CHAT>", "<DELETE_MSG>", "<EDIT_MSG>"};
 
     arr_cmd_func[0].func = &func_rpl_login;
     arr_cmd_func[1].func = &func_rpl_register;

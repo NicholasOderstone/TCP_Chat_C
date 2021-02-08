@@ -24,14 +24,13 @@ void message_delet(GtkWidget *widget, gpointer data){
 
 void message_edit(GtkWidget *widget, gpointer data){
     UNUSED(widget);
-    gint index;
     client_t *client = (client_t *)data;
     GTK_WIDGET(gtk_list_box_get_selected_row (client->m->box_message));
-    gtk_entry_set_text(GTK_ENTRY(message_entry), "");
-    index = gtk_list_box_row_get_index(gtk_list_box_get_selected_row (client->m->box_message));
+    gtk_entry_set_placeholder_text(GTK_ENTRY(message_entry), "Isert edited text here...");
 
     msg_id_q *current = client->msg_id_q_head;
-
+    gint index = gtk_list_box_row_get_index(gtk_list_box_get_selected_row (client->m->box_message));
+    gtk_list_box_unselect_all(client->m->box_message);
     while (index) {
         current = current->next;
         index--;
@@ -39,10 +38,14 @@ void message_edit(GtkWidget *widget, gpointer data){
     printf("edited: msd_id -- %d\n", current->msg_id);
     edit_msg_request_s *edit_msg = (edit_msg_request_s *)malloc(sizeof(edit_msg_request_s));
     edit_msg->msg_id = current->msg_id;
-    edit_msg->new_text = strdup("edited_text");
+    edit_msg->new_text = strdup(message_str);
+    printf("edit_msg->new_text %s", edit_msg->new_text);
     edit_msg->client = client;
-    edit_msg_request(edit_msg);
-    gtk_list_box_unselect_all(client->m->box_message);
+
+    gtk_widget_show(GTK_WIDGET(edit_b));
+    g_signal_connect(edit_b, "clicked", G_CALLBACK(edit_msg_request), (gpointer)edit_msg);
+
+
 }
 
 gboolean message_show(gpointer m) {
@@ -77,7 +80,7 @@ gboolean message_show(gpointer m) {
         gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view));
         received_mess->client->m->row_num_list_gtk++;
         to_msg_id_q(received_mess->msg_id, &received_mess->client->msg_id_q_head);
-        
+
         gtk_widget_show (GTK_WIDGET(view));
         gtk_container_set_focus_child(GTK_CONTAINER(received_mess->client->m->box_message),
             GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk)));

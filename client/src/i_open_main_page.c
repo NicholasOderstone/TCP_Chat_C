@@ -18,6 +18,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
 
     GtkWidget *send_b_image = gtk_image_new_from_file ("client/resources/send_b_img.png");
     GtkWidget *menu_b_image = gtk_image_new_from_file ("client/resources/menu.png");
+    GtkWidget *edit_b_image = gtk_image_new_from_file ("client/resources/edit.png");
 
 
     gtk_css_provider_load_from_path(cssProvider, "client/resources/gtk.css", NULL);
@@ -34,7 +35,9 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     gtk_widget_show(window);
     //ПЕРЕДЕЛАЙ ОКНА В ОКНА А НЕ ВИДЖЕТЫ
     connection_spin = GTK_SPINNER(gtk_builder_get_object(builder, "connection_spinner"));
-
+    edit_b = GTK_BUTTON(gtk_builder_get_object (builder, "edit_b"));
+    gtk_button_set_image (edit_b, edit_b_image);
+    gtk_widget_hide(GTK_WIDGET(edit_b));
     menu_b = GTK_BUTTON(gtk_builder_get_object (builder, "main_menu"));
     chat_label  = GTK_LABEL(gtk_builder_get_object(builder, "chat_lbl"));
     gtk_button_set_image (menu_b, menu_b_image);

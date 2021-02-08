@@ -147,16 +147,18 @@ void chat_menu(GtkWidget *widget, gpointer data){
     UNUSED(widget);
     client_t *client = (client_t *)data;
     GtkButton  *add_user, *delete_chat;
-    GtkWidget *wind;
 
-    
-    wind = GTK_WIDGET(gtk_builder_get_object(builder, "chat_dialog"));
-    gtk_window_move(GTK_WINDOW(wind), client->m->root_x, client->m->root_y);
-    gtk_widget_show(wind);
+
+    chat_menu_wind = GTK_WIDGET(gtk_builder_get_object(builder, "chat_dialog"));
+    gtk_window_move(GTK_WINDOW(chat_menu_wind), client->m->root_x, client->m->root_y);
+    gtk_widget_show(chat_menu_wind);
     add_user = GTK_BUTTON(gtk_builder_get_object(builder, "add_member"));
     delete_chat = GTK_BUTTON(gtk_builder_get_object(builder, "delete_chat"));
     g_signal_connect(add_user, "clicked", G_CALLBACK(open_login_page), data);
     g_signal_connect(delete_chat, "clicked", G_CALLBACK(func_register), data);
+}
+void close_ch_dialog(){
+    gtk_widget_hide(chat_menu_wind);
 }
 gboolean destroy() {
     gtk_main_quit();

@@ -11,7 +11,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     GtkWidget *menu_new_chat, *menu_join_chat;
     //GtkListBox *box;
 
-    //GtkCssProvider *cssProvider = gtk_css_provider_new();
+    GtkCssProvider *cssProvider = gtk_css_provider_new();
 
 
     GtkWidget *send_b_image = gtk_image_new_from_file ("client/resources/send_b_img.png");
@@ -19,10 +19,10 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     GtkWidget *add_user_b_image = gtk_image_new_from_file ("client/resources/add_user.png");
 
 
-    //gtk_css_provider_load_from_path(cssProvider, "client/resources/gtk.css", NULL);
-    //gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),
-    //                           GTK_STYLE_PROVIDER(cssProvider),
-    //                           GTK_STYLE_PROVIDER_PRIORITY_USER);
+    gtk_css_provider_load_from_path(cssProvider, "client/resources/gtk.css", NULL);
+    gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),
+                               GTK_STYLE_PROVIDER(cssProvider),
+                               GTK_STYLE_PROVIDER_PRIORITY_USER);
     gtk_window_get_position (GTK_WINDOW(window), &client->m->root_x, &client->m->root_y);
     gtk_widget_hide(window);
     builder = gtk_builder_new();
@@ -69,7 +69,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     //gtk_text_buffer_create_tag(message_s->buffer, "gray_bg", "background","gray", NULL);
     //gtk_text_buffer_insert_with_tags_by_name (message_s->buffer, &message_s->end, "name", -1, "gray_bg", NULL);
     message_entry = GTK_ENTRY(gtk_builder_get_object(builder, "message_entry"));
-    
+
     //g_signal_connect(send_b, "clicked", G_CALLBACK(show_my_msg), (gpointer)message_s);
     //gtk_binding_entry_add_signall()
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_send), gp_client);

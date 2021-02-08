@@ -38,6 +38,7 @@ void open_signup_page(GtkWidget *widget, gpointer gp_client)
     GObject *signup_b;
     UNUSED(widget);
     client_t *client = (client_t *)gp_client;
+    gtk_widget_hide(window);
     gtk_window_get_position (GTK_WINDOW(window), &client->m->root_x, &client->m->root_y);
     builder = gtk_builder_new();
     gtk_builder_add_from_file (builder, "messanger.glade", NULL);
@@ -67,7 +68,6 @@ void open_login_page(GtkWidget *widget, gpointer gp_client)
     //client_t *client = (client_t *)gp_client;
 
     //gtk_window_get_position (GTK_WINDOW(window), &client->m->root_x, &client->m->root_y);
-    gtk_widget_hide(window);
     builder = gtk_builder_new();
     gtk_builder_add_from_file (builder, "messanger.glade", NULL);
     GtkCssProvider *cssProvider = gtk_css_provider_new();

@@ -72,7 +72,7 @@ void func_rpl_del_chat(char *params, void *p) {
 
         gtk_list_box_select_row(box_chat_list, gtk_list_box_get_row_at_index(box_chat_list, (gint)index));
         gtk_container_remove(GTK_CONTAINER(box_chat_list), GTK_WIDGET(gtk_list_box_get_selected_row (box_chat_list)));
-        //del_elem_msg_id_q(&client->chat_list_head, chat_id);
+        del_elem_chat_list(&client->chat_list_head, chat_id);
         printf("## index in rpl_del_chat: %d\n", index);
     }
 
@@ -86,7 +86,27 @@ void func_rpl_edit(char *params, void *p) {
 
 void func_rpl_add_user_to_chat(char *params, void *p) {
     UNUSED(p);
-UNUSED(params);
+    GtkTextView *view ;
+    GtkTextBuffer *buffer;
+    GtkTextIter end;
+    int chat_id;
+
+    char *p_rpl = take_param(params, 1);
+    if (strcmp(p_rpl, "INCORRECT_USERNAME") == 0) {
+        printf("## INCORRECT_USERNAME\n");
+    }
+    else {
+        chat_id = atoi(p_rpl);
+        char *p_nick = take_param(params, 2);
+
+        view = GTK_TEXT_VIEW(gtk_text_view_new());
+        gtk_text_view_set_editable (view, FALSE);
+        buffer = gtk_text_buffer_new(NULL);
+        gtk_text_view_set_wrap_mode (view, GTK_WRAP_WORD_CHAR);
+        gtk_text_view_set_buffer(view, buffer);
+        gtk_text_buffer_get_iter_at_offset(buffer, &end, 0);
+        gtk_text_buffer_insert_interactive (buffer, &end, p_nick, -1, TRUE );
+    }
 }
 
 void func_rpl_add_chat(char *params, void *p) {

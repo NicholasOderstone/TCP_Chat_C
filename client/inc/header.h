@@ -96,6 +96,7 @@
 
 	typedef struct {
 		int msg_id;
+		int chat_id;
 		client_t *client;
 	} del_msg_request_s;
 
@@ -247,13 +248,13 @@
 
 	int is_chat_exists(chat_info_t **chat_list_head, int chat_id);
 
-	void send_cmd(command cmd, client_t *client);
-	void analyse_cmd(command fst_cmd, cmd_func function, client_t *client);
+	void del_elem_chat_list(chat_info_t **chat_list_head, int chat_id);
 
 // --- REQUESTS ---
 	void get_msg_request(GtkWidget *widget, gpointer data);
 	void new_chat_request(GtkWidget *widget, gpointer data);
 	void delete_msg_request(del_msg_request_s *delete_msg_request);
+	void delete_chat_request(GtkWidget *widget, gpointer data);
 	void edit_msg_request(edit_msg_request_s *edit_msg_request);
 
 // --- SWITCHES ---
@@ -271,6 +272,9 @@
 	char *cmd_to_msg(command cmd);
 	char *take_param(char *params, int number);
 	char *itoa(int val, int base);
+
+	void send_cmd(command cmd, client_t *client);
+	void analyse_cmd(command fst_cmd, cmd_func function, client_t *client);
 
 //////////////////////////
 

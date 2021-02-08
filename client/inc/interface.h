@@ -27,7 +27,8 @@
     GtkSpinner *connection_spin;
     //GtkListBox *box_chat_list;
     // GtkWidget *chat[MAX_CHATS];
-    GtkButton *ch_b;
+    GtkButton *ch_b, *chat_lbl;
+    GtkLabel *chat_label;
 //////////////////////////
 
 // FUNCTIONS
@@ -56,6 +57,7 @@
     gboolean clean_listbox();
     void my_popup_handler();
     void new_chat();
+    void chat_menu();
     void chatname_clear();
     //////////////////////////
 

@@ -3,9 +3,9 @@ button {
     background-image: none;
     color: white;
 }
-/*label {
-  background-image: linear-gradient(to top right, blue 20%, #f0f 80%);
-}*/
+label#chat_lbl{
+    color: white;
+}
 window{
      background-color: #222629;
 }

@@ -9,7 +9,7 @@
 //////////////////////////
 
 // DEFINES
-    #define MAX_CHATS 1000
+    
 //////////////////////////
 
 // STRUCTURES
@@ -25,8 +25,8 @@
     int is_exit;
     GtkEntry *message_entry, *ipv_entry, *port_entry, *chatname_entry;
     GtkSpinner *connection_spin;
-    GtkListBox *box_chat_list;
-    GtkWidget *chat[MAX_CHATS];
+    //GtkListBox *box_chat_list;
+    // GtkWidget *chat[MAX_CHATS];
     GtkButton *ch_b;
 //////////////////////////
 

@@ -8,13 +8,17 @@ int main(int argc, char **argv) {
     init_interface(&builder, &argc, &argv, (gpointer) p_client);
     init_switches();
 
-    if (pthread_mutex_init(&chat_lock, NULL) != 0)
-    {
+    if (pthread_mutex_init(&chat_lock, NULL) != 0) {
       printf("Mutex initialization failed.\n");
       return 1;
     }
-    if (pthread_mutex_init(&msg_id_lock, NULL) != 0)
-    {
+
+    if (pthread_mutex_init(&msg_id_lock, NULL) != 0) {
+      printf("Mutex initialization failed.\n");
+      return 1;
+    }
+
+    if (pthread_mutex_init(&add_chat_lock, NULL) != 0) {
       printf("Mutex initialization failed.\n");
       return 1;
     }

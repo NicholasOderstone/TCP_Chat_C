@@ -20,8 +20,8 @@ void func_login(GtkWidget *widget, gpointer data) {
     while (sw_login == -1) { }
     switch(sw_login) {
         case 0:
-        client->login = strdup(p_login);
-        client->pass = strdup(p_pass);
+	        client->login = strdup(p_login);
+	        client->pass = strdup(p_pass);
             open_main_page(NULL, data);
             sw_login = -1;
             break;

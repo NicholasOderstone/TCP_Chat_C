@@ -37,13 +37,13 @@ void new_chat_request(GtkWidget *widget, gpointer data) {
 	bzero(buffer, BUFFER_SZ);
 }
 
-void delete_msg_request(del_msg_request_s *delete_msg_request) {
+void delete_msg_request(del_msg_request_s *delete_msg_r) {
 	command cmd;
 	char buffer[BUFFER_SZ];
-	snprintf(buffer, BUFFER_SZ, "<%d>", delete_msg_request->msg_id);
+	snprintf(buffer, BUFFER_SZ, "<%d> <%d>", delete_msg_r->msg_id, delete_msg_r->chat_id);
 	cmd.command = "<DELETE_MSG>";
 	cmd.params = strdup(buffer);
-	send_cmd(cmd, delete_msg_request->client);
+	send_cmd(cmd, delete_msg_r->client);
 	bzero(buffer, BUFFER_SZ);
 }
 

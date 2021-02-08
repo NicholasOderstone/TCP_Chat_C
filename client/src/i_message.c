@@ -5,9 +5,7 @@ void message_delet(GtkWidget *widget, gpointer data){
     gint index;
     client_t *client = (client_t *)data;
     index = gtk_list_box_row_get_index(gtk_list_box_get_selected_row (client->m->box_message));
-
     msg_id_q *current = client->msg_id_q_head;
-
     while (index) {
         current = current->next;
         index--;
@@ -15,10 +13,10 @@ void message_delet(GtkWidget *widget, gpointer data){
     printf("deleted: msd_id -- %d\n", current->msg_id);
     del_msg_request_s *delete_msg = (del_msg_request_s *)malloc(sizeof(del_msg_request_s));
     delete_msg->msg_id = current->msg_id;
+    delete_msg->chat_id = client->active_chat_id;
     delete_msg->client = client;
     delete_msg_request(delete_msg);
     //display_msg_id_q(&client->msg_id_q_head);
-
     client->m->row_num_list_gtk--;
 }
 

@@ -97,6 +97,7 @@
 
 	typedef struct {
 		int msg_id;
+		int chat_id;
 		client_t *client;
 	} del_msg_request_s;
 

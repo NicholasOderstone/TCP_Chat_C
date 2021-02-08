@@ -60,3 +60,17 @@ int is_chat_exists(chat_info_t **chat_list_head, int chat_id) {
     }
     return 0;
 }
+
+int get_index_by_chat_id(chat_info_t **chat_list_head, int chat_id) {
+    chat_info_t *current = *chat_list_head;
+    int index = 0;
+    while (current != NULL)
+    {
+        if (current->chat_id == chat_id) {
+            return index;
+        }
+        current = current->next;
+        index++;
+    }
+    return -1;
+}

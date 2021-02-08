@@ -30,7 +30,7 @@
 	#define MAX_CHATS 1000
 	#define BUFFER_SZ 2048
 	#define NAME_SZ 32
-	#define AMOUNT_OF_CMD 6
+	#define AMOUNT_OF_CMD 8
 //////////////////////////
 
 // STRUCTURES
@@ -111,10 +111,10 @@
 	} edit_msg_request_s;
 
 	typedef struct {
-		int msg_id;
-		char *new_text;
+		int chat_id;
+		char *username;
 		client_t *client;
-	} edit_msg_request_s;
+	} add_user_to_chat_request_s;
 
 // --- msg, command, cmd function ---
 	typedef struct received_s {
@@ -242,6 +242,9 @@
 	void display_chat_list(chat_info_t **chat_list_head);
 	// Gets chat list size
 	int chat_list_size(chat_info_t **chat_list_head);
+
+	int get_index_by_chat_id(chat_info_t **chat_list_head, int chat_id);
+
 	int is_chat_exists(chat_info_t **chat_list_head, int chat_id);
 
 	void send_cmd(command cmd, client_t *client);

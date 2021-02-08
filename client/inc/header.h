@@ -201,9 +201,9 @@
 	// Handles processing recieved commands
 	void *process_cmd(void *arg);
 	// Handles connection to server
-	void *th_connect_to_server();
+	int connect_to_server();
 	// Handles reconnect
-	void *connect_to_server(void *cnct_inf);
+	void *reconnect_to_server(void *cnct_inf);
 
 // --- QUEUES ---
 	// Inserts the message into the message queue

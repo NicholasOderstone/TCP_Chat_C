@@ -9,7 +9,7 @@
 //////////////////////////
 
 // DEFINES
-
+    
 //////////////////////////
 
 // STRUCTURES
@@ -33,7 +33,7 @@
 // FUNCTIONS
     gboolean destroy();
     void init_interface();
-    //void init_connect_page();
+    void init_connect_page();
     void open_signup_page();
     void open_login_page();
     void open_main_page();

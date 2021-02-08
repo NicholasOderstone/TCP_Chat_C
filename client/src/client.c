@@ -5,7 +5,7 @@ int main(int argc, char **argv) {
     client_t *p_client = (client_t *)malloc(sizeof(client_t *));
     p_client = &client;
 
-    init_interface(&argc, &argv, (gpointer) p_client);
+    init_interface(&builder, &argc, &argv, (gpointer) p_client);
     init_switches();
 
     if (pthread_mutex_init(&chat_lock, NULL) != 0) {

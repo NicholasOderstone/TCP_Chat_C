@@ -1,26 +1,14 @@
 #include "../inc/interface.h"
 
-void init_interface(int *argc, char ***argv, gpointer p_client) {
-    //GObject *connect_b;
-    GtkWidget *widget =  NULL;
-    client_t *client = (client_t *)p_client;
-    static gtk_utils_t m;
-    gtk_utils_t *message_s = (gtk_utils_t *)malloc(sizeof(gtk_utils_t *));
-    message_s = &m;
-    client->m = (gtk_utils_t *)malloc(sizeof(gtk_utils_t *));
-    client->m = message_s;
-    client->m->root_x = 0;
-    client->m->root_y = 0;
+void init_interface(GtkBuilder **p_builder,  int *argc, char ***argv, gpointer p_client) {
+    GObject *connect_b;
     gtk_init(argc, argv);
-    open_login_page(widget, p_client);
+    *p_builder = gtk_builder_new();
+    gtk_builder_add_from_file (*p_builder, "messanger.glade", NULL);
+    init_connect_page(&connect_b, p_builder, p_client);
 }
 
-/*void init_connect_page(GObject **p_connect_b, GtkBuilder **p_builder, gpointer gp_client) {
-    GtkCssProvider *cssProvider = gtk_css_provider_new();
-    gtk_css_provider_load_from_path(cssProvider, "client/resources/gtk.css", NULL);
-    gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),
-                               GTK_STYLE_PROVIDER(cssProvider),
-                               GTK_STYLE_PROVIDER_PRIORITY_USER);
+void init_connect_page(GObject **p_connect_b, GtkBuilder **p_builder, gpointer gp_client) {
     window = GTK_WIDGET(gtk_builder_get_object(*p_builder, "connect_window"));
     gtk_builder_connect_signals(*p_builder, NULL);
     *p_connect_b = gtk_builder_get_object (*p_builder, "connect_b");
@@ -30,25 +18,17 @@ void init_interface(int *argc, char ***argv, gpointer p_client) {
     g_signal_connect(*p_connect_b, "clicked", G_CALLBACK(open_login_page), gp_client);
 	g_signal_connect(*p_connect_b, "clicked", G_CALLBACK(th_connect_to_server), gp_client);
     g_object_unref(*p_builder);
-}*/
+}
 
 void open_signup_page(GtkWidget *widget, gpointer gp_client)
 {
     GObject *login_p;
     GObject *signup_b;
     UNUSED(widget);
-    client_t *client = (client_t *)gp_client;
-    gtk_window_get_position (GTK_WINDOW(window), &client->m->root_x, &client->m->root_y);
     gtk_widget_hide(window);
     builder = gtk_builder_new();
     gtk_builder_add_from_file (builder, "messanger.glade", NULL);
-    GtkCssProvider *cssProvider = gtk_css_provider_new();
-    gtk_css_provider_load_from_path(cssProvider, "client/resources/gtk.css", NULL);
-    gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),
-                               GTK_STYLE_PROVIDER(cssProvider),
-                               GTK_STYLE_PROVIDER_PRIORITY_USER);
     window = GTK_WIDGET(gtk_builder_get_object(builder, "signup_window"));
-    gtk_window_move(GTK_WINDOW(window), client->m->root_x, client->m->root_y);
     gtk_builder_connect_signals(builder, NULL);
     connection_spin = GTK_SPINNER(gtk_builder_get_object(builder, "connection_spinner_s"));
     login_p = gtk_builder_get_object (builder, "login_p");
@@ -65,19 +45,10 @@ void open_login_page(GtkWidget *widget, gpointer gp_client)
     GObject *login_b;
     GObject *login;
     GtkEntry *password;
-    //client_t *client = (client_t *)gp_client;
-
-    //gtk_window_get_position (GTK_WINDOW(window), &client->m->root_x, &client->m->root_y);
     gtk_widget_hide(window);
     builder = gtk_builder_new();
     gtk_builder_add_from_file (builder, "messanger.glade", NULL);
-    GtkCssProvider *cssProvider = gtk_css_provider_new();
-    gtk_css_provider_load_from_path(cssProvider, "client/resources/gtk.css", NULL);
-    gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),
-                               GTK_STYLE_PROVIDER(cssProvider),
-                               GTK_STYLE_PROVIDER_PRIORITY_USER);
     window = GTK_WIDGET(gtk_builder_get_object(builder, "login_window"));
-    //gtk_window_move(GTK_WINDOW(window), client->m->root_x, client->m->root_y);
     gtk_builder_connect_signals(builder, NULL);
     connection_spin = GTK_SPINNER(gtk_builder_get_object(builder, "connection_spinner_l"));
     signup_p = gtk_builder_get_object (builder, "signup_p");
@@ -130,19 +101,15 @@ void cancel_ch(GtkWidget *widget, gpointer data){
     gtk_list_box_unselect_all(client->m->box_message);
 }
 
-void new_chat(GtkWidget *widget, gpointer data) {
-    UNUSED(widget);
-    client_t *client = (client_t *)data;
+void new_chat() {
     GtkWidget  *chat_name;
     static int i = 0;
     printf("index new_chat: %d\n", i);
     i++;
 
     chat_name_d  = GTK_WIDGET(gtk_builder_get_object(builder, "chat_name"));
-    gtk_window_move(GTK_WINDOW(chat_name_d), client->m->root_x, client->m->root_y);
     gtk_widget_show(chat_name_d);
     chat_name = GTK_WIDGET(gtk_builder_get_object(builder, "name"));
-    chatname_entry = GTK_ENTRY(gtk_builder_get_object(builder, "name"));
 }
 gboolean destroy() {
     gtk_main_quit();

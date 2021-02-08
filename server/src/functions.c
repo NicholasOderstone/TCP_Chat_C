@@ -108,7 +108,7 @@ void f_login(char *params, buff_t *Info) {
     char buff_out[BUFFER_SZ];
 	struct command cmd;
 	cmd.command = "<LOGIN>";
-	//printf("%s\n", params);
+	printf("%s\n", params);
     char *p_login = param_1(params);
     char *p_pass = param_2(params);
 
@@ -345,14 +345,54 @@ void f_delete_user_from_chat(char *params, buff_t *Info) {
 	getOwner_Id_By_Chat_Id(atoi(p_chat_id), buff_temp);
 	str_trim_lf (buff_temp, strlen(buff_temp)); // На всякий случай
 	if(strcmp(p_user_name, Info->client->name) == 0) { // Если создатель хочет удалить сам себя
-		// Some code
-		//f_delete_chat(, Info);
+		bzero(buff_out, BUFFER_SZ);
+		snprintf(buff_out, BUFFER_SZ, "<%s>", p_chat_id);
+		f_delete_chat(buff_out, Info);
+
+		snprintf(buff_temp, BUFFER_SZ, " <%s>", p_chat_id);
+		cmd.params = buff_out;
+		send_to_all_members(p_chat_id, cmd, Info);
+		return;
 	}
 	if(strcmp(buff_temp, Info->client->name) == 0) { // Если комманду отсылает создатель
 		// Some code
+		deleteFromChat(getIdUserByUserName(p_user_name), atoi(p_chat_id));
+
+		snprintf(buff_temp, BUFFER_SZ, " <%s>", p_chat_id);
+		cmd.params = buff_temp;
+
+		pthread_mutex_lock(&Info->serv_inf->clients_mutex);
+		for(int i=0; i<MAX_CLIENTS; ++i){
+			if(Info->serv_inf->clients[i]){
+				if(strcmp(Info->serv_inf->clients[i]->name, p_user_name) == 0){
+					send_cmd(cmd, Info->serv_inf->clients[i]);
+				}
+			}
+		}
+		pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
+		bzero(buff_out, BUFFER_SZ);
+		bzero(buff_temp, BUFFER_SZ);
+		return;
 	}
 	if(strcmp(p_user_name, Info->client->name) == 0) { // Если комманду отсылает пользователь, который хочет себя удалить
 		// Some code
+		deleteFromChat(getIdUserByUserName(p_user_name), atoi(p_chat_id));
+
+		snprintf(buff_temp, BUFFER_SZ, " <%s>", p_chat_id);
+		cmd.params = buff_temp;
+
+		pthread_mutex_lock(&Info->serv_inf->clients_mutex);
+		for(int i=0; i<MAX_CLIENTS; ++i){
+			if(Info->serv_inf->clients[i]){
+				if(strcmp(Info->serv_inf->clients[i]->name, p_user_name) == 0){
+					send_cmd(cmd, Info->serv_inf->clients[i]);
+				}
+			}
+		}
+		pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
+		bzero(buff_out, BUFFER_SZ);
+		bzero(buff_temp, BUFFER_SZ);
+		return;
 	}
 
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);

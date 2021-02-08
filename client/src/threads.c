@@ -1,10 +1,27 @@
 #include "../inc/header.h"
 
-void *th_connect_to_server(GtkWidget *widget, gpointer data) {
-// --- Init client ---
-	UNUSED(widget);
-	client_t *info = (client_t *)data;
-	init_client(info, ipv_str, port_str);
+int connect_to_server(client_t *info, int argc, char** argv) {
+// --- Init client --
+
+	if(argc != 3) {
+		printf("Usage: %s <ipv4> <port>\n", argv[0]);
+		return 1;
+	}
+
+	char *ip = argv[1];
+	char *port = argv[2];
+
+    if (validate_ip(ip) != 1) {
+		printf("<ipv4> \"%s\" is incorrect \n", ip);
+		return 1;
+	}
+
+	if (validate_port(port) != 1) {
+		printf("<port> \"%s\" is incorrect \n", port);
+		return 1;
+	}
+
+	init_client(info, ip, port);
 	while(1) {
         if(info->exit == 1) {
 			break;
@@ -30,12 +47,12 @@ void *th_connect_to_server(GtkWidget *widget, gpointer data) {
 	}
 // --- Connect to Server ---
 	pthread_t server_connection_handler;
-	if (pthread_create(&server_connection_handler, NULL, connect_to_server, (void*)info) != 0){
+	if (pthread_create(&server_connection_handler, NULL, reconnect_to_server, (void*)info) != 0){
 		perror("ERROR: pthread\n");
-		return NULL;
+		return 1;
 	}
 
-    return NULL;
+    return 0;
 }
 
 void *init_threads(void *data) {

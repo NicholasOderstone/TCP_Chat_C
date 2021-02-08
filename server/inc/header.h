@@ -229,10 +229,15 @@
     int createChat(int creator_id, char *name); // Create chat and add the creator
     void insertInUserInChats(int user_id, int chat_id); // Insert user in chat
     user_t *pack_chat_members(int id); // 
-    //char* getChat_Id_By_Msg_Id(int id, char* rez); // Get chat_id by msg_id
+<<<<<<< HEAD
     void deleteChat(char* id); // Delete chat by chat_id
     char* getOwner_Id_By_Chat_Id(int id, char* rez); // Получить id создателя чата по id этого чата
     char* getChatName(int id, char* rez); // Получить имя чата  по id чата
+=======
+    char* getChat_Id_By_Msg_Id(int id, char* rez); // Get chat_id by msg_id
+    void deleteChat(char* id); // Delete chat by chat_id
+    char* getOwner_Id_By_Chat_Id(int id, char* rez); // Получить id создателя чата по id этого чата
+>>>>>>> client_changes
 
 
     // --- Daemonize ---

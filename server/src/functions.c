@@ -242,13 +242,14 @@ void f_edit_msg(char *params, buff_t *Info) {
 	struct command cmd;
 	cmd.command = "<EDIT_MSG>";
 	char *p_msg_id = param_1(params);
-	char *p_new_text = param_2(params);
+	char *p_chat_id = param_2(params);
+	char *p_new_text = param_3(params);
 	updateTextMessage(atoi(p_msg_id), p_new_text);
-	snprintf(buff_out, BUFFER_SZ, " <%s> <%s>", p_msg_id, p_new_text);
+	//snprintf(buff_out, BUFFER_SZ, " <%s> <%s>", p_msg_id, p_new_text);
+	snprintf(buff_out, BUFFER_SZ, " <%s>", p_chat_id);
 	cmd.params = buff_out;
 
-	//getChat_Id_By_Msg_Id(atoi(p_msg_id), buff_temp);
-	send_to_all_members(buff_temp, cmd, Info);
+	send_to_all_members(p_chat_id, cmd, Info);
 
 	bzero(buff_out, BUFFER_SZ);
 	bzero(buff_temp, BUFFER_SZ);

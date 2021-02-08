@@ -12,8 +12,8 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     //GtkListBox *box;
 
     GtkCssProvider *cssProvider = gtk_css_provider_new();
-    client->m = (gtk_utils_t *)malloc(sizeof(gtk_utils_t));
-    client->m = message_s;
+    //client->m = (gtk_utils_t *)malloc(sizeof(gtk_utils_t));
+    //client->m = message_s;
 
     GtkWidget *send_b_image = gtk_image_new_from_file ("client/resources/send_b_img.png");
     GtkWidget *menu_b_image = gtk_image_new_from_file ("client/resources/menu.png");
@@ -54,8 +54,8 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     send_b = gtk_builder_get_object (builder, "send_buttom");
     gtk_button_set_image (GTK_BUTTON (send_b), send_b_image);
 
-    message_s->box_message = GTK_LIST_BOX(gtk_builder_get_object(builder, "message_list"));
-    message_s->box_chat_list = GTK_LIST_BOX(gtk_builder_get_object(builder, "chat_list"));
+    client->m->box_message = GTK_LIST_BOX(gtk_builder_get_object(builder, "message_list"));
+    client->m->box_chat_list = GTK_LIST_BOX(gtk_builder_get_object(builder, "chat_list"));
     //gtk_text_buffer_create_tag(message_s->buffer, "gray_bg", "background","gray", NULL);
     //gtk_text_buffer_insert_with_tags_by_name (message_s->buffer, &message_s->end, "name", -1, "gray_bg", NULL);
     message_entry = GTK_ENTRY(gtk_builder_get_object(builder, "message_entry"));

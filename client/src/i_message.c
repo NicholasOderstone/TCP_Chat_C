@@ -72,8 +72,10 @@ gboolean message_show(gpointer m) {
                                             adj);
         printf("INDEX: %d\n", received_mess->client->m->row_num_list_gtk);
         ind =  gtk_list_box_row_get_index (gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk));
+        //gtk_container_set_focus_child(GTK_CONTAINER(received_mess->client->m->box_message),
+        //                           GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, ind+ind)));
         gtk_container_set_focus_child(GTK_CONTAINER(received_mess->client->m->box_message),
-                                   GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, ind+ind)));
+                                  GTK_WIDGET(view));
         //gtk_widget_grab_focus (GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk)));
         memset(received_mess->message, 0, sizeof(received_mess->message));
         memset(received_mess->sender_name, 0, sizeof(received_mess->sender_name));

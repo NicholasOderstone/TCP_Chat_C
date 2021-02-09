@@ -27,7 +27,7 @@
     GtkSpinner *connection_spin;
     //GtkListBox *box_chat_list;
     // GtkWidget *chat[MAX_CHATS];
-    GtkButton *ch_b, *chat_lbl, *edit_b;
+    GtkButton *ch_b, *chat_lbl, *edit_b,  *add_user, *delete_chat, *add_mem;
     GtkLabel *chat_label;
 //////////////////////////
 
@@ -60,6 +60,7 @@
     void chat_menu();
     void chatname_clear();
     void close_ch_dialog();
+    void add_mem_wind();
     //////////////////////////
 
 #endif

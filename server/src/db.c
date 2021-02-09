@@ -125,6 +125,43 @@ char* getOwner_Id_By_Chat_Id(int id, char* rez){
     return rez;
 }
 
+char* getNickByUserName(char* login, char* rez){
+    sqlite3 *db;
+    sqlite3_stmt *res;
+    
+    int rc = sqlite3_open("data.db", &db);
+    
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return "-1";
+    }
+    
+    rc = sqlite3_prepare_v2(db, "select nick from users where login = ?;", -1, &res, 0);    
+    sqlite3_bind_text(res, 1, login, strlen(login), NULL);
+    
+    if (rc != SQLITE_OK) {
+        
+        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        
+        return "-1";
+    }    
+    
+    rc = sqlite3_step(res);
+    
+     if (rc == SQLITE_ROW) {
+        //printf("%s\n", sqlite3_column_text(res, 0));
+     }
+    sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
+    
+    sqlite3_finalize(res);
+    sqlite3_close(db);
+    return rez;
+}
+
 char* getAllUsers(char* rez){
    sqlite3 *db;
     sqlite3_stmt *res;

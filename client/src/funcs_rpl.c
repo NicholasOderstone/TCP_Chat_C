@@ -36,9 +36,9 @@ void func_rpl_send(char *params, void *p) {
     received_messages *received_mess = (received_messages *)malloc(sizeof(received_messages));
     client_t *client = (client_t *)p;
     received_mess->client = client;
-    strcpy(received_mess->message, take_param(params, 5));
-    strcpy(received_mess->time, take_param(params, 4));
-    strcpy(received_mess->sender_name, take_param(params, 3));
+    strcpy(received_mess->message, take_param(params, 6));
+    strcpy(received_mess->time, take_param(params, 5));
+    strcpy(received_mess->sender_name, take_param(params, 4));
     received_mess->msg_id = atoi(take_param(params, 2));
     received_mess->chat_id = atoi(take_param(params, 1));
     if (received_mess->chat_id == received_mess->client->active_chat_id)
@@ -73,6 +73,11 @@ void func_rpl_del_chat(char *params, void *p) {
         gtk_list_box_select_row(box_chat_list, gtk_list_box_get_row_at_index(box_chat_list, (gint)index));
         gtk_container_remove(GTK_CONTAINER(box_chat_list), GTK_WIDGET(gtk_list_box_get_selected_row (box_chat_list)));
         del_elem_chat_list(&client->chat_list_head, chat_id);
+
+        while (clean_listbox((gpointer)client->m->box_message) == TRUE) {}
+        clear_msg_id_q(&client->msg_id_q_head);
+        client->m->row_num_list_gtk = -1;
+
         printf("## index in rpl_del_chat: %d\n", index);
     }
 

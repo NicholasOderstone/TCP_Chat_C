@@ -57,7 +57,7 @@ int main(int argc, char **argv){
 	//insertChat("Chat_test", "Description3");
 
 	//daemonize();
-	//insertInUserInChats(2,2);
+
 	while(1){
 		socklen_t clilen = sizeof(cli_addr);
 		/* Accept incoming connection */

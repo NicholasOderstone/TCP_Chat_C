@@ -36,6 +36,7 @@ void func_rpl_send(char *params, void *p) {
     received_messages *received_mess = (received_messages *)malloc(sizeof(received_messages));
     client_t *client = (client_t *)p;
     received_mess->client = client;
+    strcpy(received_mess->is_special, take_param(params, 7));
     strcpy(received_mess->message, take_param(params, 6));
     strcpy(received_mess->time, take_param(params, 5));
     strcpy(received_mess->sender_name, take_param(params, 4));
@@ -75,12 +76,13 @@ void func_rpl_del_chat(char *params, void *p) {
         gtk_list_box_select_row(box_chat_list, gtk_list_box_get_row_at_index(box_chat_list, (gint)index));
         gtk_container_remove(GTK_CONTAINER(box_chat_list), GTK_WIDGET(gtk_list_box_get_selected_row (box_chat_list)));
         del_elem_chat_list(&client->chat_list_head, chat_id);
+        display_chat_list(&client->chat_list_head);
 
         while (clean_listbox((gpointer)client->m->box_message) == TRUE) {}
         clear_msg_id_q(&client->msg_id_q_head);
         client->m->row_num_list_gtk = -1;
 
-        printf("## index in rpl_del_chat: %d\n", index);
+        //printf("## index in rpl_del_chat: %d\n", index);
     }
 
 }
@@ -107,7 +109,7 @@ void func_rpl_leave_chat(char *params, void *p) {
 
     int chat_id = atoi(p_rpl);
     char *p_nick = take_param(params, 2);
-    printf("## %s left chat with chat_id %d", p_nick, chat_id);
+    printf("  ## %s left chat with chat_id %d\n", p_nick, chat_id);
     /*client_t *client = (client_t *)p;
     GtkTextView *view ;
     GtkTextBuffer *buffer;
@@ -140,10 +142,10 @@ void func_rpl_leave_chat(char *params, void *p) {
 void func_rpl_add_user_to_chat(char *params, void *p) {
     UNUSED(p);
     char *p_rpl = take_param(params, 1);
-    
+
     int chat_id = atoi(p_rpl);
     char *p_nick = take_param(params, 2);
-    printf("## %s joined chat with chat_id %d", p_nick, chat_id);
+    printf("  ## %s joined chat with chat_id %d\n", p_nick, chat_id);
     /*UNUSED(p);
     GtkTextView *view ;
     GtkTextBuffer *buffer;
@@ -178,7 +180,10 @@ void func_rpl_add_chat(char *params, void *p) {
         return;
     }
 
-    to_chat_list(p_id, p_name, &client->chat_list_head);
+    // if chat_name not NULL
+    if (p_name != NULL) {
+        to_chat_list(p_id, p_name, &client->chat_list_head);
+    }
     //while (clean_listbox((gpointer)box_chat_list) == TRUE) {}
     //pthread_mutex_lock(&add_chat_lock);
     //int i = client->last_chat_index;

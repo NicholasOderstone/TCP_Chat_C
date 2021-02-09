@@ -29,7 +29,7 @@ void display_chat_list(chat_info_t **chat_list_head) {
     chat_info_t *current = *chat_list_head;
     while (current != NULL)
     {
-        printf("## chat_name: %s\tchat_id: %d\n", current->chat_name, current->chat_id);
+        printf("  ## chat_name: %s\tchat_id: %d\n", current->chat_name, current->chat_id);
         current = current->next;
     }
     printf("\n");
@@ -52,6 +52,7 @@ void del_elem_chat_list(chat_info_t **chat_list_head, int chat_id) {
     }
     prev_elem->next = temp->next;
     free(temp);
+    printf(" !! chat with chat_id %d deleted\n", chat_id);
     return;
 }
 

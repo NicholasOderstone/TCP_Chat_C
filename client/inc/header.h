@@ -125,6 +125,7 @@
 		char message[BUFFER_SZ];
 		char time[BUFFER_SZ];
 		char sender_name[NAME_SZ];
+		char is_special[2];
 	}	received_messages;
 
 	typedef struct {

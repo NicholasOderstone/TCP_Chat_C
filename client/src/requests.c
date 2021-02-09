@@ -66,14 +66,43 @@ void delete_chat_request(GtkWidget *widget, gpointer data) {
 }
 
 // ---- EDIT_MSG ----
-void edit_msg_request(edit_msg_request_s *edit_msg_r) {
+void edit_msg_request(GtkWidget *widget, gpointer data) {
+    UNUSED(widget);
 	command cmd;
 	char buffer[BUFFER_SZ];
-	snprintf(buffer, BUFFER_SZ, "<%d> <%d> <%s>", edit_msg_r->msg_id, edit_msg_r->client->active_chat_id, edit_msg_r->new_text);
+
+    gint index;
+    client_t *client = (client_t *)data;
+    GTK_WIDGET(gtk_list_box_get_selected_row (client->m->box_message));
+
+    index = gtk_list_box_row_get_index(gtk_list_box_get_selected_row (client->m->box_message));
+
+    msg_id_q *current = client->msg_id_q_head;
+
+    while (index) {
+        current = current->next;
+        index--;
+    }
+    printf("edited: msd_id -- %d\n", current->msg_id);
+
+    edit_msg_request_s *edit_msg = (edit_msg_request_s *)malloc(sizeof(edit_msg_request_s));
+    edit_msg->msg_id = current->msg_id;
+    edit_msg->client = client;
+    //edit_msg_request(edit_msg);
+
+    gtk_list_box_unselect_all(client->m->box_message);
+
+    edit_msg->new_text = strdup(message_str);
+    printf("edit_msg->new_text %s", edit_msg->new_text);
+
+	snprintf(buffer, BUFFER_SZ, "<%d> <%d> <%s>", edit_msg->msg_id, edit_msg->client->active_chat_id, edit_msg->new_text);
 	cmd.command = "<EDIT_MSG>";
 	cmd.params = strdup(buffer);
-	send_cmd(cmd, edit_msg_r->client);
+	send_cmd(cmd, edit_msg->client);
 	bzero(buffer, BUFFER_SZ);
+    gtk_entry_set_placeholder_text(GTK_ENTRY(message_entry), "");
+    gtk_widget_hide(GTK_WIDGET(edit_b));
+    message_clear();
 }
 
 // ---- ADD_USER_TO_CHAT ----
@@ -81,7 +110,8 @@ void add_user_to_chat_request(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
 	command cmd;
 	char buffer[BUFFER_SZ];
-    add_user_to_chat_request_s *add_user_to_chat_r)
+    add_user_to_chat_request_s *add_user_to_chat_r = (add_user_to_chat_request_s *)data;
+
 	snprintf(buffer, BUFFER_SZ, "<%d> <usr2>", add_user_to_chat_r->chat_id);
 	cmd.command = "<ADD_USER_TO_CHAT>";
 	cmd.params = strdup(buffer);

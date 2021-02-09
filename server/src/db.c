@@ -86,45 +86,6 @@ sql = "CREATE TABLE IF NOT EXISTS CHATS("  \
 }
 
 
-char* getChat_Id_By_Msg_Id(int id, char* rez){
-   sqlite3 *db;
-    sqlite3_stmt *res;
-
-    int rc = sqlite3_open("data.db", &db);
-
-    if (rc != SQLITE_OK) {
-
-        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
-        sqlite3_close(db);
-
-        return "-1";
-    }
-
-    rc = sqlite3_prepare_v2(db, "select CHAT_ID from Messages WHERE ID = ?;", -1, &res, 0);
-    sqlite3_bind_int(res, 1, id);
-
-    if (rc != SQLITE_OK) {
-
-        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
-        sqlite3_close(db);
-
-        return "-1";
-    }
-
-    rc = sqlite3_step(res);
-
-     if (rc == SQLITE_ROW) {
-       // printf("%s\n", sqlite3_column_text(res, 0));
-     }
-    sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
-
-
-    sqlite3_finalize(res);
-    sqlite3_close(db);
-
-    return rez;
-}
-
 char* getOwner_Id_By_Chat_Id(int id, char* rez){
    sqlite3 *db;
     sqlite3_stmt *res;

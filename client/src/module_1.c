@@ -31,7 +31,7 @@ void input_pump(struct read_msg_info_s *Info) {
 	{
 
 		*line_end = 0;
-		//printf("input: %s\n", line_start);
+		printf(" >  input: %s\n", line_start);
 		to_msg_q(line_start, Info->msg_q_front, Info->lock);
 		line_start = line_end + 1;
 	}

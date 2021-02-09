@@ -83,14 +83,14 @@ void func_rpl_edit(char *params, void *p) {
     char *chat_id = take_param(params, 1);
     command cmd;
     char buffer[BUFFER_SZ];
+    while (clean_listbox((gpointer)client->m->box_message) == TRUE) {}
+    clear_msg_id_q(&client->msg_id_q_head);
+    client->m->row_num_list_gtk = -1;
     snprintf(buffer, BUFFER_SZ, "<%s>", chat_id);
     cmd.command = "<CHAT_MSG>";
     cmd.params = strdup(buffer);
     send_cmd(cmd, client);
-    while (clean_listbox((gpointer)client->m->box_message) == TRUE) {}
-    clear_msg_id_q(&client->msg_id_q_head);
-    client->m->row_num_list_gtk = -1;
-    
+
     bzero(buffer, BUFFER_SZ);
 }
 

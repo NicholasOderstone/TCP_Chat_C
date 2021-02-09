@@ -8,7 +8,6 @@ void *process_cmd(void *arg) {
 	  printf("Mutex initialization failed.\n");
 	  return NULL;
 	}
-	static int counter = 0;
 	while(1) {
 		if(Info->buff_m->client->exit_flag == 1) {
 			break;
@@ -17,8 +16,6 @@ void *process_cmd(void *arg) {
 		if (*Info->cmd_q_front == NULL) {
 			continue;
 		}
-					printf("%d\n", counter);
-			counter++;
 		struct command fst_cmd = take_fst_cmd_in_q(Info->cmd_q_front);
 		move_cmd_q(Info->cmd_q_front);
 		for (int j = 0; j < AMOUNT_OF_CMD; j++) {

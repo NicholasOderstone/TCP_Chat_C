@@ -73,6 +73,11 @@ void func_rpl_del_chat(char *params, void *p) {
         gtk_list_box_select_row(box_chat_list, gtk_list_box_get_row_at_index(box_chat_list, (gint)index));
         gtk_container_remove(GTK_CONTAINER(box_chat_list), GTK_WIDGET(gtk_list_box_get_selected_row (box_chat_list)));
         del_elem_chat_list(&client->chat_list_head, chat_id);
+
+        while (clean_listbox((gpointer)client->m->box_message) == TRUE) {}
+        clear_msg_id_q(&client->msg_id_q_head);
+        client->m->row_num_list_gtk = -1;
+
         printf("## index in rpl_del_chat: %d\n", index);
     }
 

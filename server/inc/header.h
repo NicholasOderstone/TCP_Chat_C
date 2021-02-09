@@ -27,7 +27,7 @@
     #define MAX_CLIENTS 100
     #define BUFFER_SZ 2048
     #define NAME_SZ 32
-    #define AMOUNT_OF_CMD 10
+    #define AMOUNT_OF_CMD 12
     #define MAX_CHAT_USERS 1024
 
 
@@ -239,6 +239,8 @@
     char* getNickByUserName(char* login, char* rez); // get Nick by login
     chat_t *pack_user_chats(int id);
     void insertUSER_TO_CHAT(int user_id, int chat_id);
+    void updateNick(int id, char* name);
+    void updatePasswordUser(int id, char* name);
 
 
     // --- Daemonize ---

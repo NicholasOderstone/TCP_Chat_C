@@ -491,12 +491,23 @@ void f_delete_user_from_chat(char *params, buff_t *Info) {
 	bzero(buff_temp, BUFFER_SZ);
 }
 
+void f_change_pass(char *params, buff_t *Info) {
+	updatePasswordUser(getIdUserByUserName(char* login), char* name)
+}
+
+void f_change_nick(char *params, buff_t *Info) {
+	char buff_out[BUFFER_SZ];
+	char *p_login = param_1(params);
+	char *p_new_nick = param_2(params);
+	updateNick(getIdUserByUserName(p_login), p_new_nick);
+}
+
 
 void initialize_functions(cmd_func arr_cmd_func[]) {
     char *arr_func_names[AMOUNT_OF_CMD] = { "LOGIN", "SEND", "REGISTER",
 											"CHAT_MSG", "DELETE_MSG", "EDIT_MSG",
 											"NEW_CHAT", "ADD_USER_TO_CHAT", "LEAVE_CHAT",
-											"DELETE_USER_FROM_CHAT"};
+											"DELETE_USER_FROM_CHAT", "CHANGE_PASS", "CHANGE_NICK"};
 
     arr_cmd_func[0].func = &f_login;
     arr_cmd_func[1].func = &f_send;
@@ -508,6 +519,8 @@ void initialize_functions(cmd_func arr_cmd_func[]) {
 	arr_cmd_func[7].func = &f_add_user_to_chat;
 	arr_cmd_func[8].func = &f_delete_chat;
 	arr_cmd_func[9].func = &f_delete_user_from_chat;
+	arr_cmd_func[10].func = &f_change_pass;
+	arr_cmd_func[11].func = &f_change_nick;
 	// change_pass
 	// change nickname
 

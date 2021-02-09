@@ -114,10 +114,12 @@ void message_send(GtkWidget *widget, gpointer data) {
         return;
     }
 
-    snprintf(buffer, BUFFER_SZ, "<%d> <%s> <%d> <0>", client->active_chat_id, message_str, (int)rawtime);
-    cmd.command = "<SEND>";
-    cmd.params = strdup(buffer);
-    send_cmd(cmd, client);
+    if (client->active_chat_id != -1) {
+        snprintf(buffer, BUFFER_SZ, "<%d> <%s> <%d> <0>", client->active_chat_id, message_str, (int)rawtime);
+        cmd.command = "<SEND>";
+        cmd.params = strdup(buffer);
+        send_cmd(cmd, client);
+    }
     bzero(buffer, BUFFER_SZ);
 }
 

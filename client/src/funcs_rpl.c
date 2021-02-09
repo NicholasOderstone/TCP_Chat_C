@@ -72,6 +72,7 @@ void func_rpl_del_chat(char *params, void *p) {
     else {
         chat_id = atoi(p_rpl);
         int index = get_index_by_chat_id(&client->chat_list_head, chat_id);
+        client->active_chat_id = -1;
 
         gtk_list_box_select_row(box_chat_list, gtk_list_box_get_row_at_index(box_chat_list, (gint)index));
         gtk_container_remove(GTK_CONTAINER(box_chat_list), GTK_WIDGET(gtk_list_box_get_selected_row (box_chat_list)));

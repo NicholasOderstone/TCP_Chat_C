@@ -80,6 +80,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     g_signal_connect(client->m->delet_b, "clicked", G_CALLBACK(message_delet),gp_client);
     g_signal_connect(client->m->edit_b, "clicked", G_CALLBACK(message_edit),gp_client);
     g_signal_connect(client->m->cancel_b, "clicked", G_CALLBACK(cancel_ch),gp_client);
+    g_signal_connect(edit_b, "clicked", G_CALLBACK(edit_msg_request), gp_client);
 
 
     new_chat_request_s *new_chat_r = (new_chat_request_s *)malloc(sizeof(new_chat_r));

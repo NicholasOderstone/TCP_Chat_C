@@ -1,28 +1,26 @@
 #include "../inc/header.h"
 
 void send_to_all_members(char *p_chat_id, struct command cmd, buff_t *Info) {
-	user_t *user[MAX_CHAT_USERS];
-	for(int i = 0; 1; i++ ) {
-		user[i] = pack_chat_members(atoi(p_chat_id));
-		if(user[i] == NULL) {
+	user_t *user[MAX_CLIENTS];
+	int k = 0;
+	for(; 1; k++ ) {
+		user[k] = pack_chat_members(atoi(p_chat_id));
+		if(user[k] == NULL) {
 			printf("No users in chat\n");
 			break;
 		}
-		//printf("chat member id: %s\n", user[i]->user_id);
+		printf("chat member id: %s\n", user[k]->user_id);
 	}
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 	for(int i=0; i<MAX_CLIENTS; ++i){
 			if(Info->serv_inf->clients[i] != NULL){
-				for(int j = 0; j < MAX_CHAT_USERS; j++) {
+				for(int j = 0; j < k; j++) {
 					if(user[j] != NULL){
 						str_trim_lf(user[j]->user_name, strlen(user[i]->user_name));
 						if(strcmp(user[j]->user_name, Info->serv_inf->clients[i]->name) == 0) {
 							send_cmd(cmd, Info->serv_inf->clients[i]);
 							break;
 						}
-					}
-					else {
-						break;
 					}
 				}
 		}
@@ -40,6 +38,7 @@ void chat_list(char *p_login, buff_t *Info) {
 
 
 	getUserChats(getIdUserByUserName(p_login), buff_temp);
+	printf("%s\n", buff_temp);
 	temp = strtok(buff_temp, ",");
 	while(temp != NULL) {
 		mass_of_chats[i] = atoi(temp);
@@ -164,7 +163,7 @@ void f_send(char *params, buff_t *Info) {
 
 	cmd.command = "<SEND>";
 	int new_msg_id = insertMessage(atoi(p_chat_id), getIdUserByUserName(Info->client->name), p_text, atoi(p_time), "0");
-	snprintf(buff_out, BUFFER_SZ, " <%s> <%s> <%s> <%s> <%s>", p_chat_id, itoa(new_msg_id, buff_temp, 10), Info->client->name, p_time, p_text);
+	snprintf(buff_out, BUFFER_SZ, " <%s> <%s> <%s> <%s> <%s>", p_chat_id, itoa(new_msg_id, buff_temp, 10), Info->client->name, p_time, p_text); // Return nickname
 
 
 	cmd.params = buff_out;
@@ -223,12 +222,12 @@ void f_del_msg(char *params, buff_t *Info) {
 	struct command cmd;
 	cmd.command = "<DELETE_MSG>";
 	char *p_msg_id = param_1(params);
+	char *p_chat_id = param_2(params);
 	deleteMessage(p_msg_id);
 	snprintf(buff_out, BUFFER_SZ, " <%s>", p_msg_id);
 	cmd.params = buff_out;
 
-	getChat_Id_By_Msg_Id(atoi(p_msg_id), buff_temp);
-	send_to_all_members(buff_temp, cmd, Info);
+	send_to_all_members(p_chat_id, cmd, Info);
 
 	bzero(buff_out, BUFFER_SZ);
 	bzero(buff_temp, BUFFER_SZ);
@@ -243,11 +242,11 @@ void f_edit_msg(char *params, buff_t *Info) {
 	char *p_chat_id = param_2(params);
 	char *p_new_text = param_3(params);
 	updateTextMessage(atoi(p_msg_id), p_new_text);
+	//snprintf(buff_out, BUFFER_SZ, " <%s> <%s>", p_msg_id, p_new_text);
 	snprintf(buff_out, BUFFER_SZ, " <%s>", p_chat_id);
 	cmd.params = buff_out;
 
-	getChat_Id_By_Msg_Id(atoi(p_msg_id), buff_temp);
-	send_to_all_members(buff_temp, cmd, Info);
+	send_to_all_members(p_chat_id, cmd, Info);
 
 	bzero(buff_out, BUFFER_SZ);
 	bzero(buff_temp, BUFFER_SZ);
@@ -289,7 +288,7 @@ void f_add_user_to_chat(char *params, buff_t *Info) {
 	char *p_chat_id = param_1(params);
 	char *p_username = param_2(params);
 	insertInUserInChats(getIdUserByUserName(p_username), atoi(p_chat_id));
-	snprintf(buff_out, BUFFER_SZ, " <%s> <%s>", p_chat_id, getChatName(atoi(p_chat_id), buff_temp2));
+	snprintf(buff_out, BUFFER_SZ, " <%s>", p_chat_id/*, getChatName(atoi(p_chat_id), buff_temp2)*/); //Nickname
 	cmd.params = buff_out;
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 	for(int i=0; i<MAX_CLIENTS; ++i){
@@ -304,7 +303,7 @@ void f_add_user_to_chat(char *params, buff_t *Info) {
 	bzero(buff_temp, BUFFER_SZ);
 	bzero(buff_temp2, BUFFER_SZ);
 
-}
+}//incorrect_username
 
 void f_delete_chat(char *params, buff_t *Info) {
 	char buff_out[BUFFER_SZ];
@@ -316,12 +315,8 @@ void f_delete_chat(char *params, buff_t *Info) {
 
 
 	getOwner_Id_By_Chat_Id(atoi(p_chat_id), buff_temp);
-	str_trim_lf (buff_temp, strlen(buff_temp)); // На всякий случай
-	//printf("%s\n", buff_temp);
-
 	getUserName(atoi(buff_temp), tempp);
-	str_trim_lf (tempp, strlen(tempp));
-	printf("%s\n", tempp);
+	str_trim_lf(tempp, strlen(tempp));
 	if(strcmp(tempp, Info->client->name) != 0) {
 		pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 		printf("NOT_OWNER\n");
@@ -334,12 +329,11 @@ void f_delete_chat(char *params, buff_t *Info) {
 	deleteChat(p_chat_id);
 	snprintf(buff_out, BUFFER_SZ, " <%s>", p_chat_id);
 	cmd.params = buff_out;
-
+	
 	send_to_all_members(p_chat_id, cmd, Info);
-
+	
 	bzero(buff_out, BUFFER_SZ);
 	bzero(buff_temp, BUFFER_SZ);
-	bzero(tempp, BUFFER_SZ);
 }
 
 void f_delete_user_from_chat(char *params, buff_t *Info) {
@@ -353,22 +347,21 @@ void f_delete_user_from_chat(char *params, buff_t *Info) {
 	getOwner_Id_By_Chat_Id(atoi(p_chat_id), buff_temp);
 	str_trim_lf (buff_temp, strlen(buff_temp)); // На всякий случай
 	if(strcmp(p_user_name, Info->client->name) == 0) { // Если создатель хочет удалить сам себя
-		bzero(buff_temp, BUFFER_SZ);
-		snprintf(buff_temp, BUFFER_SZ, "<%s>", p_chat_id);
-		f_delete_chat(buff_temp, Info);
+		bzero(buff_out, BUFFER_SZ);
+		snprintf(buff_out, BUFFER_SZ, "<%s>", p_chat_id);
+		f_delete_chat(buff_out, Info);
 
-		snprintf(buff_out, BUFFER_SZ, " <%s>", p_chat_id);
+		snprintf(buff_temp, BUFFER_SZ, " <%s>", p_chat_id);
 		cmd.params = buff_out;
 		send_to_all_members(p_chat_id, cmd, Info);
-		bzero(buff_out, BUFFER_SZ);
-		bzero(buff_temp, BUFFER_SZ);
 		return;
 	}
 	if(strcmp(buff_temp, Info->client->name) == 0) { // Если комманду отсылает создатель
+		// Some code
 		deleteFromChat(getIdUserByUserName(p_user_name), atoi(p_chat_id));
 
-		snprintf(buff_out, BUFFER_SZ, " <%s>", p_chat_id);
-		cmd.params = buff_out;
+		snprintf(buff_temp, BUFFER_SZ, " <%s>", p_chat_id);
+		cmd.params = buff_temp;
 
 		pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 		for(int i=0; i<MAX_CLIENTS; ++i){
@@ -384,10 +377,11 @@ void f_delete_user_from_chat(char *params, buff_t *Info) {
 		return;
 	}
 	if(strcmp(p_user_name, Info->client->name) == 0) { // Если комманду отсылает пользователь, который хочет себя удалить
+		// Some code
 		deleteFromChat(getIdUserByUserName(p_user_name), atoi(p_chat_id));
 
-		snprintf(buff_out, BUFFER_SZ, " <%s>", p_chat_id);
-		cmd.params = buff_out;
+		snprintf(buff_temp, BUFFER_SZ, " <%s>", p_chat_id);
+		cmd.params = buff_temp;
 
 		pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 		for(int i=0; i<MAX_CLIENTS; ++i){
@@ -415,9 +409,9 @@ void f_delete_user_from_chat(char *params, buff_t *Info) {
 
 
 void initialize_functions(cmd_func arr_cmd_func[]) {
-    char *arr_func_names[AMOUNT_OF_CMD] = { "LOGIN", "SEND", "REGISTER",
-											"CHAT_MSG", "DELETE_MSG", "EDIT_MSG",
-											"NEW_CHAT", "ADD_USER_TO_CHAT", "DELETE_CHAT",
+    char *arr_func_names[AMOUNT_OF_CMD] = { "LOGIN", "SEND", "REGISTER", 
+											"CHAT_MSG", "DELETE_MSG", "EDIT_MSG", 
+											"NEW_CHAT", "ADD_USER_TO_CHAT", "DELETE_CHAT", 
 											"DELETE_USER_FROM_CHAT"};
 
     arr_cmd_func[0].func = &f_login;
@@ -430,7 +424,8 @@ void initialize_functions(cmd_func arr_cmd_func[]) {
 	arr_cmd_func[7].func = &f_add_user_to_chat;
 	arr_cmd_func[8].func = &f_delete_chat;
 	arr_cmd_func[9].func = &f_delete_user_from_chat;
-
+	// change_pass
+	// change nickname
 
 
     for (int i = 0; i < AMOUNT_OF_CMD; i++)

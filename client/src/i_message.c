@@ -15,6 +15,7 @@ void message_delet(GtkWidget *widget, gpointer data){
     printf("deleted: msd_id -- %d\n", current->msg_id);
     del_msg_request_s *delete_msg = (del_msg_request_s *)malloc(sizeof(del_msg_request_s));
     delete_msg->msg_id = current->msg_id;
+    delete_msg->chat_id = client->active_chat_id;
     delete_msg->client = client;
     delete_msg_request(delete_msg);
     //display_msg_id_q(&client->msg_id_q_head);
@@ -24,28 +25,10 @@ void message_delet(GtkWidget *widget, gpointer data){
 
 void message_edit(GtkWidget *widget, gpointer data){
     UNUSED(widget);
-    client_t *client = (client_t *)data;
-    GTK_WIDGET(gtk_list_box_get_selected_row (client->m->box_message));
-    gtk_entry_set_placeholder_text(GTK_ENTRY(message_entry), "Isert edited text here...");
-
-    msg_id_q *current = client->msg_id_q_head;
-    gint index = gtk_list_box_row_get_index(gtk_list_box_get_selected_row (client->m->box_message));
-    gtk_list_box_unselect_all(client->m->box_message);
-    while (index) {
-        current = current->next;
-        index--;
-    }
-    printf("edited: msd_id -- %d\n", current->msg_id);
-    edit_msg_request_s *edit_msg = (edit_msg_request_s *)malloc(sizeof(edit_msg_request_s));
-    edit_msg->msg_id = current->msg_id;
-    edit_msg->new_text = strdup(message_str);
-    printf("edit_msg->new_text %s", edit_msg->new_text);
-    edit_msg->client = client;
+    UNUSED(data);
+    gtk_entry_set_placeholder_text(GTK_ENTRY(message_entry), "Insert edited text here...");
 
     gtk_widget_show(GTK_WIDGET(edit_b));
-    g_signal_connect(edit_b, "clicked", G_CALLBACK(edit_msg_request), (gpointer)edit_msg);
-
-
 }
 
 gboolean message_show(gpointer m) {

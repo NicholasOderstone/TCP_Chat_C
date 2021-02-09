@@ -143,19 +143,26 @@ void new_chat(GtkWidget *widget, gpointer data) {
     chat_name = GTK_WIDGET(gtk_builder_get_object(builder, "name"));
     chatname_entry = GTK_ENTRY(gtk_builder_get_object(builder, "name"));
 }
+
 void chat_menu(GtkWidget *widget, gpointer data){
     UNUSED(widget);
     client_t *client = (client_t *)data;
     GtkButton  *add_user, *delete_chat;
+    GtkWidget *wind;
+    del_chat_request_s *delete_chat_r = (del_chat_request_s *)malloc(sizeof(del_chat_request_s));
+    delete_chat_r->chat_id = client->active_chat_id;
+    delete_chat_r->client = client;
+    add_user_to_chat_request_s *add_user_to_chat_r = (add_user_to_chat_request_s *)malloc(sizeof(add_user_to_chat_request_s));
+    add_user_to_chat_r->chat_id = client->active_chat_id;
+    add_user_to_chat_r->client = client;
 
-
-    chat_menu_wind = GTK_WIDGET(gtk_builder_get_object(builder, "chat_dialog"));
-    gtk_window_move(GTK_WINDOW(chat_menu_wind), client->m->root_x, client->m->root_y);
-    gtk_widget_show(chat_menu_wind);
+    wind = GTK_WIDGET(gtk_builder_get_object(builder, "chat_dialog"));
+    gtk_window_move(GTK_WINDOW(wind), client->m->root_x, client->m->root_y);
+    gtk_widget_show(wind);
     add_user = GTK_BUTTON(gtk_builder_get_object(builder, "add_member"));
     delete_chat = GTK_BUTTON(gtk_builder_get_object(builder, "delete_chat"));
-    g_signal_connect(add_user, "clicked", G_CALLBACK(open_login_page), data);
-    g_signal_connect(delete_chat, "clicked", G_CALLBACK(func_register), data);
+    g_signal_connect(add_user, "clicked", G_CALLBACK(add_user_to_chat_request), add_user_to_chat_r);
+    g_signal_connect(delete_chat, "clicked", G_CALLBACK(delete_chat_request), delete_chat_r);
 }
 void close_ch_dialog(){
     gtk_widget_hide(chat_menu_wind);

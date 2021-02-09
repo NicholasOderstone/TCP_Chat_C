@@ -100,7 +100,13 @@ void func_rpl_edit(char *params, void *p) {
 }
 
 void func_rpl_leave_chat(char *params, void *p) {
-    client_t *client = (client_t *)p;
+    UNUSED(p);
+    char *p_rpl = take_param(params, 1);
+
+    int chat_id = atoi(p_rpl);
+    char *p_nick = take_param(params, 2);
+    printf("## %s left chat with chat_id %d", p_nick, chat_id);
+    /*client_t *client = (client_t *)p;
     GtkTextView *view ;
     GtkTextBuffer *buffer;
     GtkTextIter end;
@@ -128,12 +134,18 @@ void func_rpl_leave_chat(char *params, void *p) {
     gtk_container_set_focus_vadjustment(GTK_CONTAINER(client->m->box_message), adj);
     printf("INDEX: %d\n", client->m->row_num_list_gtk);
     ind =  gtk_list_box_row_get_index (gtk_list_box_get_row_at_index (client->m->box_message, client->m->row_num_list_gtk));
-    gtk_container_set_focus_child(GTK_CONTAINER(client->m->box_message),GTK_WIDGET(gtk_list_box_get_row_at_index (client->m->box_message, ind+ind)));
+    gtk_container_set_focus_child(GTK_CONTAINER(client->m->box_message),GTK_WIDGET(gtk_list_box_get_row_at_index (client->m->box_message, ind+ind)));*/
 }
 
 
 void func_rpl_add_user_to_chat(char *params, void *p) {
     UNUSED(p);
+    char *p_rpl = take_param(params, 1);
+
+    int chat_id = atoi(p_rpl);
+    char *p_nick = take_param(params, 2);
+    printf("## %s joined chat with chat_id %d", p_nick, chat_id);
+    /*UNUSED(p);
     GtkTextView *view ;
     GtkTextBuffer *buffer;
     GtkTextIter end;
@@ -154,7 +166,7 @@ void func_rpl_add_user_to_chat(char *params, void *p) {
         gtk_text_view_set_buffer(view, buffer);
         gtk_text_buffer_get_iter_at_offset(buffer, &end, 0);
         gtk_text_buffer_insert_interactive (buffer, &end, p_nick, -1, TRUE );
-    }
+    }*/
 }
 
 void func_rpl_add_chat(char *params, void *p) {

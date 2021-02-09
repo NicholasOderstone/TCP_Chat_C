@@ -147,23 +147,12 @@ void new_chat(GtkWidget *widget, gpointer data) {
 void chat_menu(GtkWidget *widget, gpointer data){
     UNUSED(widget);
     client_t *client = (client_t *)data;
-    GtkButton  *add_user, *leave_chat;
-    GtkWidget *wind;
-    del_chat_request_s *leave_chat_r = (del_chat_request_s *)malloc(sizeof(del_chat_request_s));
-    leave_chat_r->chat_id = client->active_chat_id;
-    leave_chat_r->client = client;
-    add_user_to_chat_request_s *add_user_to_chat_r = (add_user_to_chat_request_s *)malloc(sizeof(add_user_to_chat_request_s));
-    add_user_to_chat_r->chat_id = client->active_chat_id;
-    add_user_to_chat_r->client = client;
 
-    wind = GTK_WIDGET(gtk_builder_get_object(builder, "chat_dialog"));
-    gtk_window_move(GTK_WINDOW(wind), client->m->root_x, client->m->root_y);
-    gtk_widget_show(wind);
-    add_user = GTK_BUTTON(gtk_builder_get_object(builder, "add_member"));
-    leave_chat = GTK_BUTTON(gtk_builder_get_object(builder, "delete_chat"));
-    g_signal_connect(add_user, "clicked", G_CALLBACK(add_user_to_chat_request), add_user_to_chat_r);
-    g_signal_connect(leave_chat, "clicked", G_CALLBACK(leave_chat_request), leave_chat_r);
+    chat_menu_wind = GTK_WIDGET(gtk_builder_get_object(builder, "chat_dialog"));
+    gtk_window_move(GTK_WINDOW(chat_menu_wind), client->m->root_x, client->m->root_y);
+    gtk_widget_show(chat_menu_wind);
 }
+
 gboolean destroy() {
     gtk_main_quit();
     return TRUE;
@@ -195,4 +184,15 @@ gboolean chat_show(gpointer m) {
     if (chat_show_info->client->exit == 1)
         return FALSE;
     return TRUE;
+}
+void add_mem_wind(GtkWidget *widget, gpointer data){
+    UNUSED(widget);
+    gtk_widget_hide(chat_menu_wind);
+    client_t *client = (client_t *)data;
+    GtkEntry *entr;
+    entr = GTK_ENTRY(gtk_builder_get_object(builder, "search_user"));
+    gtk_widget_set_sensitive(GTK_WIDGET(entr), TRUE);
+    add_memwind = GTK_WIDGET(gtk_builder_get_object(builder, "add_user_chat"));
+    gtk_window_move(GTK_WINDOW(add_memwind), client->m->root_x, client->m->root_y);
+    gtk_widget_show(add_memwind);
 }

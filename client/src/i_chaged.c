@@ -48,3 +48,6 @@ void r_pass_s_changed(GtkEntry *e){
 void message_changed(GtkEntry *e){
     sprintf(message_str, "%s", gtk_entry_get_text(e));
 }
+void user_searh_changed(GtkEntry *e) {
+    sprintf(user_searh_str, "%s", gtk_entry_get_text(e));
+}

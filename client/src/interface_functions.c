@@ -194,7 +194,9 @@ void add_mem_wind(GtkWidget *widget, gpointer data){
     UNUSED(widget);
     client_t *client = (client_t *)data;
     GtkWidget *wind;
-
+    GtkEntry *entr;
+    entr = GTK_ENTRY(gtk_builder_get_object(builder, "search_user"));
+    gtk_widget_set_sensitive(GTK_WIDGET(entr), TRUE);
     wind = GTK_WIDGET(gtk_builder_get_object(builder, "add_user_chat"));
     gtk_window_move(GTK_WINDOW(wind), client->m->root_x, client->m->root_y);
     gtk_widget_show(wind);

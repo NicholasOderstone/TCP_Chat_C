@@ -107,6 +107,7 @@
         char sender[32];
         char text[BUFFER_SZ];
         char time[50];
+        //identificator
     } msg_t;
 
     

@@ -178,16 +178,18 @@ void f_send(char *params, buff_t *Info) {
 	char *p_chat_id = param_1(params);
 	char *p_text = param_2(params);
 	char *p_time = param_3(params);
+	char *p_ide
 	struct command cmd;
 	char buff_out[BUFFER_SZ];
 	char buff_temp[BUFFER_SZ];
 	char user_name[BUFFER_SZ];
 
 	cmd.command = "<SEND>";
+	
 	int new_msg_id = insertMessage(atoi(p_chat_id), getIdUserByUserName(Info->client->name), p_text, atoi(p_time), "0");
 	getNickByUserName(Info->client->name, user_name);
 	str_trim_lf(user_name, strlen(user_name));
-	snprintf(buff_out, BUFFER_SZ, " <%s> <%s> <%s> <%s> <%s> <%s>", p_chat_id, itoa(new_msg_id, buff_temp, 10), Info->client->name, user_name, p_time, p_text);
+	snprintf(buff_out, BUFFER_SZ, " <%s> <%s> <%s> <%s> <%s> <%s>", p_chat_id, itoa(new_msg_id, buff_temp, 10), Info->client->name, user_name, p_time, p_text, );
 
 
 	cmd.params = buff_out;
@@ -195,7 +197,7 @@ void f_send(char *params, buff_t *Info) {
 	bzero(buff_out, BUFFER_SZ);
 	bzero(buff_temp, BUFFER_SZ);
 	bzero(user_name, BUFFER_SZ);
-}
+} //send p_chat_id msg_id Info->client->name user_name JOIN/LEAVE 1
 
 void f_register(char *params, buff_t *Info) {
 	char buff_out[BUFFER_SZ];

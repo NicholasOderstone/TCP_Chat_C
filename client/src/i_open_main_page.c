@@ -48,7 +48,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     gtk_button_set_label(chat_lbl, "");
     gtk_menu_button_set_popup (GTK_MENU_BUTTON(menu_b), GTK_WIDGET(menu));
 
-
+    
     gtk_menu_attach (menu, menu_new_chat, 0, 1, 0, 1);
     gtk_menu_attach (menu, menu_join_chat, 0, 1, 1, 2);
     gtk_widget_show_all(GTK_WIDGET(menu));

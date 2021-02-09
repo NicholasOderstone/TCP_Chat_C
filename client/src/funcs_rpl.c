@@ -36,9 +36,9 @@ void func_rpl_send(char *params, void *p) {
     received_messages *received_mess = (received_messages *)malloc(sizeof(received_messages));
     client_t *client = (client_t *)p;
     received_mess->client = client;
-    strcpy(received_mess->message, take_param(params, 5));
-    strcpy(received_mess->time, take_param(params, 4));
-    strcpy(received_mess->sender_name, take_param(params, 3));
+    strcpy(received_mess->message, take_param(params, 6));
+    strcpy(received_mess->time, take_param(params, 5));
+    strcpy(received_mess->sender_name, take_param(params, 4));
     received_mess->msg_id = atoi(take_param(params, 2));
     received_mess->chat_id = atoi(take_param(params, 1));
     if (received_mess->chat_id == received_mess->client->active_chat_id)
@@ -79,9 +79,19 @@ void func_rpl_del_chat(char *params, void *p) {
 }
 
 void func_rpl_edit(char *params, void *p) {
-    UNUSED(p);
+    client_t *client = (client_t *)p;
+    char *chat_id = take_param(params, 1);
+    command cmd;
+    char buffer[BUFFER_SZ];
+    while (clean_listbox((gpointer)client->m->box_message) == TRUE) {}
+    clear_msg_id_q(&client->msg_id_q_head);
+    client->m->row_num_list_gtk = -1;
+    snprintf(buffer, BUFFER_SZ, "<%s>", chat_id);
+    cmd.command = "<CHAT_MSG>";
+    cmd.params = strdup(buffer);
+    send_cmd(cmd, client);
 
-    printf("## edit params: %s\n", params);
+    bzero(buffer, BUFFER_SZ);
 }
 
 void func_rpl_add_user_to_chat(char *params, void *p) {

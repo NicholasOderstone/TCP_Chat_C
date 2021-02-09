@@ -255,7 +255,8 @@
 	void new_chat_request(GtkWidget *widget, gpointer data);
 	void delete_msg_request(del_msg_request_s *delete_msg_request);
 	void delete_chat_request(GtkWidget *widget, gpointer data);
-	void edit_msg_request(edit_msg_request_s *edit_msg_request);
+	void edit_msg_request(GtkWidget *widget, gpointer data);
+	void add_user_to_chat_request(GtkWidget *widget, gpointer data);
 
 // --- SWITCHES ---
 	void init_switches(void);

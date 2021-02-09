@@ -25,25 +25,10 @@ void message_delet(GtkWidget *widget, gpointer data){
 
 void message_edit(GtkWidget *widget, gpointer data){
     UNUSED(widget);
-    gint index;
-    client_t *client = (client_t *)data;
-    GTK_WIDGET(gtk_list_box_get_selected_row (client->m->box_message));
-    gtk_entry_set_text(GTK_ENTRY(message_entry), "");
-    index = gtk_list_box_row_get_index(gtk_list_box_get_selected_row (client->m->box_message));
+    UNUSED(data);
+    gtk_entry_set_placeholder_text(GTK_ENTRY(message_entry), "Insert edited text here...");
 
-    msg_id_q *current = client->msg_id_q_head;
-
-    while (index) {
-        current = current->next;
-        index--;
-    }
-    printf("edited: msd_id -- %d\n", current->msg_id);
-    edit_msg_request_s *edit_msg = (edit_msg_request_s *)malloc(sizeof(edit_msg_request_s));
-    edit_msg->msg_id = current->msg_id;
-    edit_msg->new_text = strdup("edited_text");
-    edit_msg->client = client;
-    edit_msg_request(edit_msg);
-    gtk_list_box_unselect_all(client->m->box_message);
+    gtk_widget_show(GTK_WIDGET(edit_b));
 }
 
 gboolean message_show(gpointer m) {

@@ -57,6 +57,10 @@ int main(int argc, char **argv){
 	//insertChat("Chat_test", "Description3");
 
 	//daemonize();
+	if(getIdUserByUserName("char* login") == 0) {
+		printf("You retard");
+	}
+	printf("%d\n", getIdUserByUserName("char* login"));
 
 	while(1){
 		socklen_t clilen = sizeof(cli_addr);

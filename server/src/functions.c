@@ -313,7 +313,13 @@ void f_add_user_to_chat(char *params, buff_t *Info) {
 	cmd.command = "<ADD_CHAT>";
 	char *p_chat_id = param_1(params);
 	char *p_username = param_2(params);
-	printf("1\n");
+	if(getIdUserByUserName(p_username) == 0) {
+		//Oшибка: такого пользователя нет
+		printf("Incorrect_username\n");
+		cmd.params = " <INCORRECT_USERNAME>";
+		send_cmd(cmd, Info->client);
+		return;
+	}
 	insertUSER_TO_CHAT(getIdUserByUserName(p_username), atoi(p_chat_id));
 
 	getNickByUserName(Info->client->name, user_name);

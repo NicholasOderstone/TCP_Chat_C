@@ -35,7 +35,7 @@ void func_login(GtkWidget *widget, gpointer data) {
             break;
         default:
             break;
-    }
+    }  
 }
 
 void func_register(GtkWidget *widget, gpointer data) {

@@ -69,7 +69,7 @@ void delete_chat_request(GtkWidget *widget, gpointer data) {
 void edit_msg_request(edit_msg_request_s *edit_msg_r) {
 	command cmd;
 	char buffer[BUFFER_SZ];
-	snprintf(buffer, BUFFER_SZ, "<%d> <%s>", edit_msg_r->msg_id, edit_msg_r->new_text);
+	snprintf(buffer, BUFFER_SZ, "<%d> <%d> <%s>", edit_msg_r->msg_id, edit_msg_r->client->active_chat_id, edit_msg_r->new_text);
 	cmd.command = "<EDIT_MSG>";
 	cmd.params = strdup(buffer);
 	send_cmd(cmd, edit_msg_r->client);
@@ -77,10 +77,12 @@ void edit_msg_request(edit_msg_request_s *edit_msg_r) {
 }
 
 // ---- ADD_USER_TO_CHAT ----
-void add_user_to_chat_request(add_user_to_chat_request_s *add_user_to_chat_r) {
+void add_user_to_chat_request(GtkWidget *widget, gpointer data) {
+    UNUSED(widget);
 	command cmd;
 	char buffer[BUFFER_SZ];
-	snprintf(buffer, BUFFER_SZ, "<%d> <%s>", add_user_to_chat_r->chat_id, add_user_to_chat_r->username);
+    add_user_to_chat_request_s *add_user_to_chat_r)
+	snprintf(buffer, BUFFER_SZ, "<%d> <usr2>", add_user_to_chat_r->chat_id);
 	cmd.command = "<ADD_USER_TO_CHAT>";
 	cmd.params = strdup(buffer);
 	send_cmd(cmd, add_user_to_chat_r->client);

@@ -36,9 +36,9 @@ void func_rpl_send(char *params, void *p) {
     received_messages *received_mess = (received_messages *)malloc(sizeof(received_messages));
     client_t *client = (client_t *)p;
     received_mess->client = client;
-    strcpy(received_mess->message, take_param(params, 5));
-    strcpy(received_mess->time, take_param(params, 4));
-    strcpy(received_mess->sender_name, take_param(params, 3));
+    strcpy(received_mess->message, take_param(params, 6));
+    strcpy(received_mess->time, take_param(params, 5));
+    strcpy(received_mess->sender_name, take_param(params, 4));
     received_mess->msg_id = atoi(take_param(params, 2));
     received_mess->chat_id = atoi(take_param(params, 1));
     if (received_mess->chat_id == received_mess->client->active_chat_id)

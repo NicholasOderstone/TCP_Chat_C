@@ -110,11 +110,11 @@ void add_user_to_chat_request(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
 	command cmd;
 	char buffer[BUFFER_SZ];
-    add_user_to_chat_request_s *add_user_to_chat_r = (add_user_to_chat_request_s *)data;
+    client_t *client = (client_t *)data;
 
-	snprintf(buffer, BUFFER_SZ, "<%d> <usr2>", add_user_to_chat_r->chat_id);
+	snprintf(buffer, BUFFER_SZ, "<%d> <usr2>", client->active_chat_id);
 	cmd.command = "<ADD_USER_TO_CHAT>";
 	cmd.params = strdup(buffer);
-	send_cmd(cmd, add_user_to_chat_r->client);
+	send_cmd(cmd, client);
 	bzero(buffer, BUFFER_SZ);
 }

@@ -235,6 +235,7 @@
     char* getChat_Id_By_Msg_Id(int id, char* rez); // Get chat_id by msg_id
     void deleteChat(char* id); // Delete chat by chat_id
     char* getOwner_Id_By_Chat_Id(int id, char* rez); // Получить id создателя чата по id этого чата
+    void send_to_all_members_delete_special(struct command cmd, buff_t *Info, user_t **user, int k); // special edition for delete_chat
 
 
     // --- Daemonize ---

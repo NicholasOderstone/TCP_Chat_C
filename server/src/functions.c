@@ -6,10 +6,10 @@ void send_to_all_members(char *p_chat_id, struct command cmd, buff_t *Info) {
 	for(; 1; k++ ) {
 		user[k] = pack_chat_members(atoi(p_chat_id));
 		if(user[k] == NULL) {
-			printf("No users in chat\n");
+			//printf("No users in chat\n");
 			break;
 		}
-		printf("chat member id: %s\n", user[k]->user_id);
+		//printf("chat member id: %s\n", user[k]->user_id);
 	}
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 	for(int i=0; i<MAX_CLIENTS; ++i){
@@ -28,6 +28,23 @@ void send_to_all_members(char *p_chat_id, struct command cmd, buff_t *Info) {
 	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
 }
 
+void send_to_all_members_delete_special(struct command cmd, buff_t *Info, user_t **user, int k) {
+	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
+	for(int i=0; i<MAX_CLIENTS; ++i){
+			if(Info->serv_inf->clients[i] != NULL){
+				for(int j = 0; j < k; j++) {
+					if(user[j] != NULL){
+						str_trim_lf(user[j]->user_name, strlen(user[i]->user_name));
+						if(strcmp(user[j]->user_name, Info->serv_inf->clients[i]->name) == 0) {
+							send_cmd(cmd, Info->serv_inf->clients[i]);
+							break;
+						}
+					}
+				}
+		}
+	}
+	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
+}
 void chat_list(char *p_login, buff_t *Info) {
 	int mass_of_chats[128];
 	int i = 0;
@@ -38,7 +55,7 @@ void chat_list(char *p_login, buff_t *Info) {
 
 
 	getUserChats(getIdUserByUserName(p_login), buff_temp);
-	printf("%s\n", buff_temp);
+	//printf("%s\n", buff_temp);
 	temp = strtok(buff_temp, ",");
 	while(temp != NULL) {
 		mass_of_chats[i] = atoi(temp);
@@ -77,7 +94,7 @@ void f_chat_msg(char *params, buff_t *Info) {
 	while(1) {
 		msg_t *new_mess = pack_msg_from_chat(atoi(p_chat_id));
 		if(new_mess == NULL) {
-			printf("No messages in chat\n");
+			//printf("No messages in chat\n");
 			break;
 		}
 		cmd.command = "<SEND>";
@@ -107,7 +124,7 @@ void f_login(char *params, buff_t *Info) {
     char buff_out[BUFFER_SZ];
 	struct command cmd;
 	cmd.command = "<LOGIN>";
-	printf("%s\n", params);
+	//printf("%s\n", params);
     char *p_login = param_1(params);
     char *p_pass = param_2(params);
 
@@ -259,7 +276,7 @@ void f_new_chat(char *params, buff_t *Info) {
 	cmd.command = "<ADD_CHAT>";
 	char *p_new_chat_name = param_1(params);
 	int chat_id = createChat(getIdUserByUserName(Info->client->name), p_new_chat_name);
-	printf("f_new_chat -> createChat: %d\n", chat_id);
+	//printf("f_new_chat -> createChat: %d\n", chat_id);
 	if(chat_id == -1) {
 		return;
 	}
@@ -326,11 +343,25 @@ void f_delete_chat(char *params, buff_t *Info) {
 		return;
 	}
 
+	user_t *user[MAX_CLIENTS];
+	int k = 0;
+	for(; 1; k++ ) {
+		user[k] = pack_chat_members(atoi(p_chat_id));
+		if(user[k] == NULL) {
+			break;
+		}
+	}
+	for(int i = 0; i < k; i++) {
+		deleteFromChat(atoi(user[i]->user_id), atoi(p_chat_id));
+	}
+
 	deleteChat(p_chat_id);
 	snprintf(buff_out, BUFFER_SZ, " <%s>", p_chat_id);
 	cmd.params = buff_out;
+
+	send_to_all_members_delete_special(cmd, Info, user, k);
 	
-	send_to_all_members(p_chat_id, cmd, Info);
+	//send_to_all_members(p_chat_id, cmd, Info);
 	
 	bzero(buff_out, BUFFER_SZ);
 	bzero(buff_temp, BUFFER_SZ);

@@ -196,3 +196,6 @@ void add_mem_wind(GtkWidget *widget, gpointer data){
     gtk_window_move(GTK_WINDOW(add_memwind), client->m->root_x, client->m->root_y);
     gtk_widget_show(add_memwind);
 }
+void clean_adduser() {
+    gtk_entry_set_text(GTK_ENTRY(adduser_entry), "");
+}

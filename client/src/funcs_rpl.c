@@ -63,6 +63,8 @@ void func_rpl_del_chat(char *params, void *p) {
     int chat_id;
 
     char *p_rpl = take_param(params, 1);
+    gtk_button_set_label(chat_lbl, "");
+    gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), FALSE);
     if (strcmp(p_rpl, "NOT_OWNER") == 0) {
         printf("## NOT_OWNER\n");
     }
@@ -114,10 +116,8 @@ void func_rpl_leave_chat(char *params, void *p) {
     GtkAdjustment *adj;
     gint ind;
     char *p_rpl = take_param(params, 1);
-
     chat_id = atoi(p_rpl);
     char *p_nick = take_param(params, 2);
-
     view = GTK_TEXT_VIEW(gtk_text_view_new());
     gtk_text_view_set_editable (view, FALSE);
     buffer = gtk_text_buffer_new(NULL);
@@ -128,7 +128,6 @@ void func_rpl_leave_chat(char *params, void *p) {
     gtk_text_buffer_insert_interactive (buffer, &end, " left chat\n", -1, TRUE );
     gtk_container_add (GTK_CONTAINER(client->m->box_message), GTK_WIDGET(view));
     client->m->row_num_list_gtk++;
-
     gtk_widget_show (GTK_WIDGET(view));
     adj= GTK_ADJUSTMENT(gtk_builder_get_object(builder,"scroll_messeges"));
     gtk_container_set_focus_vadjustment(GTK_CONTAINER(client->m->box_message), adj);
@@ -141,7 +140,7 @@ void func_rpl_leave_chat(char *params, void *p) {
 void func_rpl_add_user_to_chat(char *params, void *p) {
     UNUSED(p);
     char *p_rpl = take_param(params, 1);
-
+    
     int chat_id = atoi(p_rpl);
     char *p_nick = take_param(params, 2);
     printf("## %s joined chat with chat_id %d", p_nick, chat_id);
@@ -150,7 +149,6 @@ void func_rpl_add_user_to_chat(char *params, void *p) {
     GtkTextBuffer *buffer;
     GtkTextIter end;
     int chat_id;
-
     char *p_rpl = take_param(params, 1);
     if (strcmp(p_rpl, "INCORRECT_USERNAME") == 0) {
         printf("## INCORRECT_USERNAME\n");
@@ -158,7 +156,6 @@ void func_rpl_add_user_to_chat(char *params, void *p) {
     else {
         chat_id = atoi(p_rpl);
         char *p_nick = take_param(params, 2);
-
         view = GTK_TEXT_VIEW(gtk_text_view_new());
         gtk_text_view_set_editable (view, FALSE);
         buffer = gtk_text_buffer_new(NULL);

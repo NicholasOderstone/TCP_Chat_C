@@ -36,7 +36,8 @@ gboolean message_show(gpointer m) {
     GtkTextView *view ;
     GtkTextBuffer *buffer;
     GtkTextIter end;
-
+    GtkAdjustment *adj;
+    gint ind;
     view = GTK_TEXT_VIEW(gtk_text_view_new ());
     gtk_text_view_set_editable (view, FALSE);
     buffer = gtk_text_buffer_new(NULL);
@@ -66,8 +67,13 @@ gboolean message_show(gpointer m) {
         to_msg_id_q(received_mess->msg_id, &received_mess->client->msg_id_q_head);
 
         gtk_widget_show (GTK_WIDGET(view));
+        adj= GTK_ADJUSTMENT(gtk_builder_get_object(builder,"scroll_messeges"));
+        gtk_container_set_focus_vadjustment(GTK_CONTAINER(received_mess->client->m->box_message),
+                                            adj);
+        printf("INDEX: %d\n", received_mess->client->m->row_num_list_gtk);
+        ind =  gtk_list_box_row_get_index (gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk));
         gtk_container_set_focus_child(GTK_CONTAINER(received_mess->client->m->box_message),
-            GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk)));
+                                   GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, ind+ind)));
         //gtk_widget_grab_focus (GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk)));
         memset(received_mess->message, 0, sizeof(received_mess->message));
         memset(received_mess->sender_name, 0, sizeof(received_mess->sender_name));

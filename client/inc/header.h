@@ -30,7 +30,7 @@
 	#define MAX_CHATS 1000
 	#define BUFFER_SZ 2048
 	#define NAME_SZ 32
-	#define AMOUNT_OF_CMD 9
+	#define AMOUNT_OF_CMD 7
 //////////////////////////
 
 // STRUCTURES
@@ -57,6 +57,7 @@
 	typedef struct chat_info {
 		int chat_id;
 		char *chat_name;
+		time_t last_msg_time;
 		struct chat_info *next;
 	} chat_info_t;
 

@@ -1,5 +1,6 @@
 #include "../inc/header.h"
 
+// --- LOGIN ---
 void func_rpl_login(char *params, void *p) {
     UNUSED(p);
     char *p_rpl = take_param(params, 1);
@@ -16,6 +17,7 @@ void func_rpl_login(char *params, void *p) {
     }
 }
 
+// --- REGISTER ---
 void func_rpl_register(char *params, void *p) {
     UNUSED(p);
     char *p_rpl = take_param(params, 1);
@@ -32,6 +34,7 @@ void func_rpl_register(char *params, void *p) {
     }
 }
 
+// --- SEND ---
 void func_rpl_send(char *params, void *p) {
     received_messages *received_mess = (received_messages *)malloc(sizeof(received_messages));
     client_t *client = (client_t *)p;
@@ -46,6 +49,7 @@ void func_rpl_send(char *params, void *p) {
         gdk_threads_add_idle(message_show, (gpointer)received_mess);
 }
 
+// --- DELETE_MSG ---
 void func_rpl_del_msg(char *params, void *p) {
     client_t *client = (client_t *)p;
     GtkListBox *box = client->m->box_message;
@@ -58,6 +62,7 @@ void func_rpl_del_msg(char *params, void *p) {
     //printf("## index in rpl_delete: %d\n", index);
 }
 
+// --- DELETE_CHAT ---
 void func_rpl_del_chat(char *params, void *p) {
     client_t *client = (client_t *)p;
     GtkListBox *box_chat_list = client->m->box_chat_list;
@@ -82,93 +87,12 @@ void func_rpl_del_chat(char *params, void *p) {
         while (clean_listbox((gpointer)client->m->box_message) == TRUE) {}
         clear_msg_id_q(&client->msg_id_q_head);
         client->m->row_num_list_gtk = -1;
-
         //printf("## index in rpl_del_chat: %d\n", index);
     }
 
 }
 
-void func_rpl_edit(char *params, void *p) {
-    client_t *client = (client_t *)p;
-    char *chat_id = take_param(params, 1);
-    command cmd;
-    char buffer[BUFFER_SZ];
-    while (clean_listbox((gpointer)client->m->box_message) == TRUE) {}
-    clear_msg_id_q(&client->msg_id_q_head);
-    client->m->row_num_list_gtk = -1;
-    snprintf(buffer, BUFFER_SZ, "<%s>", chat_id);
-    cmd.command = "<CHAT_MSG>";
-    cmd.params = strdup(buffer);
-    send_cmd(cmd, client);
-
-    bzero(buffer, BUFFER_SZ);
-}
-
-void func_rpl_leave_chat(char *params, void *p) {
-    UNUSED(p);
-    char *p_rpl = take_param(params, 1);
-
-    int chat_id = atoi(p_rpl);
-    char *p_nick = take_param(params, 2);
-    printf("  ## %s left chat with chat_id %d\n", p_nick, chat_id);
-    /*client_t *client = (client_t *)p;
-    GtkTextView *view ;
-    GtkTextBuffer *buffer;
-    GtkTextIter end;
-    int chat_id;
-    GtkAdjustment *adj;
-    gint ind;
-    char *p_rpl = take_param(params, 1);
-    chat_id = atoi(p_rpl);
-    char *p_nick = take_param(params, 2);
-    view = GTK_TEXT_VIEW(gtk_text_view_new());
-    gtk_text_view_set_editable (view, FALSE);
-    buffer = gtk_text_buffer_new(NULL);
-    gtk_text_view_set_wrap_mode (view, GTK_WRAP_WORD_CHAR);
-    gtk_text_view_set_buffer(view, buffer);
-    gtk_text_buffer_get_iter_at_offset(buffer, &end, 0);
-    gtk_text_buffer_insert_interactive (buffer, &end, p_nick, -1, TRUE );
-    gtk_text_buffer_insert_interactive (buffer, &end, " left chat\n", -1, TRUE );
-    gtk_container_add (GTK_CONTAINER(client->m->box_message), GTK_WIDGET(view));
-    client->m->row_num_list_gtk++;
-    gtk_widget_show (GTK_WIDGET(view));
-    adj= GTK_ADJUSTMENT(gtk_builder_get_object(builder,"scroll_messeges"));
-    gtk_container_set_focus_vadjustment(GTK_CONTAINER(client->m->box_message), adj);
-    printf("INDEX: %d\n", client->m->row_num_list_gtk);
-    ind =  gtk_list_box_row_get_index (gtk_list_box_get_row_at_index (client->m->box_message, client->m->row_num_list_gtk));
-    gtk_container_set_focus_child(GTK_CONTAINER(client->m->box_message),GTK_WIDGET(gtk_list_box_get_row_at_index (client->m->box_message, ind+ind)));*/
-}
-
-
-void func_rpl_add_user_to_chat(char *params, void *p) {
-    UNUSED(p);
-    char *p_rpl = take_param(params, 1);
-
-    int chat_id = atoi(p_rpl);
-    char *p_nick = take_param(params, 2);
-    printf("  ## %s joined chat with chat_id %d\n", p_nick, chat_id);
-    /*UNUSED(p);
-    GtkTextView *view ;
-    GtkTextBuffer *buffer;
-    GtkTextIter end;
-    int chat_id;
-    char *p_rpl = take_param(params, 1);
-    if (strcmp(p_rpl, "INCORRECT_USERNAME") == 0) {
-        printf("## INCORRECT_USERNAME\n");
-    }
-    else {
-        chat_id = atoi(p_rpl);
-        char *p_nick = take_param(params, 2);
-        view = GTK_TEXT_VIEW(gtk_text_view_new());
-        gtk_text_view_set_editable (view, FALSE);
-        buffer = gtk_text_buffer_new(NULL);
-        gtk_text_view_set_wrap_mode (view, GTK_WRAP_WORD_CHAR);
-        gtk_text_view_set_buffer(view, buffer);
-        gtk_text_buffer_get_iter_at_offset(buffer, &end, 0);
-        gtk_text_buffer_insert_interactive (buffer, &end, p_nick, -1, TRUE );
-    }*/
-}
-
+// --- ADD_CHAT ---
 void func_rpl_add_chat(char *params, void *p) {
     client_t *client = (client_t *)p;
     int p_id = atoi(take_param(params, 1));
@@ -185,9 +109,6 @@ void func_rpl_add_chat(char *params, void *p) {
     if (p_name != NULL) {
         to_chat_list(p_id, p_name, &client->chat_list_head);
     }
-    //while (clean_listbox((gpointer)box_chat_list) == TRUE) {}
-    //pthread_mutex_lock(&add_chat_lock);
-    //int i = client->last_chat_index;
 
     chat_info_t *current = client->chat_list_head;
     chat_info_t *prev = client->chat_list_head;
@@ -197,25 +118,40 @@ void func_rpl_add_chat(char *params, void *p) {
         current = current->next;
     }
 
-    //gtk_widget_show(GTK_WIDGET(chat[i]));
     chat_show_info_s *chat_show_info = (chat_show_info_s *)malloc(sizeof(chat_show_info_s));
     chat_show_info->chat = prev;
+    chat_show_info->chat->last_msg_time = (time_t)atoi(take_param(params, 3));
     chat_show_info->client = client;
     chat_show_info->counter = ++client->last_chat_index;
-    //printf("rpl #### counter: %d  client->last_chat_index: %d  chat: %s #####\n", chat_show_info->counter, client->last_chat_index, chat_show_info->chat->chat_name);
-    gdk_threads_add_idle(chat_show, (gpointer)chat_show_info);
-    //gtk_widget_show(GTK_WIDGET(box_chat_list));
+    display_chat_list(&client->chat_list_head);
+    //printf("rpl #### counter: %d  client->last_chat_index: %d  chat: %s #####\n",
+    //    chat_show_info->counter, client->last_chat_index, chat_show_info->chat->chat_name);
 
-    //client->last_chat_index++;
-    //display_chat_list(&client->chat_list_head);
-    //pthread_mutex_unlock(&add_chat_lock);
+    gdk_threads_add_idle(chat_show, (gpointer)chat_show_info);
 }
 
+
+// --- EDIT ---
+void func_rpl_edit(char *params, void *p) {
+    client_t *client = (client_t *)p;
+    char *chat_id = take_param(params, 1);
+    command cmd;
+    char buffer[BUFFER_SZ];
+    while (clean_listbox((gpointer)client->m->box_message) == TRUE) {}
+    clear_msg_id_q(&client->msg_id_q_head);
+    client->m->row_num_list_gtk = -1;
+    snprintf(buffer, BUFFER_SZ, "<%s>", chat_id);
+    cmd.command = "<CHAT_MSG>";
+    cmd.params = strdup(buffer);
+    send_cmd(cmd, client);
+
+    bzero(buffer, BUFFER_SZ);
+}
 
 void init_funcs(cmd_func arr_cmd_func[]) {
     char *arr_func_names[AMOUNT_OF_CMD] = { "<LOGIN>", "<REGISTER>", "<SEND>",
                                             "<ADD_CHAT>", "<DELETE_MSG>", "<EDIT_MSG>",
-                                            "<DELETE_CHAT>", "<ADD_USER_TO_CHAT>", "<LEAVE_CHAT>"};
+                                            "<DELETE_CHAT>"};
 
     arr_cmd_func[0].func = &func_rpl_login;
     arr_cmd_func[1].func = &func_rpl_register;
@@ -224,8 +160,6 @@ void init_funcs(cmd_func arr_cmd_func[]) {
     arr_cmd_func[4].func = &func_rpl_del_msg;
     arr_cmd_func[5].func = &func_rpl_edit;
     arr_cmd_func[6].func = &func_rpl_del_chat;
-    arr_cmd_func[7].func = &func_rpl_add_user_to_chat;
-    arr_cmd_func[8].func = &func_rpl_leave_chat;
 
     for (int i = 0; i < AMOUNT_OF_CMD; i++)
         arr_cmd_func[i].name = strdup(arr_func_names[i]);

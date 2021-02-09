@@ -18,7 +18,7 @@
 
 // GLOBAL VARIABLES
     GtkBuilder      *builder;
-    GtkWidget       *window, *chat_name_d, *chat_menu_wind;
+    GtkWidget       *window, *chat_name_d, *chat_menu_wind, *add_memwind;
     char username_str [32], passoword_str[32], message_str[2048], port_str[5],
                 ipv_str[16], username_str_s[32], nick_str_s[32], pass_str_s[32],
                 r_pass_str_s[32], chatname_str[32], user_searh_str[32];
@@ -27,7 +27,7 @@
     GtkSpinner *connection_spin;
     //GtkListBox *box_chat_list;
     // GtkWidget *chat[MAX_CHATS];
-    GtkButton *ch_b, *chat_lbl, *edit_b,  *add_user, *delete_chat, *add_mem;
+    GtkButton *ch_b, *chat_lbl, *edit_b,  *add_user, *leave_chat, *add_mem;
     GtkLabel *chat_label;
 //////////////////////////
 

@@ -89,7 +89,6 @@ void send_to_all_members_send_special(char *p_chat_id, char *msg_id, struct comm
 			if(getUNREAD(atoi(p_chat_id), atoi(user[j]->user_id)) == -1) {
 				printf("5\n");
 				setUNREAD(atoi(p_chat_id), atoi(user[j]->user_id), atoi(msg_id));
-				
 			}
 			else {
 				printf("6\n");

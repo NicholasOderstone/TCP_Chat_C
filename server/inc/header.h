@@ -240,7 +240,8 @@
     char* getNickByUserName(char* login, char* rez); // get Nick by login
     chat_t *pack_user_chats(int id);
     void insertUSER_TO_CHAT(int user_id, int chat_id);
-    int getTimeLastMsg(int id);
+    int getLastMsgTime(int id);
+    int getLastId(int id);
 
 
     // --- Daemonize ---

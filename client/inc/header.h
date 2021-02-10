@@ -57,7 +57,8 @@
 	typedef struct chat_info {
 		int chat_id;
 		char *chat_name;
-		time_t last_msg_time;
+		int last_msg_time;
+		int f_unread_msg_id;
 		struct chat_info *next;
 	} chat_info_t;
 
@@ -238,6 +239,7 @@
 	int get_index_by_chat_id(chat_info_t **chat_list_head, int chat_id);
 	int is_chat_exists(chat_info_t **chat_list_head, int chat_id);
 	void del_elem_chat_list(chat_info_t **chat_list_head, int chat_id);
+	chat_info_t *get_chat_p_by_chat_id(chat_info_t **chat_list_head, int chat_id) ;
 
 // --- REQUESTS ---
 	void get_msg_request(GtkWidget *widget, gpointer data);

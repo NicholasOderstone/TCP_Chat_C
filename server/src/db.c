@@ -1417,11 +1417,11 @@ user_t *pack_chat_members(int id){
     return new_user;
 }
 
-int getTimeLastMsg(int id) {
+int getLastMsgTime(int id) {
    sqlite3 *db;
     sqlite3_stmt *res;
     int rc = sqlite3_open("data.db", &db);
-    rc = sqlite3_prepare_v2(db, "select DATE from MESSAGES where CHAT_ID = ?, IS_READ = 0;", -1, &res, 0);
+    rc = sqlite3_prepare_v2(db, "select DATE from MESSAGES where CHAT_ID = ?;", -1, &res, 0);
     sqlite3_bind_int(res, 1, id);
     rc = sqlite3_step(res);
     if (sqlite3_column_int(res, 0) == 0) {

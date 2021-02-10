@@ -12,7 +12,7 @@ void message_delet(GtkWidget *widget, gpointer data){
         current = current->next;
         index--;
     }
-    printf("deleted: msd_id -- %d\n", current->msg_id);
+    //printf("deleted: msd_id -- %d\n", current->msg_id);
     del_msg_request_s *delete_msg = (del_msg_request_s *)malloc(sizeof(del_msg_request_s));
     delete_msg->msg_id = current->msg_id;
     delete_msg->chat_id = client->active_chat_id;

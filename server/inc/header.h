@@ -40,6 +40,7 @@
         int uid;
         char name[32];
         int exit_flag;
+        char *active_id_chat;
     } client_t;
 
     /* Handles all neccessary info about server*/
@@ -243,7 +244,10 @@
     void updateNick(int id, char* name);
     void updatePasswordUser(int id, char* name);
     int getTimeLastMsg(int id);
-
+    int getLastMsgTime(int id);
+    void send_to_all_members_send_special(char *p_chat_id, char *msg_id,struct command cmd, buff_t *Info); // special edition for command send
+    void setUNREAD(int chat_id, int user_id, int unread);
+    int getUNREAD(int chat_id, int user_id);
 
     // --- Daemonize ---
     void daemonize();

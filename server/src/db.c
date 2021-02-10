@@ -65,12 +65,13 @@ sql = "CREATE TABLE IF NOT EXISTS CHATS("  \
 
 
 //USER_IN_CHAT
-  sql = "CREATE TABLE IF NOT EXISTS USER_IN_CHAT("  \
+ sql = "CREATE TABLE IF NOT EXISTS USER_IN_CHAT("  \
       "ID INTEGER PRIMARY KEY     AUTOINCREMENT," \
       "USER_ID       INT     NOT NULL," \
       "LOGIN         TEXT    NOT NULL," \
       "CHAT_ID       INT     NOT NULL," \
-      "NAME          TEXT    NOT NULL);";
+      "NAME          TEXT    NOT NULL," \
+      "UNREAD        INT     );";
   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
 
 
@@ -83,6 +84,33 @@ sql = "CREATE TABLE IF NOT EXISTS CHATS("  \
    sqlite3_close(db);
 
    return 0;
+}
+
+void setUNREAD(int chat_id, int user_id, int unread){
+    char sql[500];
+    sprintf (sql,"UPDATE USER_IN_CHAT SET UNREAD = %d WHERE CHAT_ID = %d and USER_ID = %d;", unread, chat_id, user_id);
+    sqlite3 *db;
+    sqlite3_stmt *res = NULL;
+    char *err_msg = 0;
+    int rc = sqlite3_open("data.db", &db);
+    rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+    sqlite3_finalize(res);
+    sqlite3_close(db);
+    return;
+}
+int getUNREAD(int chat_id, int user_id){
+    sqlite3 *db;
+    sqlite3_stmt *res;
+    int rez;
+    int rc = sqlite3_open("data.db", &db);
+    char sql[500];
+    sprintf(sql, "SELECT UNREAD FROM USER_IN_CHAT WHERE CHAT_ID = %d and USER_ID = %d", chat_id, user_id);
+    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+    rc = sqlite3_step(res);
+    rez = sqlite3_column_int(res, 0);
+    sqlite3_finalize(res);
+    sqlite3_close(db);
+return rez;
 }
 
 
@@ -1467,3 +1495,20 @@ int getTimeLastMsg(int id) {
     return rez;
 }
 
+int getLastMsgTime(int id) {
+   sqlite3 *db;
+    sqlite3_stmt *res;
+    int rc = sqlite3_open("data.db", &db);
+    rc = sqlite3_prepare_v2(db, "select DATE from MESSAGES where CHAT_ID = ?;", -1, &res, 0);
+    sqlite3_bind_int(res, 1, id);
+    rc = sqlite3_step(res);
+    if (sqlite3_column_int(res, 0) == 0) {
+        sqlite3_finalize(res);
+        sqlite3_close(db);
+        return -1;
+    }
+    int rez = sqlite3_column_int(res, 0);
+    sqlite3_finalize(res);
+    sqlite3_close(db);
+    return rez;
+}

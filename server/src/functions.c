@@ -45,6 +45,58 @@ void send_to_all_members_delete_special(struct command cmd, buff_t *Info, user_t
 	}
 	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
 }
+
+void send_to_all_members_send_special(char *p_chat_id, char *msg_id, struct command cmd, buff_t *Info) {
+	user_t *user[MAX_CLIENTS];
+	int k = 0;
+	for(; 1; k++ ) {
+		user[k] = pack_chat_members(atoi(p_chat_id));
+		if(user[k] == NULL) {
+			break;
+		}
+	}
+	int flag = 0;
+	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
+	for(int j = 0; j < k; j++) {	
+		for(int i=0; i<MAX_CLIENTS; ++i) { //общий массив пользователей онлайн
+			if(Info->serv_inf->clients[i] != NULL){ 
+				if(user[j] != NULL){
+					if(strcmp(user[j]->user_name, Info->serv_inf->clients[i]->name) == 0) { // Если имена совпадают
+						flag = 1;
+						if(strcmp(Info->client->active_id_chat, p_chat_id) == 0) { // Если чат активный
+							send_cmd(cmd, Info->serv_inf->clients[i]);
+							break;
+						}
+						else {
+							send_cmd(cmd, Info->serv_inf->clients[i]);
+							if(getUNREAD(atoi(p_chat_id), atoi(user[j]->user_id)) == -1) {
+								setUNREAD(atoi(p_chat_id), atoi(user[j]->user_id), 3);
+								break;
+							}
+							else {
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+		if(flag == 1) {
+			if(getUNREAD(atoi(p_chat_id), atoi(user[j]->user_id)) == -1) {
+				setUNREAD(atoi(p_chat_id), atoi(user[j]->user_id), 3);
+				flag = 0;
+				continue;
+			}
+			else {
+				flag = 0;
+				continue;
+			}
+		}
+	}
+	msg_id = NULL;
+	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
+}
+
 void chat_list(char *p_login, buff_t *Info) {
 	int mass_of_chats[128];
 	int i = 0;
@@ -52,6 +104,7 @@ void chat_list(char *p_login, buff_t *Info) {
 	char buff_out[BUFFER_SZ];
 	char buff_temp[BUFFER_SZ];
 	char buff_temp2[BUFFER_SZ];
+	char buff_temp3[BUFFER_SZ];
 
 
 	getUserChats(getIdUserByUserName(p_login), buff_temp);
@@ -73,7 +126,7 @@ void chat_list(char *p_login, buff_t *Info) {
 		itoa(mass_of_chats[j], buff_temp, 10);
 		getChatName(mass_of_chats[j], buff_temp2);
 		str_trim_lf (buff_temp2, strlen(buff_temp2));
-		snprintf(buff_out, BUFFER_SZ, " <%s> <%s> <%d>", buff_temp, buff_temp2, getTimeLastMsg(mass_of_chats[j]));
+		snprintf(buff_out, BUFFER_SZ, " <%s> <%s> <%s> <%d>", buff_temp, buff_temp2, itoa(getUNREAD(mass_of_chats[j], getIdUserByUserName(p_login)), buff_temp3, 10), getTimeLastMsg(mass_of_chats[j]));
 		arr_of_chats[j].params = buff_out;
 
 		pthread_mutex_lock(&Info->serv_inf->clients_mutex);
@@ -83,6 +136,7 @@ void chat_list(char *p_login, buff_t *Info) {
 		bzero(buff_out, BUFFER_SZ);
 		bzero(buff_temp, BUFFER_SZ);
 		bzero(buff_temp2, BUFFER_SZ);
+		bzero(buff_temp3, BUFFER_SZ);
 	}
 }
 
@@ -92,6 +146,11 @@ void f_chat_msg(char *params, buff_t *Info) {
 	char buff_out[BUFFER_SZ];
 	char user_name[BUFFER_SZ];
 	char sender[BUFFER_SZ];
+
+
+	Info->client->active_id_chat = p_chat_id;
+
+
 	while(1) {
 		msg_t *new_mess = pack_msg_from_chat(atoi(p_chat_id));
 		if(new_mess == NULL) {
@@ -192,7 +251,7 @@ void f_send(char *params, buff_t *Info) {
 
 
 	cmd.params = buff_out;
-	send_to_all_members(p_chat_id, cmd, Info);
+	send_to_all_members_send_special(p_chat_id, buff_temp, cmd, Info);
 	bzero(buff_out, BUFFER_SZ);
 	bzero(buff_temp, BUFFER_SZ);
 	bzero(user_name, BUFFER_SZ);
@@ -281,6 +340,7 @@ void f_edit_msg(char *params, buff_t *Info) {
 void f_new_chat(char *params, buff_t *Info) {
 	char buff_out[BUFFER_SZ];
 	char buff_temp[BUFFER_SZ];
+	char buff_temp2[BUFFER_SZ];
 	struct command cmd;
 	cmd.command = "<ADD_CHAT>";
 	char *p_new_chat_name = param_1(params);
@@ -289,7 +349,7 @@ void f_new_chat(char *params, buff_t *Info) {
 	if(chat_id == -1) {
 		return;
 	}
-	snprintf(buff_out, BUFFER_SZ, " <%s> <%s> <%d>", itoa(chat_id, buff_temp, 10), p_new_chat_name, getTimeLastMsg(chat_id));
+	snprintf(buff_out, BUFFER_SZ, " <%s> <%s> <%s> <%d>", itoa(chat_id, buff_temp, 10), itoa(getUNREAD(chat_id, getIdUserByUserName(Info->client->name)), buff_temp2, 10), p_new_chat_name, getTimeLastMsg(chat_id));
 	cmd.params = buff_out;
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 	for(int i=0; i<MAX_CLIENTS; ++i){
@@ -302,6 +362,7 @@ void f_new_chat(char *params, buff_t *Info) {
 	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
 	bzero(buff_out, BUFFER_SZ);
 	bzero(buff_temp, BUFFER_SZ);
+	bzero(buff_temp2, BUFFER_SZ);
 }
 
 
@@ -309,6 +370,7 @@ void f_add_user_to_chat(char *params, buff_t *Info) {
 	char buff_out[BUFFER_SZ];
 	char buff_temp[BUFFER_SZ];
 	char buff_temp2[BUFFER_SZ];
+	char buff_temp3[BUFFER_SZ];
 	char user_name[BUFFER_SZ];
 	struct command cmd;
 	cmd.command = "<ADD_CHAT>";
@@ -331,7 +393,7 @@ void f_add_user_to_chat(char *params, buff_t *Info) {
 	str_trim_lf(buff_temp2, strlen(buff_temp2));
 
 
-	snprintf(buff_out, BUFFER_SZ, " <%s> <%s> <%d>", p_chat_id, buff_temp2, getTimeLastMsg(atoi(p_chat_id))); //Nickname
+	snprintf(buff_out, BUFFER_SZ, " <%s> <%s> <%s> <%d>", p_chat_id, buff_temp2, itoa(getUNREAD(atoi(p_chat_id), getIdUserByUserName(Info->client->name)), buff_temp3, 10), getTimeLastMsg(atoi(p_chat_id))); //Nickname
 	cmd.params = buff_out;
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 	for(int i=0; i<MAX_CLIENTS; ++i){
@@ -345,6 +407,7 @@ void f_add_user_to_chat(char *params, buff_t *Info) {
 	bzero(buff_out, BUFFER_SZ);
 	bzero(buff_temp, BUFFER_SZ);
 	bzero(buff_temp2, BUFFER_SZ);
+	bzero(buff_temp3, BUFFER_SZ);
 	bzero(user_name, BUFFER_SZ);
 
 	char buff_out156[BUFFER_SZ];
@@ -491,18 +554,17 @@ void f_delete_user_from_chat(char *params, buff_t *Info) {
 }
 
 void f_change_pass(char *params, buff_t *Info) {
-	params = NULL;
+	char *p_login = param_1(params);
+	char *p_new_pass = param_2(params);
+	updatePasswordUser(getIdUserByUserName(p_login), p_new_pass);
 	(void)Info;
-	//updatePasswordUser(getIdUserByUserName(char* login), char* name)
 }
 
 void f_change_nick(char *params, buff_t *Info) {
-	params = NULL;
-	(void)Info;
-	/*char buff_out[BUFFER_SZ];
 	char *p_login = param_1(params);
 	char *p_new_nick = param_2(params);
-	updateNick(getIdUserByUserName(p_login), p_new_nick);*/
+	updateNick(getIdUserByUserName(p_login), p_new_nick);
+	(void)Info;
 }
 
 

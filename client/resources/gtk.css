@@ -3,6 +3,51 @@ button {
     background-image: none;
     color: white;
 }
+//reer
+button#login_p { /* кнопка для перехода на странцу логина*/
+
+}
+button#signup_b { /* кнопка для регистрации*/
+
+}
+button#signup_p { /* кнопка для перехода на страницу логина*/
+
+}
+button#login_b { /* кнопка для логина*/
+
+}
+button#edit_b { /* кнопка edit*/
+
+}
+
+button#add_mem { /* кнопка для add user to chat*/
+
+}
+
+button#menu_b { /* кнопка menu*/
+
+}
+button#cancel_d { /* кнопка cancel*/
+
+}button#cancel_n { /* кнопка cancel*/
+
+}button#cancel_u { /* кнопка cancel*/
+
+}button#chat_lbl { /* кнопка chata*/
+
+}button#ch_b { /* кнопка confirm*/
+
+}button#add_user { /* кнопка add user*/
+
+}button#leave_chat { /* кнопка leave chat*/
+
+}
+label#incorrect_l{/* нееврный логин*/
+    color: white;
+}
+label#incorrect_p{/* нееврный пароль*/
+    color: white;
+}
 label#chat_lbl{
     color: white;
 }

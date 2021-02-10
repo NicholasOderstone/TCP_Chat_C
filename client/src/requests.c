@@ -104,6 +104,7 @@ void edit_msg_request(GtkWidget *widget, gpointer data) {
 	bzero(buffer, BUFFER_SZ);
     gtk_entry_set_placeholder_text(GTK_ENTRY(message_entry), "");
     gtk_widget_hide(GTK_WIDGET(edit_b));
+    gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), TRUE);
     message_clear();
 }
 

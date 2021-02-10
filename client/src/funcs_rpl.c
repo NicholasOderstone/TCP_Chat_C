@@ -43,6 +43,7 @@ void func_rpl_send(char *params, void *p) {
     strcpy(received_mess->message, take_param(params, 6));
     strcpy(received_mess->time, take_param(params, 5));
     strcpy(received_mess->sender_name, take_param(params, 4));
+    strcpy(received_mess->sender_login, take_param(params, 3));
     received_mess->msg_id = atoi(take_param(params, 2));
     received_mess->chat_id = atoi(take_param(params, 1));
     if (received_mess->chat_id == received_mess->client->active_chat_id)
@@ -59,6 +60,7 @@ void func_rpl_del_msg(char *params, void *p) {
     gtk_list_box_select_row(box, gtk_list_box_get_row_at_index(box, (gint)index));
     gtk_container_remove(GTK_CONTAINER(box), GTK_WIDGET(gtk_list_box_get_selected_row (box)));
     del_elem_msg_id_q(&client->msg_id_q_head, msg_id);
+    gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), TRUE);
     //printf("## index in rpl_delete: %d\n", index);
 }
 

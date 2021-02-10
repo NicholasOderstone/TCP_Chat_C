@@ -83,6 +83,10 @@ void open_login_page(GtkWidget *widget, gpointer gp_client)
     login_b = gtk_builder_get_object (builder, "login_b");
     g_signal_connect(signup_p, "clicked", G_CALLBACK(open_signup_page), gp_client);
     g_signal_connect(login_b, "clicked", G_CALLBACK(func_login), gp_client);
+    incorrect_l = GTK_LABEL(gtk_builder_get_object(builder, "incorrect_l"));
+    incorrect_p = GTK_LABEL(gtk_builder_get_object(builder, "incorrect_p"));
+    gtk_widget_hide(GTK_WIDGET(incorrect_l));
+    gtk_widget_hide(GTK_WIDGET(incorrect_p));
     login = gtk_builder_get_object(builder, "login");
     password = GTK_ENTRY(gtk_builder_get_object(builder, "password"));
     gtk_entry_set_visibility (password, FALSE);
@@ -98,6 +102,7 @@ gboolean is_edit_delet(gpointer m) {
         gtk_widget_show(client->m->cancel_b);
         gtk_widget_show(client->m->edit_b);
         gtk_widget_show(client->m->delet_b);
+        gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), FALSE);
     }
     else
     {
@@ -105,6 +110,7 @@ gboolean is_edit_delet(gpointer m) {
         gtk_widget_hide(client->m->cancel_b);
         gtk_widget_hide(client->m->edit_b);
         gtk_widget_hide(client->m->delet_b);
+
     }
     if (client-> exit == 1)
         return FALSE;
@@ -126,6 +132,7 @@ gboolean clean_listbox(gpointer data){
 void cancel_ch(GtkWidget *widget, gpointer data){
     UNUSED(widget);
     client_t *client = (client_t *)data;
+    gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), TRUE);
     gtk_list_box_unselect_all(client->m->box_message);
 }
 
@@ -198,4 +205,13 @@ void add_mem_wind(GtkWidget *widget, gpointer data){
 }
 void clean_adduser() {
     gtk_entry_set_text(GTK_ENTRY(adduser_entry), "");
+}
+void cancel_d_f() {
+    gtk_widget_hide(chat_menu_wind);
+}
+void cancel_n_f() {
+    gtk_widget_hide(chat_name_d);
+}
+void cancel_u_f() {
+    gtk_widget_hide(add_memwind);
 }

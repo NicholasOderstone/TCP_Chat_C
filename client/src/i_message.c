@@ -19,7 +19,7 @@ void message_delet(GtkWidget *widget, gpointer data){
     delete_msg->client = client;
     delete_msg_request(delete_msg);
     //display_msg_id_q(&client->msg_id_q_head);
-    
+
     client->m->row_num_list_gtk--;
 }
 
@@ -33,12 +33,14 @@ void message_edit(GtkWidget *widget, gpointer data){
 
 gboolean message_show(gpointer m) {
     received_messages *received_mess = (received_messages *)m;
-    GtkTextView *view ;
+    GtkTextView *view, *view_e ;
     GtkTextBuffer *buffer;
     GtkTextIter end;
     GtkAdjustment *adj;
     gint ind;
     view = GTK_TEXT_VIEW(gtk_text_view_new ());
+    gtk_text_view_set_editable (view, FALSE);
+    view_e = GTK_TEXT_VIEW(gtk_text_view_new ());
     gtk_text_view_set_editable (view, FALSE);
     buffer = gtk_text_buffer_new(NULL);
     gtk_text_view_set_wrap_mode ( view, GTK_WRAP_WORD_CHAR);
@@ -64,35 +66,49 @@ gboolean message_show(gpointer m) {
             bzero(time_buf, BUFFER_SZ);
 
             gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view));
-            received_mess->client->m->row_num_list_gtk++;
+            gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view_e));
+            received_mess->client->m->row_num_list_gtk+=2;
             to_msg_id_q(received_mess->msg_id, &received_mess->client->msg_id_q_head);
 
             gtk_widget_show (GTK_WIDGET(view));
+
             adj= GTK_ADJUSTMENT(gtk_builder_get_object(builder,"scroll_messeges"));
             gtk_container_set_focus_vadjustment(GTK_CONTAINER(received_mess->client->m->box_message),
                                                 adj);
+
             //printf("INDEX: %d\n", received_mess->client->m->row_num_list_gtk);
-            ind =  gtk_list_box_row_get_index (gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk));
-            //gtk_container_set_focus_child(GTK_CONTAINER(received_mess->client->m->box_message),
-            //                           GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, ind+ind)));
             gtk_container_set_focus_child(GTK_CONTAINER(received_mess->client->m->box_message),
-                                      GTK_WIDGET(view));
+                                       GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk-2)));
+            if ( strcmp(received_mess->sender_login, received_mess->client->login) != 0){
+                gtk_list_box_row_set_activatable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk), FALSE);
+                gtk_list_box_row_set_selectable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk), FALSE);
+            }
+            else {
+                gtk_list_box_row_set_activatable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk), TRUE);
+                gtk_list_box_row_set_selectable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk), TRUE);
+            }
+            some_func((gpointer) received_mess);
             //gtk_widget_grab_focus (GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk)));
         }
         else {
             gtk_text_buffer_insert_interactive (buffer, &end, received_mess->message, -1, TRUE );
 
             gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view));
-            received_mess->client->m->row_num_list_gtk++;
+                gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view_e));
+            received_mess->client->m->row_num_list_gtk+=2;
             to_msg_id_q(received_mess->msg_id, &received_mess->client->msg_id_q_head);
 
             gtk_widget_show (GTK_WIDGET(view));
             adj = GTK_ADJUSTMENT(gtk_builder_get_object(builder,"scroll_messeges"));
             gtk_container_set_focus_vadjustment(GTK_CONTAINER(received_mess->client->m->box_message), adj);
+
             ind =  gtk_list_box_row_get_index (gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk));
-            gtk_list_box_row_set_activatable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,ind), FALSE);
-            gtk_list_box_row_set_selectable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,ind), FALSE);
-            gtk_container_set_focus_child(GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view));
+            gtk_list_box_row_set_activatable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk), FALSE);
+            gtk_list_box_row_set_selectable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk), FALSE);
+            gtk_container_set_focus_child(GTK_CONTAINER(received_mess->client->m->box_message),
+                                       GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk-2)));
+            gtk_container_remove(GTK_CONTAINER(received_mess->client->m->box_message),  GTK_WIDGET(gtk_list_box_get_row_at_index(received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk)));
+            received_mess->client->m->row_num_list_gtk--;
         }
         memset(received_mess->message, 0, sizeof(received_mess->message));
         memset(received_mess->sender_name, 0, sizeof(received_mess->sender_name));
@@ -102,7 +118,11 @@ gboolean message_show(gpointer m) {
         return FALSE;
     return TRUE;
 }
-
+void some_func(gpointer m){
+    received_messages *received_mess = (received_messages *)m;
+    gtk_container_remove(GTK_CONTAINER(received_mess->client->m->box_message),  GTK_WIDGET(gtk_list_box_get_row_at_index(received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk)));
+    received_mess->client->m->row_num_list_gtk--;
+}
 void message_send(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
     client_t *client = (client_t *)data;

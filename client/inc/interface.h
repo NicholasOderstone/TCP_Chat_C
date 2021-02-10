@@ -29,7 +29,7 @@
     // GtkWidget *chat[MAX_CHATS];
     GtkButton *ch_b, *chat_lbl, *edit_b,  *add_user, *leave_chat, *add_mem,
                 *cancel_u, *cancel_d, *cancel_n;
-    GtkLabel *chat_label;
+    GtkLabel *chat_label, *incorrect_l, *incorrect_p;
 //////////////////////////
 
 // FUNCTIONS
@@ -64,6 +64,10 @@
     void add_mem_wind();
     void user_searh_changed();
     void clean_adduser();
+    void cancel_n_f();
+    void cancel_d_f();
+    void cancel_u_f();
+    void some_func();
     //////////////////////////
 
 #endif

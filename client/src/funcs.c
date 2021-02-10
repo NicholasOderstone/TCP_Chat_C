@@ -22,15 +22,19 @@ void func_login(GtkWidget *widget, gpointer data) {
         case 0:
 	        client->login = strdup(p_login);
 	        client->pass = strdup(p_pass);
+			gtk_widget_hide(GTK_WIDGET(incorrect_l));
+			gtk_widget_hide(GTK_WIDGET(incorrect_p));
             open_main_page(NULL, data);
             sw_login = -1;
             break;
         case 1:
             printf("## INCORRECT_LOGIN\n");
+			gtk_widget_show(GTK_WIDGET(incorrect_l));
             sw_login = -1;
             break;
         case 2:
             printf("## INCORRECT_PASS\n");
+			gtk_widget_show(GTK_WIDGET(incorrect_p));
             sw_login = -1;
             break;
         default:

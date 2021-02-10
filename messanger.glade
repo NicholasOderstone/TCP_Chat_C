@@ -235,6 +235,7 @@
           <object class="GtkEntry" id="name">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="max-length">32</property>
             <property name="max-width-chars">32</property>
             <property name="placeholder-text" translatable="yes">Entry name chat</property>
             <signal name="changed" handler="chatname_changed" swapped="no"/>
@@ -346,6 +347,32 @@
             <property name="y">6</property>
           </packing>
         </child>
+        <child>
+          <object class="GtkLabel" id="incorrect_l">
+            <property name="width-request">158</property>
+            <property name="height-request">29</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">INCORRECT LOGIN</property>
+          </object>
+          <packing>
+            <property name="x">149</property>
+            <property name="y">138</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="incorrect_p">
+            <property name="width-request">158</property>
+            <property name="height-request">29</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">INCORRECT PASS</property>
+          </object>
+          <packing>
+            <property name="x">149</property>
+            <property name="y">217</property>
+          </packing>
+        </child>
       </object>
     </child>
     <accessibility>
@@ -367,6 +394,7 @@
             <property name="height-request">34</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="max-length">900</property>
             <property name="activates-default">True</property>
             <signal name="changed" handler="message_changed" swapped="no"/>
           </object>

@@ -61,7 +61,6 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
 
     send_b = gtk_builder_get_object (builder, "send_buttom");
     gtk_button_set_image (GTK_BUTTON (send_b), send_b_image);
-
     client->m->box_message = GTK_LIST_BOX(gtk_builder_get_object(builder, "message_list"));
     client->m->box_chat_list = GTK_LIST_BOX(gtk_builder_get_object(builder, "chat_list"));
     //gtk_text_buffer_create_tag(message_s->buffer, "gray_bg", "background","gray", NULL);

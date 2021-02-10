@@ -491,14 +491,18 @@ void f_delete_user_from_chat(char *params, buff_t *Info) {
 }
 
 void f_change_pass(char *params, buff_t *Info) {
-	updatePasswordUser(getIdUserByUserName(char* login), char* name)
+	params = NULL;
+	(void)Info;
+	//updatePasswordUser(getIdUserByUserName(char* login), char* name)
 }
 
 void f_change_nick(char *params, buff_t *Info) {
-	char buff_out[BUFFER_SZ];
+	params = NULL;
+	(void)Info;
+	/*char buff_out[BUFFER_SZ];
 	char *p_login = param_1(params);
 	char *p_new_nick = param_2(params);
-	updateNick(getIdUserByUserName(p_login), p_new_nick);
+	updateNick(getIdUserByUserName(p_login), p_new_nick);*/
 }
 
 

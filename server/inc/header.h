@@ -107,7 +107,7 @@
         char sender[32];
         char text[BUFFER_SZ];
         char time[50];
-        //identificator
+        char is_read[2];
     } msg_t;
 
     
@@ -242,6 +242,7 @@
     void insertUSER_TO_CHAT(int user_id, int chat_id);
     void updateNick(int id, char* name);
     void updatePasswordUser(int id, char* name);
+    int getTimeLastMsg(int id);
 
 
     // --- Daemonize ---

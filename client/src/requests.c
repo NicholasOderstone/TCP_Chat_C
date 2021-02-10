@@ -3,6 +3,7 @@
 // ---- CHAT_MSG ----
 void get_msg_request(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
+    gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), TRUE);
     get_messages_request_s *get_messages_r = (get_messages_request_s *)data;
     if (get_messages_r->client->active_chat_id != get_messages_r->chat->chat_id) {
     	get_messages_r->client->active_chat_id = get_messages_r->chat->chat_id;

@@ -46,54 +46,64 @@ void send_to_all_members_delete_special(struct command cmd, buff_t *Info, user_t
 	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
 }
 
-void send_to_all_members_send_special(char *p_chat_id, char *msg_id, struct command cmd, buff_t *Info) {
+void send_to_all_members_send_special(char *p_chat_id, int msg_id, struct command cmd, buff_t *Info) {
 	user_t *user[MAX_CLIENTS];
 	int num_of_memb = 0;
+	int chat_id = atoi(p_chat_id);
+
 	for(; 1; num_of_memb++ ) {
-		user[num_of_memb] = pack_chat_members(atoi(p_chat_id));
+		user[num_of_memb] = pack_chat_members(chat_id);
 		if(user[num_of_memb] == NULL) {
 			break;
 		}
 	}
-	int is_online = 0;
+	
+	int is_online;
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
-	for(int j = 0; j < num_of_memb; j++) {	
+	for(int j = 0; j < num_of_memb; j++) {
+		is_online = 0;
+		int user_id = atoi(user[j]->user_id);
+		printf("Sending msg to %s: %d\n", user[j]->user_name, user_id);
+
 		for(int i=0; i<MAX_CLIENTS; ++i) { //общий массив пользователей онлайн
-			if(Info->serv_inf->clients[i] != NULL){ 
-				if(user[j] != NULL){
-					if(strcmp(user[j]->user_name, Info->serv_inf->clients[i]->name) == 0) { // Если имена совпадают
-						is_online = 1;
-						if(Info->client->active_id_chat == atoi(p_chat_id)) { // Если чат активный
-							printf("1\n");
-							send_cmd(cmd, Info->serv_inf->clients[i]);
+			if(Info->serv_inf->clients[i] != NULL && user[j] != NULL){ 
+
+				if(strcmp(user[j]->user_name, Info->serv_inf->clients[i]->name) == 0) { // Если имена совпадают
+					is_online = 1;
+					printf("%s is online\n", user[j]->user_name);
+					if(Info->serv_inf->clients[i]->active_id_chat == chat_id) { // Если чат активный
+						printf("1\n");
+						send_cmd(cmd, Info->serv_inf->clients[i]);
+						break;
+					}
+					else {
+						printf("2\n");
+						send_cmd(cmd, Info->serv_inf->clients[i]);
+						if(getUNREAD(chat_id, user_id) == -1) {
+							printf("3\n");
+							setUNREAD(chat_id, user_id, msg_id);
 							break;
 						}
 						else {
-							printf("2\n");
-							send_cmd(cmd, Info->serv_inf->clients[i]);
-							if(getUNREAD(atoi(p_chat_id), atoi(user[j]->user_id)) == -1) {
-								printf("3\n");
-								setUNREAD(atoi(p_chat_id), atoi(user[j]->user_id), atoi(msg_id));
-								break;
-							}
-							else {
-								printf("4\n");
-								break;
-							}
+							printf("4\n");
+							break;
 						}
 					}
 				}
 			}
 		}
-		if(is_online == 1) {
-			if(getUNREAD(atoi(p_chat_id), atoi(user[j]->user_id)) == -1) {
+
+		if(is_online == 0) {
+			printf("%s is offline\n", user[j]->user_name);
+			printf("## getUNREAD: %d -- chat_id: %d, user_id: %d", getUNREAD(chat_id, user_id), chat_id, user_id);
+			if(getUNREAD(chat_id, user_id) == -1) {
 				printf("5\n");
-				setUNREAD(atoi(p_chat_id), atoi(user[j]->user_id), atoi(msg_id));
+				setUNREAD(chat_id, user_id, msg_id);
 			}
 			else {
+				is_online = 0;
 				printf("6\n");
 			}
-			is_online = 0;
 		}
 	}
 	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
@@ -128,7 +138,8 @@ void chat_list(char *p_login, buff_t *Info) {
 		itoa(mass_of_chats[j], buff_temp, 10);
 		getChatName(mass_of_chats[j], buff_temp2);
 		str_trim_lf (buff_temp2, strlen(buff_temp2));
-		snprintf(buff_out, BUFFER_SZ, " <%s> <%s> <%s> <%d>", buff_temp, buff_temp2, itoa(getUNREAD(mass_of_chats[j], getIdUserByUserName(p_login)), buff_temp3, 10), getTimeLastMsg(mass_of_chats[j]));
+		printf("chat_id: %d\n", mass_of_chats[j]);
+		snprintf(buff_out, BUFFER_SZ, " <%s> <%s> <%d> <%d>", buff_temp, buff_temp2, getUNREAD(mass_of_chats[j], getIdUserByUserName(p_login)), getLastMsgTime(mass_of_chats[j]));
 		arr_of_chats[j].params = buff_out;
 
 		pthread_mutex_lock(&Info->serv_inf->clients_mutex);
@@ -149,12 +160,17 @@ void f_chat_msg(char *params, buff_t *Info) {
 	char user_name[BUFFER_SZ];
 	char sender[BUFFER_SZ];
 
+	int ch_id = atoi(p_chat_id);
+	Info->client->active_id_chat = ch_id;
 
-	Info->client->active_id_chat = atoi(p_chat_id);
+	int uid = Info->client->uid;
 
+	Info->serv_inf->clients[uid]->active_id_chat = ch_id;
+	
+	setUNREAD(ch_id, getIdUserByUserName(Info->client->name), -1);
 
 	while(1) {
-		msg_t *new_mess = pack_msg_from_chat(atoi(p_chat_id));
+		msg_t *new_mess = pack_msg_from_chat(ch_id);
 		if(new_mess == NULL) {
 			//printf("No messages in chat\n");
 			break;
@@ -242,20 +258,20 @@ void f_send(char *params, buff_t *Info) {
 	char *p_identificator = param_4(params);
 	struct command cmd;
 	char buff_out[BUFFER_SZ];
-	char buff_temp[BUFFER_SZ];
+	// char buff_temp[BUFFER_SZ];
 	char user_name[BUFFER_SZ];
 
 	cmd.command = "<SEND>";
 	int new_msg_id = insertMessage(atoi(p_chat_id), getIdUserByUserName(Info->client->name), p_text, atoi(p_time), p_identificator);
 	getNickByUserName(Info->client->name, user_name);
 	str_trim_lf(user_name, strlen(user_name));
-	snprintf(buff_out, BUFFER_SZ, " <%s> <%s> <%s> <%s> <%s> <%s> <%s>", p_chat_id, itoa(new_msg_id, buff_temp, 10), Info->client->name, user_name, p_time, p_text, p_identificator);
+	snprintf(buff_out, BUFFER_SZ, " <%s> <%d> <%s> <%s> <%s> <%s> <%s>", p_chat_id, new_msg_id, Info->client->name, user_name, p_time, p_text, p_identificator);
 
 
 	cmd.params = buff_out;
-	send_to_all_members_send_special(p_chat_id, buff_temp, cmd, Info);
+	send_to_all_members_send_special(p_chat_id, new_msg_id, cmd, Info);
 	bzero(buff_out, BUFFER_SZ);
-	bzero(buff_temp, BUFFER_SZ);
+	// bzero(buff_temp, BUFFER_SZ);
 	bzero(user_name, BUFFER_SZ);
 }
 
@@ -351,7 +367,7 @@ void f_new_chat(char *params, buff_t *Info) {
 	if(chat_id == -1) {
 		return;
 	}
-	snprintf(buff_out, BUFFER_SZ, " <%s> <%s> <%s> <%d>", itoa(chat_id, buff_temp, 10), p_new_chat_name, itoa(getUNREAD(chat_id, getIdUserByUserName(Info->client->name)), buff_temp2, 10), getTimeLastMsg(chat_id));
+	snprintf(buff_out, BUFFER_SZ, " <%s> <%s> <%d> <%d>", itoa(chat_id, buff_temp, 10), p_new_chat_name, getUNREAD(chat_id, getIdUserByUserName(Info->client->name)), getLastMsgTime(chat_id));
 	cmd.params = buff_out;
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 	for(int i=0; i<MAX_CLIENTS; ++i){
@@ -367,12 +383,11 @@ void f_new_chat(char *params, buff_t *Info) {
 	bzero(buff_temp2, BUFFER_SZ);
 }
 
-
+// ПЕРЕДЕЛАТЬ ПО-ЧЕЛОВЕЧЕСКИ, ТВОЮ МАТЬ
 void f_add_user_to_chat(char *params, buff_t *Info) {
 	char buff_out[BUFFER_SZ];
 	char buff_temp[BUFFER_SZ];
 	char buff_temp2[BUFFER_SZ];
-	char buff_temp3[BUFFER_SZ];
 	char user_name[BUFFER_SZ];
 	struct command cmd;
 	cmd.command = "<ADD_CHAT>";
@@ -395,9 +410,10 @@ void f_add_user_to_chat(char *params, buff_t *Info) {
 	str_trim_lf(buff_temp2, strlen(buff_temp2));
 
 
-	snprintf(buff_out, BUFFER_SZ, " <%s> <%s> <%s> <%d>", p_chat_id, buff_temp2, itoa(getUNREAD(atoi(p_chat_id), getIdUserByUserName(Info->client->name)), buff_temp3, 10), getTimeLastMsg(atoi(p_chat_id))); //Nickname
+	snprintf(buff_out, BUFFER_SZ, " <%s> <%s> <%d> <%d>", p_chat_id, buff_temp2, getUNREAD(atoi(p_chat_id), getIdUserByUserName(Info->client->name)), getLastMsgTime(atoi(p_chat_id))); //Nickname
 	cmd.params = buff_out;
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
+	// ПЕРЕДЕЛАТЬ ПО-ЧЕЛОВЕЧЕСКИ, ТВОЮ МАТЬ
 	for(int i=0; i<MAX_CLIENTS; ++i){
 		if(Info->serv_inf->clients[i]){
 			if(strcmp(Info->serv_inf->clients[i]->name, p_username) == 0){
@@ -409,7 +425,6 @@ void f_add_user_to_chat(char *params, buff_t *Info) {
 	bzero(buff_out, BUFFER_SZ);
 	bzero(buff_temp, BUFFER_SZ);
 	bzero(buff_temp2, BUFFER_SZ);
-	bzero(buff_temp3, BUFFER_SZ);
 	bzero(user_name, BUFFER_SZ);
 
 	char buff_out156[BUFFER_SZ];
@@ -418,7 +433,7 @@ void f_add_user_to_chat(char *params, buff_t *Info) {
 	getNickByUserName(p_username, buff_out156);
 	str_trim_lf(buff_out156, strlen(buff_out156));
 	strcat(buff_out156, " joined chat");
-	snprintf(tempp, BUFFER_SZ, "<%s> <%s> <1612885395> <2>", p_chat_id, buff_out156);
+	snprintf(tempp, BUFFER_SZ, "<%s> <%s> <%d> <2>", p_chat_id, buff_out156, ((int)time(NULL)));
 	f_send(tempp, Info);
 	//send_to_all_members(p_chat_id, cmd1, Info);
 	bzero(buff_out156, BUFFER_SZ);

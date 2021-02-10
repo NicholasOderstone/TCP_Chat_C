@@ -131,7 +131,7 @@
     /* ORIGINAL FUNCTIONS */
 
     /* Add client to the clients array*/
-    void client_add(client_t *cl, server_info_t *serv_inf);
+    int client_add(client_t *cl, server_info_t *serv_inf);
     /* Remove client from the clients array*/
     void client_remove(int uid, server_info_t *serv_inf);
     /* Send message *s to all clients exept sender */
@@ -211,6 +211,7 @@
     char* getOneUser(int id, char* rez); // Получить всю инфу по выбранному пользователю (по id)
     int insertUser(char* login, char* password, char* nick, char* status); // Создать юзера
     int getIdUserByUserName(char* login); // Получить id юзера по логину юзера
+    char* getIdUserByNick(char* nick, char* rez);
     char* getAllUsers(char* rez); // Получить всех пользователей
     void deleteUser(char* id); // Удалить выбранного пользователя с выбранный id
     char* getUserName(int id, char* rez); // Получить имя пользователя по id
@@ -245,7 +246,7 @@
     void updatePasswordUser(int id, char* name);
     int getTimeLastMsg(int id);
     int getLastMsgTime(int id);
-    void send_to_all_members_send_special(char *p_chat_id, char *msg_id,struct command cmd, buff_t *Info); // special edition for command send
+    void send_to_all_members_send_special(char *p_chat_id, int msg_id,struct command cmd, buff_t *Info); // special edition for command send
     void setUNREAD(int chat_id, int user_id, int unread);
     int getUNREAD(int chat_id, int user_id);
 

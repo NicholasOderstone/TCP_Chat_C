@@ -1244,7 +1244,7 @@ void insertUSER_TO_CHAT(int user_id, int chat_id){
     sprintf(name, "%s", sqlite3_column_text(res, 0));
     sqlite3_finalize(res);
 
-    sprintf (sql,"INSERT INTO USER_IN_CHAT (USER_ID, LOGIN, CHAT_ID, NAME) VALUES ('%d','%s','%d','%s');",user_id,login,chat_id,name);
+    sprintf (sql,"INSERT INTO USER_IN_CHAT (USER_ID, LOGIN, CHAT_ID, NAME, UNREAD) VALUES ('%d','%s','%d','%s', '%d');",user_id,login,chat_id,name, -1);
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     sqlite3_close(db);
     return;
@@ -1477,29 +1477,12 @@ user_t *pack_chat_members(int id){
     return new_user;
 }
 
-int getTimeLastMsg(int id) {
-   sqlite3 *db;
-    sqlite3_stmt *res;
-    int rc = sqlite3_open("data.db", &db);
-    rc = sqlite3_prepare_v2(db, "select DATE from MESSAGES where CHAT_ID = ?, IS_READ = 0;", -1, &res, 0);
-    sqlite3_bind_int(res, 1, id);
-    rc = sqlite3_step(res);
-    if (sqlite3_column_int(res, 0) == 0) {
-        sqlite3_finalize(res);
-        sqlite3_close(db);
-        return -1;
-    }
-    int rez = sqlite3_column_int(res, 0);
-    sqlite3_finalize(res);
-    sqlite3_close(db);
-    return rez;
-}
 
 int getLastMsgTime(int id) {
    sqlite3 *db;
     sqlite3_stmt *res;
     int rc = sqlite3_open("data.db", &db);
-    rc = sqlite3_prepare_v2(db, "select DATE from MESSAGES where CHAT_ID = ?;", -1, &res, 0);
+    rc = sqlite3_prepare_v2(db, "select MAX(DATE) from MESSAGES where CHAT_ID = ?;", -1, &res, 0);
     sqlite3_bind_int(res, 1, id);
     rc = sqlite3_step(res);
     if (sqlite3_column_int(res, 0) == 0) {

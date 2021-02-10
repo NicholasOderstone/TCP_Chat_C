@@ -28,7 +28,7 @@
 // DEFINES
 	#define MAX_CLIENTS 100
 	#define MAX_CHATS 1000
-	#define BUFFER_SZ 2048
+	#define BUFFER_SZ 4096
 	#define NAME_SZ 32
 	#define AMOUNT_OF_CMD 7
 //////////////////////////

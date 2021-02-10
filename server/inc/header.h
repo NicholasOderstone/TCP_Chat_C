@@ -27,7 +27,7 @@
     #define MAX_CLIENTS 100
     #define BUFFER_SZ 2048
     #define NAME_SZ 32
-    #define AMOUNT_OF_CMD 10
+    #define AMOUNT_OF_CMD 12
     #define MAX_CHAT_USERS 1024
 
 
@@ -40,6 +40,7 @@
         int uid;
         char name[32];
         int exit_flag;
+        int active_id_chat;
     } client_t;
 
     /* Handles all neccessary info about server*/
@@ -240,9 +241,13 @@
     char* getNickByUserName(char* login, char* rez); // get Nick by login
     chat_t *pack_user_chats(int id);
     void insertUSER_TO_CHAT(int user_id, int chat_id);
+    void updateNick(int id, char* name);
+    void updatePasswordUser(int id, char* name);
+    int getTimeLastMsg(int id);
     int getLastMsgTime(int id);
-    int getLastId(int id);
-
+    void send_to_all_members_send_special(char *p_chat_id, char *msg_id,struct command cmd, buff_t *Info); // special edition for command send
+    void setUNREAD(int chat_id, int user_id, int unread);
+    int getUNREAD(int chat_id, int user_id);
 
     // --- Daemonize ---
     void daemonize();

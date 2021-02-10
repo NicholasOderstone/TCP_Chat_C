@@ -51,7 +51,7 @@ void func_rpl_send(char *params, void *p) {
     char last_msg_time_buf[BUFFER_SZ];
     chat_info_t *chat = get_chat_p_by_chat_id(&received_mess->client->chat_list_head, received_mess->chat_id);
 
-    //time_t time = (time_t)atoi(received_mess->time);
+    time_t time = (time_t)atoi(received_mess->time);
     //time_t time = (time_t)atoi(chat->last_msg_time);
     struct tm *ptm = localtime(&time);
     if (ptm == NULL) {

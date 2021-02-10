@@ -54,7 +54,6 @@ int main(int argc, char **argv){
 
 	/* Data Base */
 	initDB();
-	//insertChat("Chat_test", "Description3");
 
 	//daemonize();
 

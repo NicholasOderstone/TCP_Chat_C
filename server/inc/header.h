@@ -40,7 +40,7 @@
         int uid;
         char name[32];
         int exit_flag;
-        char *active_id_chat;
+        int active_id_chat;
     } client_t;
 
     /* Handles all neccessary info about server*/

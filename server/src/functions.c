@@ -73,7 +73,7 @@ void chat_list(char *p_login, buff_t *Info) {
 		itoa(mass_of_chats[j], buff_temp, 10);
 		getChatName(mass_of_chats[j], buff_temp2);
 		str_trim_lf (buff_temp2, strlen(buff_temp2));
-		snprintf(buff_out, BUFFER_SZ, " <%s> <%s> <%d>", buff_temp, buff_temp2, getTimeLastMsg(mass_of_chats[j])));
+		snprintf(buff_out, BUFFER_SZ, " <%s> <%s> <%d>", buff_temp, buff_temp2, getTimeLastMsg(mass_of_chats[j]));
 		arr_of_chats[j].params = buff_out;
 
 		pthread_mutex_lock(&Info->serv_inf->clients_mutex);

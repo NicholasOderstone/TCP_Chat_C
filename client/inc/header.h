@@ -214,19 +214,12 @@
 	void *reconnect_to_server(void *cnct_inf);
 
 // --- QUEUES ---
-	// Inserts the message into the message queue
 	void to_msg_q(char *data, struct msg_q **msg_q_front, pthread_mutex_t msg_lock);
-	// Inserts the command into the command queue
 	void to_cmd_q(command data, struct cmd_q **cmd_q_front, pthread_mutex_t cmd_lock);
-
 	void to_msg_id_q(int msg_id, msg_id_q **msg_id_q_head);
-
 	void clear_msg_id_q(msg_id_q **msg_id_q_head);
-
 	void display_msg_id_q(msg_id_q **msg_id_q_head);
-
 	void del_elem_msg_id_q(msg_id_q **msg_id_q_head, int msg_id);
-
 	int get_index_by_msg_id(msg_id_q **msg_id_q_head, int msg_id);
 
 	// Deletes the first elememt from the message queue
@@ -239,17 +232,11 @@
 	command take_fst_cmd_in_q(struct cmd_q **cmd_q_front);
 
 // --- CHAT LIST ---
-	// Inserts the chat into the chat list
 	void to_chat_list(int chat_id, char *chat_name, chat_info_t **chat_list_head);
-	// Displays the chat list
 	void display_chat_list(chat_info_t **chat_list_head);
-	// Gets chat list size
 	int chat_list_size(chat_info_t **chat_list_head);
-
 	int get_index_by_chat_id(chat_info_t **chat_list_head, int chat_id);
-
 	int is_chat_exists(chat_info_t **chat_list_head, int chat_id);
-
 	void del_elem_chat_list(chat_info_t **chat_list_head, int chat_id);
 
 // --- REQUESTS ---
@@ -281,7 +268,6 @@
 
 //////////////////////////
 
-// GLOBAL VARIABLES
 	int sw_login;
 	int sw_register;
 

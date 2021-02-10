@@ -1429,7 +1429,7 @@ int getTimeLastMsg(int id) {
         sqlite3_close(db);
         return -1;
     }
-    int rez = sqlite3_column_int(res, 0));
+    int rez = sqlite3_column_int(res, 0);
     sqlite3_finalize(res);
     sqlite3_close(db);
     return rez;

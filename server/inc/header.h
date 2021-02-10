@@ -107,9 +107,10 @@
         char sender[32];
         char text[BUFFER_SZ];
         char time[50];
+        char is_read[2];
     } msg_t;
 
-    
+
     typedef struct chat_s {
         char chat_id[10];
         char chat_name[32];
@@ -228,7 +229,7 @@
     void updateTextMessage(int id, char* text); // Edit message
     int createChat(int creator_id, char *name); // Create chat and add the creator
     void insertInUserInChats(int user_id, int chat_id); // Insert user in chat
-    user_t *pack_chat_members(int id); // 
+    user_t *pack_chat_members(int id); //
     void deleteChat(char* id); // Delete chat by chat_id
     char* getOwner_Id_By_Chat_Id(int id, char* rez); // Получить id создателя чата по id этого чата
     char* getChatName(int id, char* rez); // Получить имя чата  по id чата
@@ -239,6 +240,7 @@
     char* getNickByUserName(char* login, char* rez); // get Nick by login
     chat_t *pack_user_chats(int id);
     void insertUSER_TO_CHAT(int user_id, int chat_id);
+    int getTimeLastMsg(int id);
 
 
     // --- Daemonize ---

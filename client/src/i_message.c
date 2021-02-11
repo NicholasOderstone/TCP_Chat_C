@@ -12,9 +12,10 @@ void message_delet(GtkWidget *widget, gpointer data){
         current = current->next;
         index--;
     }
-    printf("deleted: msd_id -- %d\n", current->msg_id);
+    //printf("deleted: msd_id -- %d\n", current->msg_id);
     del_msg_request_s *delete_msg = (del_msg_request_s *)malloc(sizeof(del_msg_request_s));
     delete_msg->msg_id = current->msg_id;
+    delete_msg->chat_id = client->active_chat_id;
     delete_msg->client = client;
     delete_msg_request(delete_msg);
     //display_msg_id_q(&client->msg_id_q_head);
@@ -24,25 +25,10 @@ void message_delet(GtkWidget *widget, gpointer data){
 
 void message_edit(GtkWidget *widget, gpointer data){
     UNUSED(widget);
-    gint index;
-    client_t *client = (client_t *)data;
-    GTK_WIDGET(gtk_list_box_get_selected_row (client->m->box_message));
-    gtk_entry_set_text(GTK_ENTRY(message_entry), "");
-    index = gtk_list_box_row_get_index(gtk_list_box_get_selected_row (client->m->box_message));
+    UNUSED(data);
+    gtk_entry_set_placeholder_text(GTK_ENTRY(message_entry), "Insert edited text here...");
 
-    msg_id_q *current = client->msg_id_q_head;
-
-    while (index) {
-        current = current->next;
-        index--;
-    }
-    printf("edited: msd_id -- %d\n", current->msg_id);
-    edit_msg_request_s *edit_msg = (edit_msg_request_s *)malloc(sizeof(edit_msg_request_s));
-    edit_msg->msg_id = current->msg_id;
-    edit_msg->new_text = strdup("edited_text");
-    edit_msg->client = client;
-    edit_msg_request(edit_msg);
-    gtk_list_box_unselect_all(client->m->box_message);
+    gtk_widget_show(GTK_WIDGET(edit_b));
 }
 
 gboolean message_show(gpointer m) {
@@ -50,7 +36,8 @@ gboolean message_show(gpointer m) {
     GtkTextView *view ;
     GtkTextBuffer *buffer;
     GtkTextIter end;
-
+    GtkAdjustment *adj;
+    gint ind;
     view = GTK_TEXT_VIEW(gtk_text_view_new ());
     gtk_text_view_set_editable (view, FALSE);
     buffer = gtk_text_buffer_new(NULL);
@@ -59,29 +46,52 @@ gboolean message_show(gpointer m) {
     gtk_text_buffer_get_iter_at_offset(buffer, &end, 0);
     char time_buf[BUFFER_SZ];
     if (received_mess->message[0] != 0) {
-        time_t time = (time_t)(atoi(received_mess->time));
-        struct tm *ptm = localtime(&time);
-        if (ptm == NULL) {
-            puts("The localtime() function failed");
-            return FALSE;
-        }
-        gtk_text_buffer_insert_interactive (buffer, &end, itoa(received_mess->msg_id, 10), -1, TRUE );
-        snprintf(time_buf, BUFFER_SZ, "  --  %02d:%02d:%02d", ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
-        gtk_text_buffer_insert_interactive (buffer, &end, time_buf, -1, TRUE );
-        gtk_text_buffer_insert_interactive (buffer, &end, "   ", -1, TRUE );
-        gtk_text_buffer_insert_interactive (buffer, &end, received_mess->sender_name, -1, TRUE );
-        gtk_text_buffer_insert_interactive (buffer, &end, ": ", -1, TRUE );
-        gtk_text_buffer_insert_interactive (buffer, &end, received_mess->message, -1, TRUE );
-        bzero(time_buf, BUFFER_SZ);
+        if (strcmp(received_mess->is_special, "0") == 0) {
+            time_t time = (time_t)(atoi(received_mess->time));
+            struct tm *ptm = localtime(&time);
+            if (ptm == NULL) {
+                puts("The localtime() function failed");
+                return FALSE;
+            }
+            //gtk_text_buffer_insert_interactive (buffer, &end, itoa(received_mess->msg_id, 10), -1, TRUE );
+            //snprintf(time_buf, BUFFER_SZ, "  --  %02d:%02d:%02d", ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
+            snprintf(time_buf, BUFFER_SZ, "  %02d:%02d", ptm->tm_hour, ptm->tm_min);
+            gtk_text_buffer_insert_interactive (buffer, &end, time_buf, -1, TRUE );
+            gtk_text_buffer_insert_interactive (buffer, &end, "   ", -1, TRUE );
+            gtk_text_buffer_insert_interactive (buffer, &end, received_mess->sender_name, -1, TRUE );
+            gtk_text_buffer_insert_interactive (buffer, &end, ": ", -1, TRUE );
+            gtk_text_buffer_insert_interactive (buffer, &end, received_mess->message, -1, TRUE );
+            bzero(time_buf, BUFFER_SZ);
 
-        gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view));
-        received_mess->client->m->row_num_list_gtk++;
-        to_msg_id_q(received_mess->msg_id, &received_mess->client->msg_id_q_head);
-        
-        gtk_widget_show (GTK_WIDGET(view));
-        gtk_container_set_focus_child(GTK_CONTAINER(received_mess->client->m->box_message),
-            GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk)));
-        //gtk_widget_grab_focus (GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk)));
+            gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view));
+            received_mess->client->m->row_num_list_gtk++;
+            to_msg_id_q(received_mess->msg_id, &received_mess->client->msg_id_q_head);
+
+            gtk_widget_show (GTK_WIDGET(view));
+            adj= GTK_ADJUSTMENT(gtk_builder_get_object(builder,"scroll_messeges"));
+            gtk_container_set_focus_vadjustment(GTK_CONTAINER(received_mess->client->m->box_message),
+                                                adj);
+            //printf("INDEX: %d\n", received_mess->client->m->row_num_list_gtk);
+            ind =  gtk_list_box_row_get_index (gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk));
+            //gtk_container_set_focus_child(GTK_CONTAINER(received_mess->client->m->box_message),
+            //                           GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, ind+ind)));
+            gtk_container_set_focus_child(GTK_CONTAINER(received_mess->client->m->box_message),
+                                      GTK_WIDGET(view));
+            //gtk_widget_grab_focus (GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk)));
+        }
+        else {
+            gtk_text_buffer_insert_interactive (buffer, &end, received_mess->message, -1, TRUE );
+
+            gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view));
+            received_mess->client->m->row_num_list_gtk++;
+            to_msg_id_q(received_mess->msg_id, &received_mess->client->msg_id_q_head);
+
+            gtk_widget_show (GTK_WIDGET(view));
+            adj = GTK_ADJUSTMENT(gtk_builder_get_object(builder,"scroll_messeges"));
+            gtk_container_set_focus_vadjustment(GTK_CONTAINER(received_mess->client->m->box_message), adj);
+            ind =  gtk_list_box_row_get_index (gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk));
+            gtk_container_set_focus_child(GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view));
+        }
         memset(received_mess->message, 0, sizeof(received_mess->message));
         memset(received_mess->sender_name, 0, sizeof(received_mess->sender_name));
     }
@@ -104,10 +114,12 @@ void message_send(GtkWidget *widget, gpointer data) {
         return;
     }
 
-    snprintf(buffer, BUFFER_SZ, "<%d> <%s> <%d>", client->active_chat_id, message_str, (int)rawtime);
-    cmd.command = "<SEND>";
-    cmd.params = strdup(buffer);
-    send_cmd(cmd, client);
+    if (client->active_chat_id != -1) {
+        snprintf(buffer, BUFFER_SZ, "<%d> <%s> <%d> <0>", client->active_chat_id, message_str, (int)rawtime);
+        cmd.command = "<SEND>";
+        cmd.params = strdup(buffer);
+        send_cmd(cmd, client);
+    }
     bzero(buffer, BUFFER_SZ);
 }
 

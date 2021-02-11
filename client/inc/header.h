@@ -28,9 +28,9 @@
 // DEFINES
 	#define MAX_CLIENTS 100
 	#define MAX_CHATS 1000
-	#define BUFFER_SZ 2048
+	#define BUFFER_SZ 4096
 	#define NAME_SZ 32
-	#define AMOUNT_OF_CMD 6
+	#define AMOUNT_OF_CMD 7
 //////////////////////////
 
 // STRUCTURES
@@ -57,6 +57,8 @@
 	typedef struct chat_info {
 		int chat_id;
 		char *chat_name;
+		int last_msg_time;
+		int f_unread_msg_id;
 		struct chat_info *next;
 	} chat_info_t;
 
@@ -71,7 +73,6 @@
 		struct sockaddr_in address; // Stores ip (sin_addr.s_addr), port (sin_port) and ip format (sin_family = AF_INET)
 		int sockfd;
 		int uid;
-		char name[NAME_SZ];
 		char *login;
 		char *pass;
 		gtk_utils_t *m;
@@ -97,6 +98,7 @@
 
 	typedef struct {
 		int msg_id;
+		int chat_id;
 		client_t *client;
 	} del_msg_request_s;
 
@@ -111,6 +113,12 @@
 		client_t *client;
 	} edit_msg_request_s;
 
+	typedef struct {
+		int chat_id;
+		char *username;
+		client_t *client;
+	} add_user_to_chat_request_s;
+
 // --- msg, command, cmd function ---
 	typedef struct received_s {
 		client_t *client;
@@ -119,6 +127,7 @@
 		char message[BUFFER_SZ];
 		char time[BUFFER_SZ];
 		char sender_name[NAME_SZ];
+		char is_special[2];
 	}	received_messages;
 
 	typedef struct {
@@ -206,19 +215,12 @@
 	void *reconnect_to_server(void *cnct_inf);
 
 // --- QUEUES ---
-	// Inserts the message into the message queue
 	void to_msg_q(char *data, struct msg_q **msg_q_front, pthread_mutex_t msg_lock);
-	// Inserts the command into the command queue
 	void to_cmd_q(command data, struct cmd_q **cmd_q_front, pthread_mutex_t cmd_lock);
-
 	void to_msg_id_q(int msg_id, msg_id_q **msg_id_q_head);
-
 	void clear_msg_id_q(msg_id_q **msg_id_q_head);
-
 	void display_msg_id_q(msg_id_q **msg_id_q_head);
-
 	void del_elem_msg_id_q(msg_id_q **msg_id_q_head, int msg_id);
-
 	int get_index_by_msg_id(msg_id_q **msg_id_q_head, int msg_id);
 
 	// Deletes the first elememt from the message queue
@@ -231,22 +233,21 @@
 	command take_fst_cmd_in_q(struct cmd_q **cmd_q_front);
 
 // --- CHAT LIST ---
-	// Inserts the chat into the chat list
 	void to_chat_list(int chat_id, char *chat_name, chat_info_t **chat_list_head);
-	// Displays the chat list
 	void display_chat_list(chat_info_t **chat_list_head);
-	// Gets chat list size
 	int chat_list_size(chat_info_t **chat_list_head);
+	int get_index_by_chat_id(chat_info_t **chat_list_head, int chat_id);
 	int is_chat_exists(chat_info_t **chat_list_head, int chat_id);
-
-	void send_cmd(command cmd, client_t *client);
-	void analyse_cmd(command fst_cmd, cmd_func function, client_t *client);
+	void del_elem_chat_list(chat_info_t **chat_list_head, int chat_id);
+	chat_info_t *get_chat_p_by_chat_id(chat_info_t **chat_list_head, int chat_id) ;
 
 // --- REQUESTS ---
 	void get_msg_request(GtkWidget *widget, gpointer data);
 	void new_chat_request(GtkWidget *widget, gpointer data);
 	void delete_msg_request(del_msg_request_s *delete_msg_request);
-	void edit_msg_request(edit_msg_request_s *edit_msg_request);
+	void leave_chat_request(GtkWidget *widget, gpointer data);
+	void edit_msg_request(GtkWidget *widget, gpointer data);
+	void add_user_to_chat_request(GtkWidget *widget, gpointer data);
 
 // --- SWITCHES ---
 	void init_switches(void);
@@ -264,9 +265,11 @@
 	char *take_param(char *params, int number);
 	char *itoa(int val, int base);
 
+	void send_cmd(command cmd, client_t *client);
+	void analyse_cmd(command fst_cmd, cmd_func function, client_t *client);
+
 //////////////////////////
 
-// GLOBAL VARIABLES
 	int sw_login;
 	int sw_register;
 

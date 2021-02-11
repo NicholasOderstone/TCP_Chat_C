@@ -54,9 +54,9 @@ int main(int argc, char **argv){
 
 	/* Data Base */
 	initDB();
-	//insertChat("Chat_test", "Description3");
 
 	//daemonize();
+
 	while(1){
 		socklen_t clilen = sizeof(cli_addr);
 		/* Accept incoming connection */
@@ -75,15 +75,16 @@ int main(int argc, char **argv){
 		client_t *cli = (client_t *)malloc(sizeof(client_t));
 		cli->address = cli_addr;
 		cli->sockfd = connfd;
-		cli->uid = server.uid++;
+		// cli->uid = server.uid++;
+
+		
+		/* Add client to the client array and fork thread */
+		
 
 		/* Convert to the buff_t to transfer to the new thread*/
 		buff_t *clnt = (buff_t *)malloc(sizeof(buff_t));
 		clnt->serv_inf = &server;
-		clnt->uid = cli->uid;
-		/* Add client to the client array and fork thread */
-		client_add(cli, &server);
-
+		clnt->uid = client_add(cli, &server);
 		pthread_create(&tid, NULL, &handle_client, (void*)clnt);
 		/* Reduce CPU usage */
 		sleep(1);

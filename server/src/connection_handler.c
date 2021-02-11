@@ -29,12 +29,14 @@ void *handle_client(void *arg){
 	client_t *client = serv_inf->clients[cid];
 	client->exit_flag = 0;
 
+	// Поток чтения сообщений
 	pthread_t th_read_msg;
 	struct read_msg_info_s *read_msg_info = (struct read_msg_info_s *)malloc(sizeof(struct read_msg_info_s));
 	read_msg_info->client = client;
 	read_msg_info->cmd_q_front = &cmd_q_front;
 	pthread_create(&th_read_msg, NULL, read_msg, (void *)read_msg_info);
 
+	// Поток обработки комманд
 	pthread_t th_process_cmd;
 	struct process_cmd_info_s *process_cmd_info = (struct process_cmd_info_s *)malloc(sizeof(struct process_cmd_info_s));
 	process_cmd_info->cmd_q_front = &cmd_q_front;
@@ -51,7 +53,7 @@ void *handle_client(void *arg){
 	client_remove(client->uid, serv_inf);
 	free(client);
 	//free(read_msg_info);
-	//free(process_cmd_info);
+	//free(process_cmd_info); // Если ты раскомментируешь это у тебя будет вылетать сервер в 1 из 20 случаев при закрытии клиента
 	pthread_detach(pthread_self());
 
 	return NULL;

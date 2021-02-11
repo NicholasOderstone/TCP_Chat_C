@@ -19,8 +19,6 @@ void *process_cmd(void *arg) {
 		struct command fst_cmd = take_fst_cmd_in_q(Info->cmd_q_front);
 		move_cmd_q(Info->cmd_q_front);
 		for (int j = 0; j < AMOUNT_OF_CMD; j++) {
-			// printf("fst_cmd.command, \"%s\"\t", fst_cmd.command);
-			// printf("Info->arr_cmd_func[j].name, \"%s\"\n", Info->arr_cmd_func[j].name);
 			if (strcmp(fst_cmd.command, Info->arr_cmd_func[j].name) == 0) {
 				printf("--- %s ---\n", Info->arr_cmd_func[j].name);
 				Info->arr_cmd_func[j].func(fst_cmd.params, Info->buff_m);

@@ -20,8 +20,6 @@ void to_chat_list(int chat_id, char *chat_name, chat_info_t **chat_list_head) {
         }
         current->next = temp;
     }
-    //printf("now in chat_list: %s", current->chat_name);
-    //printf("\tid: %d\n", current->chat_id);
     pthread_mutex_unlock(&chat_lock);
 }
 
@@ -52,7 +50,6 @@ void del_elem_chat_list(chat_info_t **chat_list_head, int chat_id) {
     }
     prev_elem->next = temp->next;
     free(temp);
-    //printf(" !! chat with chat_id %d deleted\n", chat_id);
     return;
 }
 

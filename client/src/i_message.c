@@ -71,7 +71,7 @@ gboolean message_show(gpointer m) {
             to_msg_id_q(received_mess->msg_id, &received_mess->client->msg_id_q_head);
 
             gtk_widget_show (GTK_WIDGET(view));
-
+            gtk_widget_set_name(GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk)), "message");
             adj= GTK_ADJUSTMENT(gtk_builder_get_object(builder,"scroll_messeges"));
             gtk_adjustment_set_page_size (adj, 0);
             double value = gtk_adjustment_get_upper(adj);

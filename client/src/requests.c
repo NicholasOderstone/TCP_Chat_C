@@ -6,6 +6,8 @@ void get_msg_request(GtkWidget *widget, gpointer data) {
     gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), TRUE);
     get_messages_request_s *get_messages_r = (get_messages_request_s *)data;
     if (get_messages_r->client->active_chat_id != get_messages_r->chat->chat_id) {
+        printf("get_messages_r->chat->f_unread_msg_id: %d\n", get_messages_r->chat->f_unread_msg_id);
+        get_messages_r->chat->f_unread_msg_id = -1;
     	get_messages_r->client->active_chat_id = get_messages_r->chat->chat_id;
         gtk_button_set_label(chat_lbl, get_messages_r->chat->chat_name);
         gtk_label_set_text (chat_label, get_messages_r->chat->chat_name);

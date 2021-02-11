@@ -184,7 +184,7 @@ gboolean chat_show(gpointer m) {
                 return FALSE;
             }
 
-            snprintf(last_msg_time_buf, BUFFER_SZ, "%s  %02d:%02d", chat_show_info->chat->chat_name, ptm->tm_hour, ptm->tm_min);
+            snprintf(last_msg_time_buf, BUFFER_SZ, "%s  %02d:%02d unread_msg_id: %d", chat_show_info->chat->chat_name, ptm->tm_hour, ptm->tm_min, chat_show_info->chat->f_unread_msg_id);
         }
         else {
             snprintf(last_msg_time_buf, BUFFER_SZ, "%s", chat_show_info->chat->chat_name);

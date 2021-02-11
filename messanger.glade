@@ -361,6 +361,7 @@
         </child>
         <child>
           <object class="GtkLabel" id="incorrect_l">
+            <property name="name">incorrect_l</property>
             <property name="width-request">158</property>
             <property name="height-request">29</property>
             <property name="visible">True</property>
@@ -374,6 +375,7 @@
         </child>
         <child>
           <object class="GtkLabel" id="incorrect_p">
+            <property name="name">incorrect_p</property>
             <property name="width-request">158</property>
             <property name="height-request">29</property>
             <property name="visible">True</property>

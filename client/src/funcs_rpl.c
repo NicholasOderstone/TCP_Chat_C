@@ -46,8 +46,42 @@ void func_rpl_send(char *params, void *p) {
     strcpy(received_mess->sender_login, take_param(params, 3));
     received_mess->msg_id = atoi(take_param(params, 2));
     received_mess->chat_id = atoi(take_param(params, 1));
-    if (received_mess->chat_id == received_mess->client->active_chat_id)
+
+    int chat_index = get_index_by_chat_id(&received_mess->client->chat_list_head, received_mess->chat_id);
+    write(1, "1\n", 2);
+    char last_msg_time_buf[BUFFER_SZ];
+    chat_info_t *chat = get_chat_p_by_chat_id(&received_mess->client->chat_list_head, received_mess->chat_id);
+    write(1, "2\n", 2);
+
+    int rcv_time = atoi(received_mess->time);
+    if (rcv_time >= chat->last_msg_time) {
+         write(1, "3\n", 2);
+        chat->last_msg_time = rcv_time;
+        printf("%d\n", chat->last_msg_time);
+        time_t time = (time_t)chat->last_msg_time;
+         write(1, "4\n", 2);
+        struct tm *ptm = localtime(&time);
+        if (ptm == NULL) {
+            puts("The localtime() function failed");
+            return;
+        }
+         write(1, "5\n", 2);
+        snprintf(last_msg_time_buf, BUFFER_SZ, "%s  %02d:%02d", chat->chat_name, ptm->tm_hour, ptm->tm_min);
+         write(1, "6\n", 2);
+        gtk_button_set_label(GTK_BUTTON(received_mess->client->m->chat[chat_index]), last_msg_time_buf);
+         write(1, "7\n", 2);
+    }
+     write(1, "0\n\n", 3);
+
+   /*  if (chat->f_unread_msg_id == -1) {
+        chat->f_unread_msg_id = received_mess->msg_id;
+    } */
+
+
+    if (received_mess->chat_id == received_mess->client->active_chat_id) {
         gdk_threads_add_idle(message_show, (gpointer)received_mess);
+    }
+    //bzero(last_msg_time_buf, BUFFER_SZ);
 }
 
 // --- DELETE_MSG ---
@@ -97,19 +131,19 @@ void func_rpl_del_chat(char *params, void *p) {
 // --- ADD_CHAT ---
 void func_rpl_add_chat(char *params, void *p) {
     client_t *client = (client_t *)p;
-    int p_id = atoi(take_param(params, 1));
-    char *p_name = take_param(params, 2);
-    if (p_id == -1) {
+    int p_chat_id = atoi(take_param(params, 1));
+    char *p_chat_name = take_param(params, 2);
+    if (p_chat_id == -1) {
         return;
     }
 
-    if (is_chat_exists(&client->chat_list_head, p_id)) {
+    if (is_chat_exists(&client->chat_list_head, p_chat_id)) {
         return;
     }
 
     // if chat_name not NULL
-    if (p_name != NULL) {
-        to_chat_list(p_id, p_name, &client->chat_list_head);
+    if (p_chat_name != NULL) {
+        to_chat_list(p_chat_id, p_chat_name, &client->chat_list_head);
     }
 
     chat_info_t *current = client->chat_list_head;
@@ -120,11 +154,15 @@ void func_rpl_add_chat(char *params, void *p) {
         current = current->next;
     }
 
+
+
     chat_show_info_s *chat_show_info = (chat_show_info_s *)malloc(sizeof(chat_show_info_s));
     chat_show_info->chat = prev;
-    chat_show_info->chat->last_msg_time = (time_t)atoi(take_param(params, 3));
+    chat_show_info->chat->f_unread_msg_id = atoi(take_param(params, 3));
+    chat_show_info->chat->last_msg_time = atoi(take_param(params, 4));
     chat_show_info->client = client;
     chat_show_info->counter = ++client->last_chat_index;
+
     display_chat_list(&client->chat_list_head);
     //printf("rpl #### counter: %d  client->last_chat_index: %d  chat: %s #####\n",
     //    chat_show_info->counter, client->last_chat_index, chat_show_info->chat->chat_name);

@@ -65,12 +65,13 @@ sql = "CREATE TABLE IF NOT EXISTS CHATS("  \
 
 
 //USER_IN_CHAT
-  sql = "CREATE TABLE IF NOT EXISTS USER_IN_CHAT("  \
+ sql = "CREATE TABLE IF NOT EXISTS USER_IN_CHAT("  \
       "ID INTEGER PRIMARY KEY     AUTOINCREMENT," \
       "USER_ID       INT     NOT NULL," \
       "LOGIN         TEXT    NOT NULL," \
       "CHAT_ID       INT     NOT NULL," \
-      "NAME          TEXT    NOT NULL);";
+      "NAME          TEXT    NOT NULL," \
+      "UNREAD        INT     );";
   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
 
 
@@ -83,6 +84,33 @@ sql = "CREATE TABLE IF NOT EXISTS CHATS("  \
    sqlite3_close(db);
 
    return 0;
+}
+
+void setUNREAD(int chat_id, int user_id, int unread){
+    char sql[500];
+    sprintf (sql,"UPDATE USER_IN_CHAT SET UNREAD = %d WHERE CHAT_ID = %d and USER_ID = %d;", unread, chat_id, user_id);
+    sqlite3 *db;
+    sqlite3_stmt *res = NULL;
+    char *err_msg = 0;
+    int rc = sqlite3_open("data.db", &db);
+    rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+    sqlite3_finalize(res);
+    sqlite3_close(db);
+    return;
+}
+int getUNREAD(int chat_id, int user_id){
+    sqlite3 *db;
+    sqlite3_stmt *res;
+    int rez;
+    int rc = sqlite3_open("data.db", &db);
+    char sql[500];
+    sprintf(sql, "SELECT UNREAD FROM USER_IN_CHAT WHERE CHAT_ID = %d and USER_ID = %d", chat_id, user_id);
+    rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
+    rc = sqlite3_step(res);
+    rez = sqlite3_column_int(res, 0);
+    sqlite3_finalize(res);
+    sqlite3_close(db);
+return rez;
 }
 
 
@@ -583,6 +611,38 @@ char* getOneMessage(int id, char* rez){
 void updateNameUser(int id, char* name){
    char sql[500];
     sprintf (sql,"update USERS set LOGIN = '%s' where ID = '%d'", name, id);
+
+
+    sqlite3 *db;
+    char *err_msg = 0;
+
+    int rc = sqlite3_open("data.db", &db);
+
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return;
+    }
+
+    rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
+
+    if (rc != SQLITE_OK ) {
+
+        fprintf(stderr, "SQL error: %s\n", err_msg);
+
+        sqlite3_free(err_msg);
+        sqlite3_close(db);
+
+        return;
+    }
+
+    sqlite3_close(db);
+    return;
+}
+
+void updateNick(int id, char* name){
+   char sql[500];
+    sprintf (sql,"update USERS set NICK = '%s' where ID = '%d'", name, id);
 
 
     sqlite3 *db;
@@ -1184,23 +1244,11 @@ void insertUSER_TO_CHAT(int user_id, int chat_id){
     sprintf(name, "%s", sqlite3_column_text(res, 0));
     sqlite3_finalize(res);
 
-    sprintf (sql,"INSERT INTO USER_IN_CHAT (USER_ID, LOGIN, CHAT_ID, NAME) VALUES ('%d','%s','%d','%s');",user_id,login,chat_id,name);
+    sprintf (sql,"INSERT INTO USER_IN_CHAT (USER_ID, LOGIN, CHAT_ID, NAME, UNREAD) VALUES ('%d','%s','%d','%s', '%d');",user_id,login,chat_id,name, -1);
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     sqlite3_close(db);
     return;
     //INSERT INTO USER_IN_CHAT (USER_ID, LOGIN, CHAT_ID, NAME) VALUES ('1','test1','1','chat1');
-}
-
-void insertUSER_TO_CHAT2(int user_id, char* login, int chat_id, char* name){
-    char sql[500];
-    sqlite3 *db;
-    char *err_msg = 0;
-    int rc = sqlite3_open("data.db", &db);
-    sprintf (sql,"INSERT INTO USER_IN_CHAT (USER_ID, LOGIN, CHAT_ID, NAME) VALUES ('%d','%s','%d','%s');",user_id,login,chat_id,name);
-    printf("%s", sql);
-    rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
-    sqlite3_close(db);
-    return;
 }
 
 int createChat(int creator_id, char *name)  {
@@ -1417,11 +1465,12 @@ user_t *pack_chat_members(int id){
     return new_user;
 }
 
-int getTimeLastMsg(int id) {
+
+int getLastMsgTime(int id) {
    sqlite3 *db;
     sqlite3_stmt *res;
     int rc = sqlite3_open("data.db", &db);
-    rc = sqlite3_prepare_v2(db, "select DATE from MESSAGES where CHAT_ID = ?, IS_READ = 0;", -1, &res, 0);
+    rc = sqlite3_prepare_v2(db, "select MAX(DATE) from MESSAGES where CHAT_ID = ?;", -1, &res, 0);
     sqlite3_bind_int(res, 1, id);
     rc = sqlite3_step(res);
     if (sqlite3_column_int(res, 0) == 0) {

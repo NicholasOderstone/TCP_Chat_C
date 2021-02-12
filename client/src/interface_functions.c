@@ -63,7 +63,9 @@ void open_signup_page(GtkWidget *widget, gpointer gp_client)
     g_signal_connect(signup_b, "clicked", G_CALLBACK(func_register), gp_client);
     gtk_widget_show(window);
 }
+void change_img (GtkWidget *widget){
 
+}
 void open_login_page(GtkWidget *widget, gpointer gp_client)
 {
 	UNUSED(widget);

@@ -15,6 +15,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
 
     GtkWidget *send_b_image = gtk_image_new_from_file ("client/resources/send_b_img.png");
     GtkWidget *edit_b_image = gtk_image_new_from_file ("client/resources/edit.png");
+    GtkWidget *add_chat_b_image = gtk_image_new_from_file ("client/resources/add_chat.png");
     GtkButton *add_chat;
 
     gtk_css_provider_load_from_path(cssProvider, "client/resources/gtk.css", NULL);
@@ -39,6 +40,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     user_name  = GTK_LABEL(gtk_builder_get_object(builder, "name_user"));
     gtk_label_set_text(user_name, client->login);
     add_chat = GTK_BUTTON(gtk_builder_get_object(builder, "add_chat"));
+    gtk_button_set_image(add_chat, add_chat_b_image);
     cancel_n  = GTK_BUTTON(gtk_builder_get_object(builder, "cancel_n"));
     cancel_u  = GTK_BUTTON(gtk_builder_get_object(builder, "cancel_u"));
     chat_lbl = GTK_BUTTON(gtk_builder_get_object (builder, "chat_label"));

@@ -152,9 +152,9 @@ void new_chat(GtkWidget *widget, gpointer data) {
     static int i = 0;
     // printf("index new_chat: %d\n", i);
     i++;
-
+    gtk_window_get_position (GTK_WINDOW(window), &client->m->root_x, &client->m->root_y);
     chat_name_d  = GTK_WIDGET(gtk_builder_get_object(builder, "chat_name"));
-    gtk_window_move(GTK_WINDOW(chat_name_d), client->m->root_x, client->m->root_y);
+    gtk_window_move(GTK_WINDOW(chat_name_d), client->m->root_x+2, client->m->root_y+675);
     gtk_widget_show(chat_name_d);
     chat_name = GTK_WIDGET(gtk_builder_get_object(builder, "name"));
     chatname_entry = GTK_ENTRY(gtk_builder_get_object(builder, "name"));

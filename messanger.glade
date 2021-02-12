@@ -661,8 +661,8 @@
         <child>
           <object class="GtkButton" id="login_p">
             <property name="name">login_p</property>
-            <property name="width-request">90</property>
-            <property name="height-request">44</property>
+            <property name="width-request">57</property>
+            <property name="height-request">49</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>

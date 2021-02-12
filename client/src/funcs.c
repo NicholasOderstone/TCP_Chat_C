@@ -58,7 +58,7 @@ void func_register(GtkWidget *widget, gpointer data) {
         case 0:
             client->login = strdup(p_login);
             client->pass = strdup(p_pass);
-			gtk_widget_hide(GTK_WIDGET(hide));
+			gtk_widget_hide(GTK_WIDGET(diff_p));
 			gtk_widget_hide(GTK_WIDGET(username_e));
             open_main_page(NULL, data);
             sw_register = -1;

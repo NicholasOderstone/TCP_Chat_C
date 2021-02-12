@@ -95,7 +95,7 @@ gboolean message_show(gpointer m) {
         }
         else {
             gtk_text_buffer_insert_interactive (buffer, &end, received_mess->message, -1, TRUE );
-
+            gtk_widget_set_name(GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk)), "message_s");
             gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view));
             //    gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view_e));
             received_mess->client->m->row_num_list_gtk++;

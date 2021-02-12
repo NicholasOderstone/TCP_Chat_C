@@ -149,6 +149,74 @@ label#incorrect_l{/* нееврный логин*/
 label#incorrect_p{/* нееврный пароль*/
   color: white;
 }
+button#login_p { /* кнопка для перехода на странцу логина*/
+
+}
+button#signup_b { /* кнопка для регистрации*/
+
+}
+button#signup_p { /* кнопка для перехода на страницу регистрации*/
+    color: #ff00ea;
+}
+button#login_b { /* кнопка для логина*/
+
+}
+button#edit_b { /* кнопка edit s galochkoy*/
+
+}
+button#edit { /* кнопка edit*/
+
+}
+button#delete { /* кнопка edit*/
+
+}
+button#add_mem { /* кнопка для add user to chat*/
+
+}
+
+button#menu_b { /* кнопка menu*/
+
+}
+button#cancel_d { /* кнопка cancel*/
+
+}button#cancel_n { /* кнопка cancel*/
+
+}button#cancel_u { /* кнопка cancel*/
+
+}button#add { /* кнопка cancel*/
+
+}button#chat_lbl { /* кнопка chata*/
+
+}button#ch_b { /* кнопка confirm*/
+
+}button#add_member { /* кнопка add member*/
+
+}button#leave_chat { /* кнопка leave chat*/
+
+}button#confirm { /* кнопка confirm*/
+
+}button#chatbutton { /* кнопка с именем чата*/
+
+}
+#messages * {
+    background-color: #222629;
+    background-image: none;
+    color: white;
+}
+#message * {
+    background-color: #474B4F;
+    background-image: none;
+    color: white;
+}
+#chats{
+
+}
+label#incorrect_l{/* нееврный логин*/
+    color: white;
+}
+label#incorrect_p{/* нееврный пароль*/
+    color: white;
+}
 label#chat_lbl{
   color: white;
 }

@@ -48,10 +48,10 @@ void func_rpl_send(char *params, void *p) {
     received_mess->chat_id = atoi(take_param(params, 1));
 
     int chat_index = get_index_by_chat_id(&received_mess->client->chat_list_head, received_mess->chat_id);
-    write(1, "1\n", 2);
+    //write(1, "1\n", 2);
     char last_msg_time_buf[BUFFER_SZ];
     chat_info_t *chat = get_chat_p_by_chat_id(&received_mess->client->chat_list_head, received_mess->chat_id);
-    write(1, "2\n", 2);
+    //write(1, "2\n", 2);
 
 
     int old_unread_msg_id = chat->f_unread_msg_id;
@@ -66,25 +66,28 @@ void func_rpl_send(char *params, void *p) {
             }
         }
     }
-    
+
     if (((rcv_time / 60) > (chat->last_msg_time / 60)) || old_unread_msg_id != chat->f_unread_msg_id) {
-         
+
         chat->last_msg_time = rcv_time;
         printf("%d\n", chat->last_msg_time);
         time_t time = (time_t)chat->last_msg_time;
-         
+
         struct tm *ptm = localtime(&time);
         if (ptm == NULL) {
             puts("The localtime() function failed");
             return;
         }
-         
-        snprintf(last_msg_time_buf, BUFFER_SZ, "%s  %02d:%02d unread_msg_id: %d", chat->chat_name, ptm->tm_hour, ptm->tm_min, chat->f_unread_msg_id);
-        gtk_button_set_label(GTK_BUTTON(received_mess->client->m->chat[chat_index]), last_msg_time_buf);
-         
+
+        snprintf(last_msg_time_buf, BUFFER_SZ, "%s %02d:%02d ", chat->chat_name, ptm->tm_hour, ptm->tm_min);
+            if (received_mess->chat_id != received_mess->client->active_chat_id) {
+            gtk_button_set_label(GTK_BUTTON(received_mess->client->m->chat[chat_index]), last_msg_time_buf);
+            gtk_widget_show(received_mess->client->m->unread_b_images[chat_index]);
+        }
+
     }
 
-   
+
    /*  if (chat->f_unread_msg_id == -1) {
         chat->f_unread_msg_id = received_mess->msg_id;
     } */

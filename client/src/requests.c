@@ -15,10 +15,11 @@ void get_msg_request(GtkWidget *widget, gpointer data) {
         }
 
         char last_msg_time_buf[BUFFER_SZ];
-        snprintf(last_msg_time_buf, BUFFER_SZ, "%s  %02d:%02d unread_msg_id: %d", get_messages_r->chat->chat_name, ptm->tm_hour, ptm->tm_min, get_messages_r->chat->f_unread_msg_id);
+        snprintf(last_msg_time_buf, BUFFER_SZ, "%s %02d:%02d ", get_messages_r->chat->chat_name, ptm->tm_hour, ptm->tm_min);
 
         int chat_index = get_index_by_chat_id(&get_messages_r->client->chat_list_head, get_messages_r->chat->chat_id);
         gtk_button_set_label(GTK_BUTTON(get_messages_r->client->m->chat[chat_index]), last_msg_time_buf);
+        gtk_widget_hide(get_messages_r->client->m->unread_b_images[chat_index]);
 
     	get_messages_r->client->active_chat_id = get_messages_r->chat->chat_id;
         gtk_button_set_label(chat_lbl, get_messages_r->chat->chat_name);

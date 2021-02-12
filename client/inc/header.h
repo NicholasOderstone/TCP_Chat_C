@@ -45,6 +45,7 @@
 		GtkListBox *box_message;
 		GtkListBox *box_chat_list;
 		GtkWidget *chat[MAX_CHATS];
+	    GtkWidget *unread_b_images[MAX_CHATS];
 		GtkButtonBox *b_box;
 		GtkWidget *cancel_b;
 		GtkWidget *edit_b;

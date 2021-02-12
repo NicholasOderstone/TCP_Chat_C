@@ -41,11 +41,16 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     gtk_widget_hide(GTK_WIDGET(edit_b));
     menu_b = GTK_BUTTON(gtk_builder_get_object (builder, "main_menu"));
     chat_label  = GTK_LABEL(gtk_builder_get_object(builder, "chat_lbl"));
+
+    cancel_d  = GTK_BUTTON(gtk_builder_get_object(builder, "cancel_d"));
+    cancel_n  = GTK_BUTTON(gtk_builder_get_object(builder, "cancel_n"));
+    cancel_u  = GTK_BUTTON(gtk_builder_get_object(builder, "cancel_u"));
     gtk_button_set_image (menu_b, menu_b_image);
     menu_new_chat = gtk_menu_item_new_with_label ("Add Chat");
     menu_join_chat = gtk_menu_item_new_with_label ("Join Chat");
     menu = GTK_MENU(gtk_builder_get_object (builder, "menu"));
     chat_lbl = GTK_BUTTON(gtk_builder_get_object (builder, "chat_label"));
+    gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), FALSE);
     gtk_button_set_label(chat_lbl, "");
     gtk_menu_button_set_popup (GTK_MENU_BUTTON(menu_b), GTK_WIDGET(menu));
 
@@ -56,13 +61,12 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
 
     send_b = gtk_builder_get_object (builder, "send_buttom");
     gtk_button_set_image (GTK_BUTTON (send_b), send_b_image);
-
     client->m->box_message = GTK_LIST_BOX(gtk_builder_get_object(builder, "message_list"));
     client->m->box_chat_list = GTK_LIST_BOX(gtk_builder_get_object(builder, "chat_list"));
     //gtk_text_buffer_create_tag(message_s->buffer, "gray_bg", "background","gray", NULL);
     //gtk_text_buffer_insert_with_tags_by_name (message_s->buffer, &message_s->end, "name", -1, "gray_bg", NULL);
     message_entry = GTK_ENTRY(gtk_builder_get_object(builder, "message_entry"));
-
+    adduser_entry = GTK_ENTRY(gtk_builder_get_object(builder, "search_user"));
     //g_signal_connect(send_b, "clicked", G_CALLBACK(show_my_msg), (gpointer)message_s);
     //gtk_binding_entry_add_signall()
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_send), gp_client);
@@ -95,10 +99,14 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     g_signal_connect(message_entry, "activate", G_CALLBACK(message_send), gp_client);
     g_signal_connect(message_entry, "activate", G_CALLBACK(message_clear), NULL);
     g_signal_connect(add_user, "clicked", G_CALLBACK(add_mem_wind), gp_client);
+    g_signal_connect(add_user, "clicked", G_CALLBACK(clean_adduser), NULL);
     g_signal_connect(add_mem, "clicked", G_CALLBACK(add_user_to_chat_request), gp_client);
     g_signal_connect(leave_chat, "clicked", G_CALLBACK(leave_chat_request), leave_chat_r);
     g_signal_connect(ch_b, "clicked", G_CALLBACK(new_chat_request), (gpointer)new_chat_r);
     g_signal_connect(ch_b, "clicked", G_CALLBACK(chatname_clear), NULL);
-    g_signal_connect(menu_new_chat, "activate", G_CALLBACK(new_chat), gp_client);
     g_signal_connect(chat_lbl, "clicked", G_CALLBACK(chat_menu), gp_client);
+    g_signal_connect(menu_new_chat, "activate", G_CALLBACK(new_chat), gp_client);
+    g_signal_connect(cancel_d, "clicked", G_CALLBACK(cancel_d_f),  NULL);
+    g_signal_connect(cancel_n, "clicked", G_CALLBACK(cancel_n_f),  NULL);
+    g_signal_connect(cancel_u, "clicked", G_CALLBACK(cancel_u_f),  NULL);
 }

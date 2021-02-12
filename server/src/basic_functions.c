@@ -1,4 +1,5 @@
 #include "../inc/header.h"
+
 // Отправить все пользователям
 void send_to_all_members(char *p_chat_id, struct command cmd, buff_t *Info) {
 	user_t *user[MAX_CLIENTS];
@@ -388,6 +389,31 @@ void f_add_user_to_chat(char *params, buff_t *Info) {
 		send_cmd(cmd, Info->client);
 		return;
 	}
+
+
+
+	// Получение всех пользователей в чате
+	user_t *user[MAX_CLIENTS];
+	int num_of_memb = 0;
+	for(; 1; num_of_memb++ ) {
+		user[num_of_memb] = pack_chat_members(atoi(p_chat_id));
+		if(user[num_of_memb] == NULL) {
+			break;
+		}
+	}
+	for(int i = 0; i < num_of_memb; i++) {
+		if(strcmp(user[i]->user_name, p_username) == 0) {
+			//pthread_mutex_lock(&Info->serv_inf->clients_mutex);
+			//cmd.params = " <USER_IN_CHAT>";
+			printf("You're dolbaeb\n");
+			//send_cmd(cmd, Info->client);
+			//pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
+			return;
+		}
+	}
+	
+
+
 	insertUSER_TO_CHAT(getIdUserByUserName(p_username), atoi(p_chat_id));
 	//Получения ника и имени чата
 	/*getNickByUserName(Info->client->name, sender_nick); // Хз зачем оно мне нужно было 
@@ -424,6 +450,7 @@ void f_add_user_to_chat(char *params, buff_t *Info) {
 	bzero(send_to_client, BUFFER_SZ);
 	bzero(chat_name, BUFFER_SZ);
 }
+//USER_IN_CHAT
 // Я не хочу лезть в это дерьмо
 void f_delete_chat(char *params, buff_t *Info) {
 	char buff_out[BUFFER_SZ];

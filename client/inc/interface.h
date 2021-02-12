@@ -23,12 +23,13 @@
                 ipv_str[16], username_str_s[32], nick_str_s[32], pass_str_s[32],
                 r_pass_str_s[32], chatname_str[32], user_searh_str[32];
     int is_exit;
-    GtkEntry *message_entry, *ipv_entry, *port_entry, *chatname_entry;
+    GtkEntry *message_entry, *ipv_entry, *port_entry, *chatname_entry, *adduser_entry;
     GtkSpinner *connection_spin;
     //GtkListBox *box_chat_list;
     // GtkWidget *chat[MAX_CHATS];
-    GtkButton *ch_b, *chat_lbl, *edit_b,  *add_user, *leave_chat, *add_mem;
-    GtkLabel *chat_label;
+    GtkButton *ch_b, *chat_lbl, *edit_b,  *add_user, *leave_chat, *add_mem,
+                *cancel_u, *cancel_d, *cancel_n;
+    GtkLabel *chat_label, *incorrect_l, *incorrect_p;
 //////////////////////////
 
 // FUNCTIONS
@@ -62,6 +63,11 @@
     void close_ch_dialog();
     void add_mem_wind();
     void user_searh_changed();
+    void clean_adduser();
+    void cancel_n_f();
+    void cancel_d_f();
+    void cancel_u_f();
+    void some_func();
     //////////////////////////
 
 #endif

@@ -95,6 +95,7 @@
             <property name="margin-right">10</property>
             <property name="margin-top">28</property>
             <property name="max-length">32</property>
+            <property name="width-chars">32</property>
             <property name="max-width-chars">32</property>
             <property name="placeholder-text" translatable="yes">Entry name chat</property>
             <signal name="changed" handler="chatname_changed" swapped="no"/>
@@ -347,7 +348,7 @@
         <child>
           <object class="GtkEntry" id="message_entry">
             <property name="width-request">723</property>
-            <property name="height-request">34</property>
+            <property name="height-request">46</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="max-length">900</property>
@@ -425,7 +426,7 @@
           <object class="GtkScrolledWindow" id="scroll_chat_list">
             <property name="name">chat_back</property>
             <property name="width-request">421</property>
-            <property name="height-request">856</property>
+            <property name="height-request">868</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="vadjustment">scroll_chats</property>
@@ -564,6 +565,7 @@
         </child>
         <child>
           <object class="GtkButton" id="add_chat">
+            <property name="name">add_chat</property>
             <property name="width-request">50</property>
             <property name="height-request">50</property>
             <property name="visible">True</property>
@@ -575,7 +577,7 @@
           </object>
           <packing>
             <property name="x">355</property>
-            <property name="y">835</property>
+            <property name="y">847</property>
           </packing>
         </child>
         <child>

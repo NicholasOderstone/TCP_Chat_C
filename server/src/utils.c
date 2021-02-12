@@ -69,12 +69,16 @@ char* itoa(int num, char* buffer, int base) {
     return buffer;
 }
 
+char *mx_strnew(const int size) {
+    int i = 0;
 
-void Delete_From_DB(){
-  char temp[BUFFER_SZ];
-  for(int i = 0; i < 100; i++) {
-    deleteUser(itoa(i, temp, 10));
-    bzero(temp, BUFFER_SZ);
-  }
+    if (size < 0)
+        return 0;
+    char *str = (char *)malloc(size + 1);
+    while (i < size) {
+        str[i] = '\0';
+        i++;
+    }
+    str[i] = '\0';
+    return str;
 }
-

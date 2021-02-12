@@ -134,8 +134,6 @@
     int client_add(client_t *cl, server_info_t *serv_inf);
     /* Remove client from the clients array*/
     void client_remove(int uid, server_info_t *serv_inf);
-    /* Send message *s to all clients exept sender */
-    void send_message(char *s, int uid, server_info_t *serv_inf);
 
 
     // --- Thread functions ---
@@ -172,8 +170,6 @@
     void print_client_addr(struct sockaddr_in addr);
     /* CONBERT INT TO CHAR* */
     char* itoa(int num, char* buffer, int base);
-    /* DELETE EVERYONE FROM DB */
-    void Delete_From_DB();
     /* SEND TO ALL CHAT MEMBERS */
     void send_to_all_members(char *p_chat_id, struct command cmd, buff_t *Info);
 
@@ -194,16 +190,8 @@
 
     /* Initialize command functions */
     void initialize_functions();
-    /* Get parametr 1 */
-    char *param_1(char *params);
-    /* Get parametr 2 */
-	char *param_2(char *params);
-    /* Get parametr 3 */
-	char *param_3(char *params);
-    /* Get parametr 4 */
-	char *param_4(char *params);
-    /* Get parametr 5 */
-	char *param_5(char *params);
+    // Получить выбранный по номеру параметр
+    char *take_param(char *params, int number);
 
 
     // --- Data Base functions ---

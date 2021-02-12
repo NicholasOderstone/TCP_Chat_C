@@ -12,7 +12,6 @@ void *read_msg(void *arg) {
 				to_cmd_q(cmd, Info->cmd_q_front);
 			}
 		} else if (receive == 0 || strcmp(buff_out, "exit") == 0){
-			// Комманда LEAVE;
 			Info->client->exit_flag = 1;
 			break;
 		} else {

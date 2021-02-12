@@ -411,9 +411,7 @@ void f_add_user_to_chat(char *params, buff_t *Info) {
 
 
 	insertUSER_TO_CHAT(getIdUserByUserName(p_username), atoi(p_chat_id));
-	//Получения ника и имени чата
-	/*getNickByUserName(Info->client->name, sender_nick); // Хз зачем оно мне нужно было 
-	str_trim_lf(sender_nick, strlen(sender_nick));*/
+	//Получения имени чата
 	getChatName(atoi(p_chat_id), chat_name);
 	str_trim_lf(chat_name, strlen(chat_name));
 
@@ -447,21 +445,26 @@ void f_add_user_to_chat(char *params, buff_t *Info) {
 	bzero(chat_name, BUFFER_SZ);
 }
 
-//В самом начале только Бог и я знали что в этом коде написано, теперь только Бог
+// В самом начале только Бог и я знали что в этом коде написано, теперь только Бог
 // Я не хочу лезть в это дерьмо
+// UPD: пришлось ,(
 void f_delete_chat(char *params, buff_t *Info) {
-	char buff_out[BUFFER_SZ];
-    char buff_temp[BUFFER_SZ];
-    char tempp[BUFFER_SZ];
+	char send_to_client[BUFFER_SZ];
+    char id_owner_of_chat[BUFFER_SZ];
+    char owner_of_chat[BUFFER_SZ];
     struct command cmd;
     char *p_chat_id = take_param(params, 1);
     cmd.command = "<DELETE_CHAT>";
-    getOwner_Id_By_Chat_Id(atoi(p_chat_id), buff_temp);
-    getUserName(atoi(buff_temp), tempp);
-    str_trim_lf(tempp, strlen(tempp));
-    if(strcmp(tempp, Info->client->name) != 0) {
+
+	// Получение имени владельца чата
+    getOwner_Id_By_Chat_Id(atoi(p_chat_id), id_owner_of_chat);
+    getUserName(atoi(id_owner_of_chat), owner_of_chat);
+    str_trim_lf(owner_of_chat, strlen(owner_of_chat));
+
+    if(strcmp(owner_of_chat, Info->client->name) != 0) {// Если отправитель команды являеться владельцем чата
         deleteFromChat(getIdUserByUserName(Info->client->name), atoi(p_chat_id));
-        snprintf(buff_temp, BUFFER_SZ, " <%s>", p_chat_id);
+        snprintf(send_to_client, BUFFER_SZ, " <%s>", p_chat_id);
+		cmd.params = send_to_client;
         pthread_mutex_lock(&Info->serv_inf->clients_mutex);
         for(int i=0; i<MAX_CLIENTS; ++i){
             if(Info->serv_inf->clients[i]){
@@ -472,19 +475,26 @@ void f_delete_chat(char *params, buff_t *Info) {
         }
         pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
 
-		char buff_out156[BUFFER_SZ];
+		char user_nick[BUFFER_SZ];
+		char send_to_client_leave[BUFFER_SZ];
 
-		getNickByUserName(Info->client->name, buff_out156);
-		str_trim_lf(buff_out156, strlen(buff_out156));
-		strcat(buff_out156, " left chat");
-		snprintf(tempp, BUFFER_SZ, "<%s> <%s> <1612885395> <2>", p_chat_id, buff_out156);
-		f_send(tempp, Info);
-		bzero(buff_temp, BUFFER_SZ);
-		bzero(buff_out156, BUFFER_SZ);
-        bzero(tempp, BUFFER_SZ);
+		// Отправка того что пользователь вышел
+		getNickByUserName(Info->client->name, user_nick);
+		str_trim_lf(user_nick, strlen(user_nick));
+		strcat(user_nick, " left chat");
+		snprintf(send_to_client_leave, BUFFER_SZ, "<%s> <%s> <1612885395> <2>", p_chat_id, user_nick);
+		f_send(send_to_client_leave, Info);
+
+
+		bzero(user_nick, BUFFER_SZ);
+        bzero(owner_of_chat, BUFFER_SZ);
+		bzero(id_owner_of_chat, BUFFER_SZ);
+		bzero(send_to_client, BUFFER_SZ);
+		bzero(send_to_client_leave, BUFFER_SZ);
 
         return;
     }
+	// Получение всех юзеров в чате
     user_t *user[MAX_CLIENTS];
     int num_of_memb = 0;
     for(; 1; num_of_memb++ ) {
@@ -493,16 +503,21 @@ void f_delete_chat(char *params, buff_t *Info) {
             break;
         }
     }
+	// Удаление всех юзеров в чате
     for(int i = 0; i < num_of_memb; i++) {
         deleteFromChat(atoi(user[i]->user_id), atoi(p_chat_id));
     }
+	// Удаление чата
     deleteChat(p_chat_id);
-    snprintf(buff_out, BUFFER_SZ, " <%s>", p_chat_id);
-    cmd.params = buff_out;
+
+    snprintf(send_to_client, BUFFER_SZ, " <%s>", p_chat_id);
+    cmd.params = send_to_client;
+
     send_to_all_members_delete_special(cmd, Info, user, num_of_memb);
 
-    bzero(buff_out, BUFFER_SZ);
-    bzero(buff_temp, BUFFER_SZ);
+    bzero(send_to_client, BUFFER_SZ);
+	bzero(owner_of_chat, BUFFER_SZ);
+    bzero(id_owner_of_chat, BUFFER_SZ);
 }
 // temporary unused
 void f_delete_user_from_chat(char *params, buff_t *Info) {

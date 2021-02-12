@@ -42,8 +42,9 @@
             <property name="can-focus">False</property>
             <property name="layout-style">end</property>
             <child>
-              <object class="GtkButton" id="add_user">
-                <property name="label" translatable="yes">Add </property>
+              <object class="GtkButton" id="cancel_u">
+                <property name="label" translatable="yes">Cancel</property>
+                <property name="name">cancel_u</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
@@ -52,6 +53,20 @@
                 <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="add_user">
+                <property name="label" translatable="yes">Add </property>
+                <property name="name">add</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
               </packing>
             </child>
           </object>
@@ -98,7 +113,18 @@
             <property name="can-focus">False</property>
             <property name="layout-style">end</property>
             <child>
-              <placeholder/>
+              <object class="GtkButton" id="cancel_d">
+                <property name="label" translatable="yes">Cancel</property>
+                <property name="name">cancel_d</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <placeholder/>
@@ -126,6 +152,7 @@
         <child>
           <object class="GtkButton" id="add_member">
             <property name="label" translatable="yes">Add Member</property>
+            <property name="name">add_member</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
@@ -139,6 +166,7 @@
         <child>
           <object class="GtkButton" id="delete_chat">
             <property name="label" translatable="yes">Leave Chat</property>
+            <property name="name">leave_chat</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
@@ -176,8 +204,9 @@
             <property name="margin-right">135</property>
             <property name="layout-style">spread</property>
             <child>
-              <object class="GtkButton" id="confirm">
-                <property name="label" translatable="yes">Confirm</property>
+              <object class="GtkButton" id="cancel_n">
+                <property name="label" translatable="yes">Cancel</property>
+                <property name="name">cancel_n</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
@@ -186,6 +215,20 @@
                 <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="confirm">
+                <property name="label" translatable="yes">Confirm</property>
+                <property name="name">confirm</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
               </packing>
             </child>
           </object>
@@ -199,6 +242,7 @@
           <object class="GtkEntry" id="name">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="max-length">32</property>
             <property name="max-width-chars">32</property>
             <property name="placeholder-text" translatable="yes">Entry name chat</property>
             <signal name="changed" handler="chatname_changed" swapped="no"/>
@@ -216,6 +260,8 @@
     </accessibility>
   </object>
   <object class="GtkWindow" id="login_window">
+    <property name="width-request">950</property>
+    <property name="height-request">850</property>
     <property name="can-focus">False</property>
     <property name="window-position">center-always</property>
     <property name="gravity">static</property>
@@ -227,6 +273,7 @@
         <child>
           <object class="GtkButton" id="login_b">
             <property name="label" translatable="yes">Log In</property>
+            <property name="name">login_b</property>
             <property name="width-request">100</property>
             <property name="height-request">50</property>
             <property name="visible">True</property>
@@ -235,11 +282,12 @@
           </object>
           <packing>
             <property name="x">176</property>
-            <property name="y">266</property>
+            <property name="y">265</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel" id="label">
+            <property name="name">name</property>
             <property name="width-request">130</property>
             <property name="height-request">67</property>
             <property name="visible">True</property>
@@ -257,6 +305,7 @@
         <child>
           <object class="GtkButton" id="signup_p">
             <property name="label" translatable="yes">Sign Up</property>
+            <property name="name">signup_p</property>
             <property name="width-request">90</property>
             <property name="height-request">44</property>
             <property name="visible">True</property>
@@ -264,7 +313,7 @@
             <property name="receives-default">True</property>
           </object>
           <packing>
-            <property name="x">347</property>
+            <property name="x">340</property>
             <property name="y">20</property>
           </packing>
         </child>
@@ -310,6 +359,34 @@
             <property name="y">6</property>
           </packing>
         </child>
+        <child>
+          <object class="GtkLabel" id="incorrect_l">
+            <property name="name">incorrect_l</property>
+            <property name="width-request">158</property>
+            <property name="height-request">29</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">INCORRECT LOGIN</property>
+          </object>
+          <packing>
+            <property name="x">149</property>
+            <property name="y">138</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="incorrect_p">
+            <property name="name">incorrect_p</property>
+            <property name="width-request">158</property>
+            <property name="height-request">29</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">INCORRECT PASS</property>
+          </object>
+          <packing>
+            <property name="x">149</property>
+            <property name="y">217</property>
+          </packing>
+        </child>
       </object>
     </child>
     <accessibility>
@@ -331,6 +408,7 @@
             <property name="height-request">34</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="max-length">900</property>
             <property name="activates-default">True</property>
             <signal name="changed" handler="message_changed" swapped="no"/>
           </object>
@@ -386,6 +464,7 @@
                 <property name="can-focus">False</property>
                 <child>
                   <object class="GtkListBox" id="message_list">
+                    <property name="name">messages</property>
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="selection-mode">multiple</property>
@@ -414,6 +493,7 @@
                 <property name="vadjustment">scroll_chats</property>
                 <child>
                   <object class="GtkListBox" id="chat_list">
+                    <property name="name">chats</property>
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                   </object>
@@ -435,6 +515,7 @@
             <child>
               <object class="GtkButton" id="cancel_b">
                 <property name="label" translatable="yes">cancel</property>
+                <property name="name">cancel</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
@@ -448,6 +529,7 @@
             <child>
               <object class="GtkButton" id="ed_b">
                 <property name="label" translatable="yes">edit</property>
+                <property name="name">edit</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
@@ -461,6 +543,7 @@
             <child>
               <object class="GtkButton" id="del_b">
                 <property name="label" translatable="yes">delete</property>
+                <property name="name">delete</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
@@ -478,6 +561,7 @@
         </child>
         <child>
           <object class="GtkMenuButton" id="main_menu">
+            <property name="name">menu_b</property>
             <property name="width-request">47</property>
             <property name="height-request">40</property>
             <property name="visible">True</property>
@@ -492,6 +576,7 @@
         <child>
           <object class="GtkButton" id="chat_label">
             <property name="label" translatable="yes">button</property>
+            <property name="name">chat_button</property>
             <property name="width-request">100</property>
             <property name="height-request">41</property>
             <property name="visible">True</property>
@@ -504,6 +589,7 @@
         </child>
         <child>
           <object class="GtkButton" id="edit_b">
+            <property name="name">edit_b</property>
             <property name="width-request">60</property>
             <property name="height-request">34</property>
             <property name="visible">True</property>
@@ -536,6 +622,7 @@
         <child>
           <object class="GtkButton" id="signup_b">
             <property name="label" translatable="yes">Sign Up</property>
+            <property name="name">signup_b</property>
             <property name="width-request">100</property>
             <property name="height-request">50</property>
             <property name="visible">True</property>
@@ -567,6 +654,7 @@
         <child>
           <object class="GtkButton" id="login_p">
             <property name="label" translatable="yes">Log In</property>
+            <property name="name">login_p</property>
             <property name="width-request">90</property>
             <property name="height-request">44</property>
             <property name="visible">True</property>

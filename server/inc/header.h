@@ -111,7 +111,7 @@
         char is_read[2];
     } msg_t;
 
-
+    
     typedef struct chat_s {
         char chat_id[10];
         char chat_name[32];
@@ -131,7 +131,7 @@
     /* ORIGINAL FUNCTIONS */
 
     /* Add client to the clients array*/
-    void client_add(client_t *cl, server_info_t *serv_inf);
+    int client_add(client_t *cl, server_info_t *serv_inf);
     /* Remove client from the clients array*/
     void client_remove(int uid, server_info_t *serv_inf);
     /* Send message *s to all clients exept sender */
@@ -211,6 +211,7 @@
     char* getOneUser(int id, char* rez); // Получить всю инфу по выбранному пользователю (по id)
     int insertUser(char* login, char* password, char* nick, char* status); // Создать юзера
     int getIdUserByUserName(char* login); // Получить id юзера по логину юзера
+    char* getIdUserByNick(char* nick, char* rez);
     char* getAllUsers(char* rez); // Получить всех пользователей
     void deleteUser(char* id); // Удалить выбранного пользователя с выбранный id
     char* getUserName(int id, char* rez); // Получить имя пользователя по id
@@ -230,7 +231,7 @@
     void updateTextMessage(int id, char* text); // Edit message
     int createChat(int creator_id, char *name); // Create chat and add the creator
     void insertInUserInChats(int user_id, int chat_id); // Insert user in chat
-    user_t *pack_chat_members(int id); //
+    user_t *pack_chat_members(int id); // 
     void deleteChat(char* id); // Delete chat by chat_id
     char* getOwner_Id_By_Chat_Id(int id, char* rez); // Получить id создателя чата по id этого чата
     char* getChatName(int id, char* rez); // Получить имя чата  по id чата
@@ -245,7 +246,7 @@
     void updatePasswordUser(int id, char* name);
     int getTimeLastMsg(int id);
     int getLastMsgTime(int id);
-    void send_to_all_members_send_special(char *p_chat_id, char *msg_id,struct command cmd, buff_t *Info); // special edition for command send
+    void send_to_all_members_send_special(char *p_chat_id, int msg_id,struct command cmd, buff_t *Info); // special edition for command send
     void setUNREAD(int chat_id, int user_id, int unread);
     int getUNREAD(int chat_id, int user_id);
 

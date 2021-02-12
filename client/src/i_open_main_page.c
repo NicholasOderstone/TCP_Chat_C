@@ -33,7 +33,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     //ПЕРЕДЕЛАЙ ОКНА В ОКНА А НЕ ВИДЖЕТЫ
     connection_spin = GTK_SPINNER(gtk_builder_get_object(builder, "connection_spinner"));
     edit_b = GTK_BUTTON(gtk_builder_get_object (builder, "edit_b"));
-    add_mem = GTK_BUTTON(gtk_builder_get_object (builder, "add_member"));
+    add_user = GTK_BUTTON(gtk_builder_get_object (builder, "add_member"));
     gtk_button_set_image (edit_b, edit_b_image);
     gtk_widget_hide(GTK_WIDGET(edit_b));
     chat_label  = GTK_LABEL(gtk_builder_get_object(builder, "name_chat"));
@@ -81,7 +81,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     leave_chat_r->chat_id = client->active_chat_id;
     leave_chat_r->client = client;
     ch_b = GTK_BUTTON(gtk_builder_get_object(builder, "confirm"));
-    add_user = GTK_BUTTON(gtk_builder_get_object(builder, "add_member"));
+    add_mem = GTK_BUTTON(gtk_builder_get_object(builder, "add_user"));
     leave_chat = GTK_BUTTON(gtk_builder_get_object(builder, "delete_chat"));
     g_signal_connect(message_entry, "activate", G_CALLBACK(message_send), gp_client);
     g_signal_connect(message_entry, "activate", G_CALLBACK(message_clear), NULL);

@@ -80,8 +80,8 @@ void func_rpl_send(char *params, void *p) {
         }
 
         snprintf(last_msg_time_buf, BUFFER_SZ, "%s %02d:%02d ", chat->chat_name, ptm->tm_hour, ptm->tm_min);
-            if (received_mess->chat_id != received_mess->client->active_chat_id) {
-            gtk_button_set_label(GTK_BUTTON(received_mess->client->m->chat[chat_index]), last_msg_time_buf);
+        gtk_button_set_label(GTK_BUTTON(received_mess->client->m->chat[chat_index]), last_msg_time_buf);
+        if (received_mess->chat_id != received_mess->client->active_chat_id) {
             gtk_widget_show(received_mess->client->m->unread_b_images[chat_index]);
         }
 
@@ -146,7 +146,12 @@ void func_rpl_del_chat(char *params, void *p) {
 // --- ADD_CHAT ---
 void func_rpl_add_chat(char *params, void *p) {
     client_t *client = (client_t *)p;
-    int p_chat_id = atoi(take_param(params, 1));
+    char *p_frst_param = take_param(params, 1);
+    if (strcmp(p_frst_param, "INCORRECT_USERNAME") == 0) {
+        printf(" ## INCORRECT_USERNAME\n");
+        return;
+    }
+    int p_chat_id = atoi(p_frst_param);
     char *p_chat_name = take_param(params, 2);
     if (p_chat_id == -1) {
         return;

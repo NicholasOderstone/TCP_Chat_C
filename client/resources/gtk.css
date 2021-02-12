@@ -1,20 +1,83 @@
 button {
-    background-color: #86C232;
-    background-image: none;
-    color: white;
-}
-button#login_p { /* кнопка для перехода на странцу логина*/
+  background-color: #222629;
+  background-image: none;
+  color: white;
+    -gtk-icon-effect: none;
+    -gtk-icon-shadow: none;
+    text-shadow: none;
+    box-shadow: none;
 
+     /* кнопка для логина*/
+      display: inline-block;
+      color: white;
+      font-weight: 700;
+      text-decoration: none;
+      user-select: none;
+      /* padding: .5em 2em; */
+      outline: none;
+      border: 4px solid #222629;
+      border-radius: 1px;
+      transition: 0.2s;
+      border-bottom: 4px solid #2d3028;   
+}
+button:hover { border-bottom: 4px solid #86c232; }
+
+
+button#login_p { /* кнопка для перехода на странцу логина*/
+  border: 4px solid #cfcfcf;
 }
 button#signup_b { /* кнопка для регистрации*/
 
 }
 button#signup_p { /* кнопка для перехода на страницу регистрации*/
-    color: #ff00ea;
-}
-button#login_b { /* кнопка для логина*/
 
 }
+
+/* client/resources/arr_green.png */
+
+
+
+button#login_b { /* кнопка для логина*/
+}
+
+
+#message_back{
+
+}
+
+#chat_back{
+  
+}
+
+label#name{
+color: white;
+background-color: #252729;
+margin-left: 5%;
+padding-right: 5%;
+font-size: 3em;
+border-bottom: 4px solid #86c232;
+}
+
+label#username_ex{
+  font-size: 10.5px;
+}
+
+label#diff_pass{
+  font-size: 10.5px;
+}
+
+label{
+  color: white;
+  background-color: #252729;
+  margin-left: 5%;
+  padding-right: 5%;
+  font-size: 1em;
+  /* border-bottom: 4px solid #86c232; */
+  }
+
+  label:hover { border-bottom: 4px solid #86c232; }
+
+
 button#edit_b { /* кнопка edit s galochkoy*/
 
 }
@@ -29,8 +92,21 @@ button#add_mem { /* кнопка для add user to chat*/
 }
 
 button#menu_b { /* кнопка menu*/
-
+display: inline-block;
+color: white;
+font-weight: 700;
+text-decoration: none;
+user-select: none;
+padding: .5em 2em;
+outline: none;
+border: 2px solid;
+border-radius: 1px;
+transition: 0.2s;
 }
+
+button#menu_b:hover { background: rgba(255,255,255,.2); }
+button#menu_b:active { background: white; }
+
 button#cancel_d { /* кнопка cancel*/
 
 }button#cancel_n { /* кнопка cancel*/
@@ -50,43 +126,45 @@ button#cancel_d { /* кнопка cancel*/
 }button#confirm { /* кнопка confirm*/
 
 }button#chatbutton { /* кнопка с именем чата*/
+border: 4px solid #86c232;
+border-radius: 4px;
 
 }
 #messages * {
-    background-color: #222629;
-    background-image: none;
-    color: white;
+  background-color: #222629;
+  background-image: none;
+  color: white;
 }
 #message * {
-    background-color: #474B4F;
-    background-image: none;
-    color: white;
+  background-color: #474B4F;
+  background-image: none;
+  color: white;
 }
 #chats{
 
 }
 label#incorrect_l{/* нееврный логин*/
-    color: white;
+  color: white;
 }
 label#incorrect_p{/* нееврный пароль*/
-    color: white;
+  color: white;
 }
 label#chat_lbl{
-    color: white;
+  color: white;
 }
 
 window{
-     background-color: #222629;
+   background-color: #222629;
 }
 @keyframes spin {
-  to { -gtk-icon-transform: rotate(1turn); }
+to { -gtk-icon-transform: rotate(1turn); }
 }
 
 GtkSpinner {
-  -gtk-icon-source: -gtk-icontheme('process-working-symbolic');
-  -gtk-icon-palette: success blue, warning #fc3, error magenta;
-  animation-name: spin;
-  animation-duration: 1s;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
+-gtk-icon-source: -gtk-icontheme('process-working-symbolic');
+-gtk-icon-palette: success blue, warning #fc3, error magenta;
+animation-name: spin;
+animation-duration: 1s;
+animation-timing-function: linear;
+animation-iteration-count: infinite;
 }

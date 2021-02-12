@@ -293,7 +293,7 @@
           <object class="GtkLabel" id="label">
             <property name="name">name</property>
             <property name="width-request">130</property>
-            <property name="height-request">67</property>
+            <property name="height-request">59</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="label" translatable="yes">Name</property>
@@ -373,7 +373,7 @@
           </object>
           <packing>
             <property name="x">170</property>
-            <property name="y">141</property>
+            <property name="y">143</property>
           </packing>
         </child>
         <child>
@@ -643,8 +643,9 @@
         </child>
         <child>
           <object class="GtkLabel">
+            <property name="name">name</property>
             <property name="width-request">130</property>
-            <property name="height-request">67</property>
+            <property name="height-request">59</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="label" translatable="yes">Name</property>
@@ -659,13 +660,15 @@
         </child>
         <child>
           <object class="GtkButton" id="login_p">
-            <property name="label" translatable="yes">Log In</property>
             <property name="name">login_p</property>
             <property name="width-request">90</property>
             <property name="height-request">44</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
+            <child>
+              <placeholder/>
+            </child>
           </object>
           <packing>
             <property name="x">10</property>

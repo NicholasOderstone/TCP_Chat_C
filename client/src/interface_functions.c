@@ -85,7 +85,9 @@ void open_login_page(GtkWidget *widget, gpointer gp_client)
     gtk_builder_connect_signals(builder, NULL);
     connection_spin = GTK_SPINNER(gtk_builder_get_object(builder, "connection_spinner_l"));
     signup_p = gtk_builder_get_object (builder, "signup_p");
+    GtkWidget *login_p_image = gtk_image_new_from_file ("client/resources/arr_gray.png");
     login_b = gtk_builder_get_object (builder, "login_b");
+    gtk_button_set_image (login_b, login_p_image);
     g_signal_connect(signup_p, "clicked", G_CALLBACK(open_signup_page), gp_client);
     g_signal_connect(login_b, "clicked", G_CALLBACK(func_login), gp_client);
     incorrect_l = GTK_LABEL(gtk_builder_get_object(builder, "incorrect_l"));

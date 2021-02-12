@@ -29,7 +29,8 @@
     // GtkWidget *chat[MAX_CHATS];
     GtkButton *ch_b, *chat_lbl, *edit_b,  *add_user, *leave_chat, *add_mem,
                 *cancel_u, *cancel_n;
-    GtkLabel *chat_label, *incorrect_l, *incorrect_p, *diff_p, *username_e;
+    GtkLabel *chat_label, *incorrect_l, *incorrect_p, *diff_p, *username_e, *no_chat;
+
 //////////////////////////
 
 // FUNCTIONS

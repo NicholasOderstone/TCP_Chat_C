@@ -38,6 +38,8 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     gtk_widget_hide(GTK_WIDGET(edit_b));
     chat_label  = GTK_LABEL(gtk_builder_get_object(builder, "name_chat"));
     user_name  = GTK_LABEL(gtk_builder_get_object(builder, "name_user"));
+    no_chat  = GTK_LABEL(gtk_builder_get_object(builder, "not_chat"));
+    gtk_widget_show(GTK_WIDGET(no_chat));
     gtk_label_set_text(user_name, client->login);
     add_chat = GTK_BUTTON(gtk_builder_get_object(builder, "add_chat"));
     gtk_button_set_image(add_chat, add_chat_b_image);

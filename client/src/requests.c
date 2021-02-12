@@ -4,6 +4,7 @@
 void get_msg_request(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
     char last_msg_time_buf[BUFFER_SZ];
+    gtk_widget_hide(GTK_WIDGET(no_chat));
     gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), TRUE);
     get_messages_request_s *get_messages_r = (get_messages_request_s *)data;
     if (get_messages_r->client->active_chat_id != get_messages_r->chat->chat_id) {
@@ -43,6 +44,7 @@ void get_msg_request(GtkWidget *widget, gpointer data) {
 void new_chat_request(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
     gtk_widget_hide (chat_name_d);
+    gtk_widget_hide(GTK_WIDGET(no_chat));
     new_chat_request_s *new_chat_r = (new_chat_request_s *)data;
     static int counter = 0;
     printf("index new_chat_request: %d\n", counter);

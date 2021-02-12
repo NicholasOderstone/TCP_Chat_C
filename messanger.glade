@@ -347,6 +347,7 @@
         <property name="can-focus">False</property>
         <child>
           <object class="GtkEntry" id="message_entry">
+            <property name="name">message_e</property>
             <property name="width-request">723</property>
             <property name="height-request">46</property>
             <property name="visible">True</property>
@@ -601,6 +602,20 @@
             <property name="can-focus">False</property>
             <property name="label" translatable="yes">label</property>
           </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="not_chat">
+            <property name="name">not_chat</property>
+            <property name="width-request">780</property>
+            <property name="height-request">868</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">CHOOSE THE CHAT</property>
+          </object>
+          <packing>
+            <property name="x">420</property>
+            <property name="y">44</property>
+          </packing>
         </child>
       </object>
     </child>

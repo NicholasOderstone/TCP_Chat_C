@@ -403,11 +403,7 @@ void f_add_user_to_chat(char *params, buff_t *Info) {
 	}
 	for(int i = 0; i < num_of_memb; i++) {
 		if(strcmp(user[i]->user_name, p_username) == 0) {
-			//pthread_mutex_lock(&Info->serv_inf->clients_mutex);
-			//cmd.params = " <USER_IN_CHAT>";
-			printf("You're dolbaeb\n");
-			//send_cmd(cmd, Info->client);
-			//pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
+			printf("%s you're dolbaeb\n", p_username);
 			return;
 		}
 	}
@@ -450,7 +446,8 @@ void f_add_user_to_chat(char *params, buff_t *Info) {
 	bzero(send_to_client, BUFFER_SZ);
 	bzero(chat_name, BUFFER_SZ);
 }
-//USER_IN_CHAT
+
+//В самом начале только Бог и я знали что в этом коде написано, теперь только Бог
 // Я не хочу лезть в это дерьмо
 void f_delete_chat(char *params, buff_t *Info) {
 	char buff_out[BUFFER_SZ];
@@ -465,7 +462,6 @@ void f_delete_chat(char *params, buff_t *Info) {
     if(strcmp(tempp, Info->client->name) != 0) {
         deleteFromChat(getIdUserByUserName(Info->client->name), atoi(p_chat_id));
         snprintf(buff_temp, BUFFER_SZ, " <%s>", p_chat_id);
-        cmd.params = buff_temp;
         pthread_mutex_lock(&Info->serv_inf->clients_mutex);
         for(int i=0; i<MAX_CLIENTS; ++i){
             if(Info->serv_inf->clients[i]){
@@ -475,7 +471,7 @@ void f_delete_chat(char *params, buff_t *Info) {
             }
         }
         pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
-        bzero(buff_temp, BUFFER_SZ);
+
 		char buff_out156[BUFFER_SZ];
 
 		getNickByUserName(Info->client->name, buff_out156);
@@ -483,7 +479,7 @@ void f_delete_chat(char *params, buff_t *Info) {
 		strcat(buff_out156, " left chat");
 		snprintf(tempp, BUFFER_SZ, "<%s> <%s> <1612885395> <2>", p_chat_id, buff_out156);
 		f_send(tempp, Info);
-		//send_to_all_members(p_chat_id, cmd1, Info);
+		bzero(buff_temp, BUFFER_SZ);
 		bzero(buff_out156, BUFFER_SZ);
         bzero(tempp, BUFFER_SZ);
 

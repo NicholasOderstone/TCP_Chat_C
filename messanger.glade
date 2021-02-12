@@ -347,7 +347,6 @@
             <property name="height-request">40</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes">label</property>
           </object>
           <packing>
             <property name="x">419</property>
@@ -623,7 +622,7 @@
             <property name="label" translatable="yes">Back</property>
             <property name="name">login_p</property>
             <property name="width-request">57</property>
-            <property name="height-request">49</property>
+            <property name="height-request">40</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>

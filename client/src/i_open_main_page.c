@@ -37,6 +37,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     gtk_widget_hide(GTK_WIDGET(edit_b));
     chat_label  = GTK_LABEL(gtk_builder_get_object(builder, "name_chat"));
     user_name  = GTK_LABEL(gtk_builder_get_object(builder, "name_user"));
+    gtk_label_set_text(user_name, client->login);
     add_chat = GTK_BUTTON(gtk_builder_get_object(builder, "add_chat"));
     cancel_n  = GTK_BUTTON(gtk_builder_get_object(builder, "cancel_n"));
     cancel_u  = GTK_BUTTON(gtk_builder_get_object(builder, "cancel_u"));
@@ -89,7 +90,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     g_signal_connect(ch_b, "clicked", G_CALLBACK(new_chat_request), (gpointer)new_chat_r);
     g_signal_connect(ch_b, "clicked", G_CALLBACK(chatname_clear), NULL);
     //g_signal_connect(chat_lbl, "clicked", G_CALLBACK(chat_menu), gp_client);
-    g_signal_connect(add_chat, "activate", G_CALLBACK(new_chat), gp_client);
+    g_signal_connect(add_chat, "clicked", G_CALLBACK(new_chat), gp_client);
     g_signal_connect(cancel_n, "clicked", G_CALLBACK(cancel_n_f),  NULL);
     g_signal_connect(cancel_u, "clicked", G_CALLBACK(cancel_u_f),  NULL);
 }

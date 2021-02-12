@@ -13,19 +13,36 @@ button {
       font-weight: 700;
       text-decoration: none;
       user-select: none;
-      /* padding: .5em 2em; */
       outline: none;
       border: 4px solid #222629;
-      border-radius: 1px;
+
       transition: 0.2s;
-      border-bottom: 4px solid #2d3028;   
+      border-bottom: 4px solid #2d3028;
 }
 button:hover { border-bottom: 4px solid #86c232; }
 
 
 button#login_p { /* кнопка для перехода на странцу логина*/
-  border: 4px solid #cfcfcf;
+
+
 }
+
+
+button#add_chat{
+  border: 2px solid #303030;
+  background-color: #303030;
+}
+
+button#add_chat:hover{
+  border-radius: 50px;
+  border: 5px solid #86c232;
+}
+button#login_p:hover{
+  border-bottom: 4px solid #86c232;
+
+}
+
+
 button#signup_b { /* кнопка для регистрации*/
 
 }
@@ -46,16 +63,56 @@ button#login_b { /* кнопка для логина*/
 }
 
 #chat_back{
-  
+ color: #222629;
+ border: #222629;
+}
+
+button#chat_b{border: none;}
+
+button#chat_b:hover{
+
+  background-color: #83887c;
+
+}
+button#chat_b:focus{
+
+  background-color: #cad3bc;
+
 }
 
 label#name{
 color: white;
-background-color: #252729;
 margin-left: 5%;
 padding-right: 5%;
 font-size: 3em;
 border-bottom: 4px solid #86c232;
+}
+label{
+  background-color: none;
+  font-weight: 700;
+      text-decoration: none;
+      user-select: none;
+      outline: none;
+}
+
+label#name_chat{
+  display: inline-block;
+  color: white;
+
+  text-decoration: none;
+  user-select: none;
+
+  outline: none;
+}
+
+label#name_user{
+  display: inline-block;
+      color: white;
+
+      text-decoration: none;
+      user-select: none;
+
+      outline: none;
 }
 
 label#username_ex{
@@ -68,7 +125,7 @@ label#diff_pass{
 
 label{
   color: white;
-  background-color: #252729;
+  /* background-color: #252729; */
   margin-left: 5%;
   padding-right: 5%;
   font-size: 1em;
@@ -132,93 +189,88 @@ border-radius: 4px;
 }
 #messages * {
   background-color: #222629;
-  background-image: none;
   color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 #message * {
   background-color: #474B4F;
   background-image: none;
   color: white;
 }
-#chats{
 
-}
-label#incorrect_l{/* нееврный логин*/
+#add_chat_dialog{
+  box-shadow: black;
+  background-color: #252729;
+  display: inline-block;
   color: white;
-}
-label#incorrect_p{/* нееврный пароль*/
-  color: white;
-}
-button#login_p { /* кнопка для перехода на странцу логина*/
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+  /* border: 4px solid #cef39a;
+border-radius: 4px; */
+  }
 
-}
-button#signup_b { /* кнопка для регистрации*/
+  /* label#not_chat{
+    /* border: 2px double black; */
 
-}
-button#signup_p { /* кнопка для перехода на страницу регистрации*/
-    color: #ff00ea;
-}
-button#login_b { /* кнопка для логина*/
 
-}
-button#edit_b { /* кнопка edit s galochkoy*/
-
-}
-button#edit { /* кнопка edit*/
-
-}
-button#delete { /* кнопка edit*/
-
-}
-button#add_mem { /* кнопка для add user to chat*/
-
+#messages_s:hover{
+  border-radius: 25px;
+  background-color: #ff0000;
 }
 
-button#menu_b { /* кнопка menu*/
-
-}
-button#cancel_d { /* кнопка cancel*/
-
-}button#cancel_n { /* кнопка cancel*/
-
-}button#cancel_u { /* кнопка cancel*/
-
-}button#add { /* кнопка cancel*/
-
-}button#chat_lbl { /* кнопка chata*/
-
-}button#ch_b { /* кнопка confirm*/
-
-}button#add_member { /* кнопка add member*/
-
-}button#leave_chat { /* кнопка leave chat*/
-
-}button#confirm { /* кнопка confirm*/
-
-}button#chatbutton { /* кнопка с именем чата*/
-
-}
-#messages * {
+  window#main_window{
     background-color: #222629;
-    background-image: none;
-    color: white;
-}
-#message * {
-    background-color: #474B4F;
-    background-image: none;
-    color: white;
-}
-#chats{
+    filter: blur(3px);
+    -webkit-filter: blur(8px);
+  }
 
+  entry{
+    /* color :red; */
+    border-radius: 16px;
+    background-color: rgb(203, 240, 204);
+  }
+
+
+  entry:focus{
+
+    position: relative;
+
+  border-radius: 1px;
+  background: rgb(100,160,210) radial-gradient(circle at 100% 100%, rgba(255,255,255,.60), rgba(255,255,255,.20));
+  box-shadow:
+   -6px -6px rgb(100, 150, 200),
+   -5px -5px rgb(100, 140, 190),
+   -4px -4px rgb(100, 130, 180),
+   -3px -3px rgb(100, 120, 170),
+   -2px -2px rgb(100, 120, 160),
+   -1px -px rgb(100, 120, 150),
+  /* тень подложки */
+   -7px -7px 4px 2px rgb(180, 180, 180),
+   -8px -8px 6px 3px rgb(200, 200, 200);
+}
+entry#message_e{
+  border-radius: 1px;
+}
+entry#message_e:focus{
+  border: 1px double  rgb(253, 0, 0);
+  }
+
+#chats{
+  background-color: #303030;
 }
 label#incorrect_l{/* нееврный логин*/
-    color: white;
+  color: white;
 }
 label#incorrect_p{/* нееврный пароль*/
-    color: white;
+  color: white;
 }
 label#chat_lbl{
   color: white;
+}
+
+label#add_chat_lbl{
+  background-color: none;
 }
 
 window{

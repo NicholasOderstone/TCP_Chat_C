@@ -108,7 +108,7 @@ gboolean is_edit_delet(gpointer m) {
         gtk_widget_show(client->m->cancel_b);
         gtk_widget_show(client->m->edit_b);
         gtk_widget_show(client->m->delet_b);
-        gtk_widget_hide(GTK_WIDGET(add_mem));
+        gtk_widget_hide(GTK_WIDGET(add_user));
         gtk_widget_hide(GTK_WIDGET(leave_chat));
     }
     else
@@ -117,7 +117,7 @@ gboolean is_edit_delet(gpointer m) {
         gtk_widget_hide(client->m->cancel_b);
         gtk_widget_hide(client->m->edit_b);
         gtk_widget_hide(client->m->delet_b);
-        gtk_widget_show(GTK_WIDGET(add_mem));
+        gtk_widget_show(GTK_WIDGET(add_user));
         gtk_widget_show(GTK_WIDGET(leave_chat));
 
     }
@@ -192,7 +192,8 @@ gboolean chat_show(gpointer m) {
                 return FALSE;
             }
 
-            snprintf(last_msg_time_buf, BUFFER_SZ, "%s %02d:%02d ", chat_show_info->chat->chat_name, ptm->tm_hour, ptm->tm_min);
+            //snprintf(last_msg_time_buf, BUFFER_SZ, "%s %02d:%02d ", chat_show_info->chat->chat_name, ptm->tm_hour, ptm->tm_min);
+            snprintf(last_msg_time_buf, BUFFER_SZ, "%s", chat_show_info->chat->chat_name);
         }
         else {
             snprintf(last_msg_time_buf, BUFFER_SZ, "%s        ", chat_show_info->chat->chat_name);

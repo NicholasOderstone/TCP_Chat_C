@@ -17,7 +17,8 @@ void get_msg_request(GtkWidget *widget, gpointer data) {
             }
 
 
-            snprintf(last_msg_time_buf, BUFFER_SZ, "%s %02d:%02d ", get_messages_r->chat->chat_name, ptm->tm_hour, ptm->tm_min);
+            //snprintf(last_msg_time_buf, BUFFER_SZ, "%s %02d:%02d ", get_messages_r->chat->chat_name, ptm->tm_hour, ptm->tm_min);
+            snprintf(last_msg_time_buf, BUFFER_SZ, "%s", get_messages_r->chat->chat_name);
         }
         int chat_index = get_index_by_chat_id(&get_messages_r->client->chat_list_head, get_messages_r->chat->chat_id);
         gtk_button_set_label(GTK_BUTTON(get_messages_r->client->m->chat[chat_index]), last_msg_time_buf);

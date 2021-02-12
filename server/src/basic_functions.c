@@ -281,6 +281,11 @@ void f_register(char *params, buff_t *Info) {
 	char *nickname = take_param(params, 2);
 	char *password = take_param(params, 3);
 	char *rep_password = take_param(params, 4);
+
+	if(strlen(p_username) <= 2) {
+		printf("Не вводи логин <= 2\n");
+		return;
+	}
 	if(getIdUserByUserName(p_username) != 0){
 		//Oшибка: юзернейм уже существует
 		pthread_mutex_lock(&Info->serv_inf->clients_mutex);

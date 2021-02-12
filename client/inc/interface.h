@@ -28,7 +28,7 @@
     //GtkListBox *box_chat_list;
     // GtkWidget *chat[MAX_CHATS];
     GtkButton *ch_b, *chat_lbl, *edit_b,  *add_user, *leave_chat, *add_mem,
-                *cancel_u, *cancel_d, *cancel_n;
+                *cancel_u, *cancel_n;
     GtkLabel *chat_label, *incorrect_l, *incorrect_p, *diff_p, *username_e;
 //////////////////////////
 

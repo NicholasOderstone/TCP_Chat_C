@@ -55,9 +55,7 @@ void open_signup_page(GtkWidget *widget, gpointer gp_client)
     username_e = GTK_LABEL(gtk_builder_get_object(builder, "username_ex"));
     gtk_widget_hide(GTK_WIDGET(diff_p));
     gtk_widget_hide(GTK_WIDGET(username_e));
-    GtkWidget *login_p_image = gtk_image_new_from_file ("client/resources/arr_green.png");
     login_p = gtk_builder_get_object (builder, "login_p");
-    gtk_button_set_image (GTK_BUTTON(login_p), login_p_image);
     signup_b = gtk_builder_get_object (builder, "signup_b");
     g_signal_connect(login_p, "clicked", G_CALLBACK(open_login_page), gp_client);
     g_signal_connect(signup_b, "clicked", G_CALLBACK(func_register), gp_client);
@@ -109,7 +107,8 @@ gboolean is_edit_delet(gpointer m) {
         gtk_widget_show(client->m->cancel_b);
         gtk_widget_show(client->m->edit_b);
         gtk_widget_show(client->m->delet_b);
-        gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), FALSE);
+        gtk_widget_hide(GTK_WIDGET(add_mem));
+        gtk_widget_hide(GTK_WIDGET(leave_chat));
     }
     else
     {
@@ -117,6 +116,8 @@ gboolean is_edit_delet(gpointer m) {
         gtk_widget_hide(client->m->cancel_b);
         gtk_widget_hide(client->m->edit_b);
         gtk_widget_hide(client->m->delet_b);
+        gtk_widget_show(GTK_WIDGET(add_mem));
+        gtk_widget_show(GTK_WIDGET(leave_chat));
 
     }
     if (client-> exit == 1)
@@ -158,14 +159,14 @@ void new_chat(GtkWidget *widget, gpointer data) {
     chatname_entry = GTK_ENTRY(gtk_builder_get_object(builder, "name"));
 }
 
-void chat_menu(GtkWidget *widget, gpointer data){
+/*void chat_menu(GtkWidget *widget, gpointer data){
     UNUSED(widget);
     client_t *client = (client_t *)data;
 
     chat_menu_wind = GTK_WIDGET(gtk_builder_get_object(builder, "chat_dialog"));
     gtk_window_move(GTK_WINDOW(chat_menu_wind), client->m->root_x, client->m->root_y);
     gtk_widget_show(chat_menu_wind);
-}
+}*/
 
 gboolean destroy() {
     gtk_main_quit();
@@ -209,7 +210,7 @@ gboolean chat_show(gpointer m) {
         // get_messages_request_s *get_msg_buf = (get_messages_request_s *)malloc(sizeof(get_messages_request_s));
         get_messages_request_s *get_msg_buf = get_messages_request;
 
-
+        gtk_widget_set_name(GTK_WIDGET(chat_show_info->client->m->chat[new_chat_index]), "chat_b");
         g_signal_connect(chat_show_info->client->m->chat[new_chat_index], "clicked", G_CALLBACK(get_msg_request), (gpointer)get_msg_buf);
         last_added_chat_index = new_chat_index;
         bzero(last_msg_time_buf, BUFFER_SZ);
@@ -232,9 +233,6 @@ void add_mem_wind(GtkWidget *widget, gpointer data){
 }
 void clean_adduser() {
     gtk_entry_set_text(GTK_ENTRY(adduser_entry), "");
-}
-void cancel_d_f() {
-    gtk_widget_hide(chat_menu_wind);
 }
 void cancel_n_f() {
     gtk_widget_hide(chat_name_d);

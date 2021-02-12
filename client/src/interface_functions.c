@@ -51,6 +51,10 @@ void open_signup_page(GtkWidget *widget, gpointer gp_client)
     gtk_window_move(GTK_WINDOW(window), client->m->root_x, client->m->root_y);
     gtk_builder_connect_signals(builder, NULL);
     connection_spin = GTK_SPINNER(gtk_builder_get_object(builder, "connection_spinner_s"));
+    diff_p = GTK_LABEL(gtk_builder_get_object(builder, "diff_p"));
+    username_e = GTK_LABEL(gtk_builder_get_object(builder, "username_ex"));
+    gtk_widget_hide(GTK_WIDGET(diff_p));
+    gtk_widget_hide(GTK_WIDGET(username_e));
     login_p = gtk_builder_get_object (builder, "login_p");
     signup_b = gtk_builder_get_object (builder, "signup_b");
     g_signal_connect(login_p, "clicked", G_CALLBACK(open_login_page), gp_client);

@@ -260,9 +260,13 @@
     </accessibility>
   </object>
   <object class="GtkWindow" id="login_window">
-    <property name="width-request">950</property>
-    <property name="height-request">850</property>
+    <property name="width-request">500</property>
+    <property name="height-request">350</property>
     <property name="can-focus">False</property>
+    <property name="is-focus">True</property>
+    <property name="can-default">True</property>
+    <property name="has-default">True</property>
+    <property name="resizable">False</property>
     <property name="window-position">center-always</property>
     <property name="gravity">static</property>
     <signal name="destroy" handler="destroy" swapped="no"/>
@@ -281,8 +285,8 @@
             <property name="receives-default">True</property>
           </object>
           <packing>
-            <property name="x">176</property>
-            <property name="y">265</property>
+            <property name="x">200</property>
+            <property name="y">273</property>
           </packing>
         </child>
         <child>
@@ -298,8 +302,8 @@
             </attributes>
           </object>
           <packing>
-            <property name="x">160</property>
-            <property name="y">11</property>
+            <property name="x">185</property>
+            <property name="y">8</property>
           </packing>
         </child>
         <child>
@@ -313,8 +317,8 @@
             <property name="receives-default">True</property>
           </object>
           <packing>
-            <property name="x">340</property>
-            <property name="y">20</property>
+            <property name="x">397</property>
+            <property name="y">16</property>
           </packing>
         </child>
         <child>
@@ -328,8 +332,8 @@
             <signal name="changed" handler="username_changed" swapped="no"/>
           </object>
           <packing>
-            <property name="x">145</property>
-            <property name="y">96</property>
+            <property name="x">166</property>
+            <property name="y">103</property>
           </packing>
         </child>
         <child>
@@ -343,8 +347,8 @@
             <signal name="changed" handler="password_changed" swapped="no"/>
           </object>
           <packing>
-            <property name="x">145</property>
-            <property name="y">170</property>
+            <property name="x">166</property>
+            <property name="y">182</property>
           </packing>
         </child>
         <child>
@@ -361,7 +365,6 @@
         </child>
         <child>
           <object class="GtkLabel" id="incorrect_l">
-            <property name="name">incorrect_l</property>
             <property name="width-request">158</property>
             <property name="height-request">29</property>
             <property name="visible">True</property>
@@ -369,13 +372,12 @@
             <property name="label" translatable="yes">INCORRECT LOGIN</property>
           </object>
           <packing>
-            <property name="x">149</property>
-            <property name="y">138</property>
+            <property name="x">170</property>
+            <property name="y">141</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel" id="incorrect_p">
-            <property name="name">incorrect_p</property>
             <property name="width-request">158</property>
             <property name="height-request">29</property>
             <property name="visible">True</property>
@@ -383,8 +385,8 @@
             <property name="label" translatable="yes">INCORRECT PASS</property>
           </object>
           <packing>
-            <property name="x">149</property>
-            <property name="y">217</property>
+            <property name="x">170</property>
+            <property name="y">222</property>
           </packing>
         </child>
       </object>
@@ -460,6 +462,7 @@
             <property name="shadow-type">in</property>
             <child>
               <object class="GtkViewport" id="message_viewport">
+                <property name="name">message_back</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <child>
@@ -612,11 +615,15 @@
     </accessibility>
   </object>
   <object class="GtkWindow" id="signup_window">
+    <property name="width-request">500</property>
+    <property name="height-request">350</property>
     <property name="can-focus">False</property>
     <property name="gravity">static</property>
     <signal name="destroy" handler="destroy" swapped="no"/>
     <child>
       <object class="GtkFixed">
+        <property name="width-request">350</property>
+        <property name="height-request">250</property>
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <child>
@@ -630,8 +637,8 @@
             <property name="receives-default">True</property>
           </object>
           <packing>
-            <property name="x">176</property>
-            <property name="y">269</property>
+            <property name="x">200</property>
+            <property name="y">288</property>
           </packing>
         </child>
         <child>
@@ -647,8 +654,7 @@
             </attributes>
           </object>
           <packing>
-            <property name="x">160</property>
-            <property name="y">11</property>
+            <property name="x">185</property>
           </packing>
         </child>
         <child>
@@ -662,14 +668,14 @@
             <property name="receives-default">True</property>
           </object>
           <packing>
-            <property name="x">346</property>
-            <property name="y">22</property>
+            <property name="x">10</property>
+            <property name="y">10</property>
           </packing>
         </child>
         <child>
           <object class="GtkEntry" id="username_s">
-            <property name="width-request">100</property>
-            <property name="height-request">40</property>
+            <property name="width-request">168</property>
+            <property name="height-request">30</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="max-length">31</property>
@@ -677,14 +683,14 @@
             <signal name="changed" handler="username_s_changed" swapped="no"/>
           </object>
           <packing>
-            <property name="x">145</property>
-            <property name="y">75</property>
+            <property name="x">166</property>
+            <property name="y">69</property>
           </packing>
         </child>
         <child>
           <object class="GtkEntry" id="nick_s">
-            <property name="width-request">100</property>
-            <property name="height-request">40</property>
+            <property name="width-request">168</property>
+            <property name="height-request">30</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="max-length">31</property>
@@ -692,14 +698,14 @@
             <signal name="changed" handler="nick_s_changed" swapped="no"/>
           </object>
           <packing>
-            <property name="x">145</property>
+            <property name="x">166</property>
             <property name="y">125</property>
           </packing>
         </child>
         <child>
           <object class="GtkEntry" id="pass_s">
             <property name="width-request">100</property>
-            <property name="height-request">40</property>
+            <property name="height-request">30</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="max-length">31</property>
@@ -707,14 +713,14 @@
             <signal name="changed" handler="pass_s_changed" swapped="no"/>
           </object>
           <packing>
-            <property name="x">145</property>
-            <property name="y">174</property>
+            <property name="x">166</property>
+            <property name="y">176</property>
           </packing>
         </child>
         <child>
           <object class="GtkEntry" id="r_pass_s_changed">
             <property name="width-request">100</property>
-            <property name="height-request">40</property>
+            <property name="height-request">30</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="max-length">31</property>
@@ -722,8 +728,8 @@
             <signal name="changed" handler="r_pass_s_changed" swapped="no"/>
           </object>
           <packing>
-            <property name="x">145</property>
-            <property name="y">220</property>
+            <property name="x">166</property>
+            <property name="y">226</property>
           </packing>
         </child>
         <child>
@@ -736,6 +742,34 @@
           <packing>
             <property name="x">4</property>
             <property name="y">4</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="diff_pass">
+            <property name="name">diff_pass</property>
+            <property name="width-request">150</property>
+            <property name="height-request">15</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">DIFFERENT PASS</property>
+          </object>
+          <packing>
+            <property name="x">173</property>
+            <property name="y">260</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="username_ex">
+            <property name="name">username_ex</property>
+            <property name="width-request">155</property>
+            <property name="height-request">15</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">USERNAME EXIST</property>
+          </object>
+          <packing>
+            <property name="x">173</property>
+            <property name="y">103</property>
           </packing>
         </child>
       </object>

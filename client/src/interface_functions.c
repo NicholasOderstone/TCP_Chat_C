@@ -55,7 +55,7 @@ void open_signup_page(GtkWidget *widget, gpointer gp_client)
     username_e = GTK_LABEL(gtk_builder_get_object(builder, "username_ex"));
     gtk_widget_hide(GTK_WIDGET(diff_p));
     gtk_widget_hide(GTK_WIDGET(username_e));
-    GtkWidget *login_p_image = gtk_image_new_from_file ("client/resources/arr_gray.png");
+    GtkWidget *login_p_image = gtk_image_new_from_file ("client/resources/arr_green.png");
     login_p = gtk_builder_get_object (builder, "login_p");
     gtk_button_set_image (GTK_BUTTON(login_p), login_p_image);
     signup_b = gtk_builder_get_object (builder, "signup_b");

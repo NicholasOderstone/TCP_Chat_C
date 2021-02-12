@@ -47,7 +47,6 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     cancel_u  = GTK_BUTTON(gtk_builder_get_object(builder, "cancel_u"));
     gtk_button_set_image (menu_b, menu_b_image);
     menu_new_chat = gtk_menu_item_new_with_label ("Add Chat");
-    menu_join_chat = gtk_menu_item_new_with_label ("Join Chat");
     menu = GTK_MENU(gtk_builder_get_object (builder, "menu"));
     chat_lbl = GTK_BUTTON(gtk_builder_get_object (builder, "chat_label"));
     gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), FALSE);
@@ -56,7 +55,6 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
 
 
     gtk_menu_attach (menu, menu_new_chat, 0, 1, 0, 1);
-    gtk_menu_attach (menu, menu_join_chat, 0, 1, 1, 2);
     gtk_widget_show_all(GTK_WIDGET(menu));
 
     send_b = gtk_builder_get_object (builder, "send_buttom");

@@ -3,7 +3,7 @@
 // ---- CHAT_MSG ----
 void get_msg_request(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
-    char last_msg_time_buf[BUFFER_SZ];
+    //char last_msg_time_buf[BUFFER_SZ];
     gtk_widget_hide(GTK_WIDGET(no_chat));
     gtk_widget_show(GTK_WIDGET(message_entry));
 
@@ -53,11 +53,8 @@ void get_msg_request(GtkWidget *widget, gpointer data) {
 void new_chat_request(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
     gtk_widget_hide (chat_name_d);
-    gtk_widget_hide(GTK_WIDGET(no_chat));
-    gtk_widget_show(GTK_WIDGET(message_entry));
-    gtk_widget_show(GTK_WIDGET(send_b));
+
     new_chat_request_s *new_chat_r = (new_chat_request_s *)data;
-    gtk_widget_show(GTK_WIDGET(new_chat_r->client->m->box_message));
     static int counter = 0;
     printf("index new_chat_request: %d\n", counter);
     counter++;

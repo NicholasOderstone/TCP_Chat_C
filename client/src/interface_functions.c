@@ -237,8 +237,9 @@ void add_mem_wind(GtkWidget *widget, gpointer data){
     GtkEntry *entr;
     entr = GTK_ENTRY(gtk_builder_get_object(builder, "search_user"));
     gtk_widget_set_sensitive(GTK_WIDGET(entr), TRUE);
+    gtk_window_get_position (GTK_WINDOW(window), &client->m->root_x, &client->m->root_y);
     add_memwind = GTK_WIDGET(gtk_builder_get_object(builder, "add_user_chat"));
-    gtk_window_move(GTK_WINDOW(add_memwind), client->m->root_x, client->m->root_y);
+    gtk_window_move(GTK_WINDOW(add_memwind), client->m->root_x+900, client->m->root_y+45);
     gtk_widget_show(add_memwind);
 }
 void clean_adduser() {

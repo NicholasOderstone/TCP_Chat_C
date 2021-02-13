@@ -20,7 +20,7 @@
 	#include <ctype.h>
 	#include <sqlite3.h>
 	#include <time.h>
-
+	#include <ctype.h>
     #include "interface.h"
 
 //////////////////////////
@@ -266,7 +266,7 @@
 	char *cmd_to_msg(command cmd);
 	char *take_param(char *params, int number);
 	char *itoa(int val, int base);
-
+	char *mx_strtrim(const char *str);
 	void send_cmd(command cmd, client_t *client);
 	void analyse_cmd(command fst_cmd, cmd_func function, client_t *client);
 

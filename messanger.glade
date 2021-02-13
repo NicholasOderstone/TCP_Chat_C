@@ -394,6 +394,7 @@
         </child>
         <child>
           <object class="GtkScrolledWindow" id="scroll_text">
+            <property name="name">messages</property>
             <property name="width-request">780</property>
             <property name="height-request">823</property>
             <property name="visible">True</property>
@@ -404,7 +405,7 @@
             <property name="shadow-type">in</property>
             <child>
               <object class="GtkViewport" id="message_viewport">
-                <property name="name">message_back</property>
+                <property name="name">messages</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <child>

@@ -109,7 +109,7 @@ void func_rpl_del_msg(char *params, void *p) {
     gtk_list_box_select_row(box, gtk_list_box_get_row_at_index(box, (gint)index));
     gtk_container_remove(GTK_CONTAINER(box), GTK_WIDGET(gtk_list_box_get_selected_row (box)));
     del_elem_msg_id_q(&client->msg_id_q_head, msg_id);
-    gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), TRUE);
+    //gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), TRUE);
     //printf("## index in rpl_delete: %d\n", index);
 }
 
@@ -120,8 +120,8 @@ void func_rpl_del_chat(char *params, void *p) {
     int chat_id;
 
     char *p_rpl = take_param(params, 1);
-    gtk_button_set_label(chat_lbl, "");
-    gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), FALSE);
+    //gtk_button_set_label(chat_lbl, "");
+    //gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), FALSE);
     if (strcmp(p_rpl, "NOT_OWNER") == 0) {
         printf("## NOT_OWNER\n");
     }

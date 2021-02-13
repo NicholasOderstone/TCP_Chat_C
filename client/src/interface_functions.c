@@ -141,7 +141,7 @@ gboolean clean_listbox(gpointer data){
 void cancel_ch(GtkWidget *widget, gpointer data){
     UNUSED(widget);
     client_t *client = (client_t *)data;
-    gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), TRUE);
+    //gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), TRUE);
     gtk_list_box_unselect_all(client->m->box_message);
 }
 

@@ -5,8 +5,12 @@ void get_msg_request(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
     char last_msg_time_buf[BUFFER_SZ];
     gtk_widget_hide(GTK_WIDGET(no_chat));
-    gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), TRUE);
+    gtk_widget_show(GTK_WIDGET(message_entry));
+
+    gtk_widget_show(GTK_WIDGET(send_b));
+    //gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), TRUE);
     get_messages_request_s *get_messages_r = (get_messages_request_s *)data;
+    gtk_widget_show(GTK_WIDGET(get_messages_r->client->m->box_message));
     if (get_messages_r->client->active_chat_id != get_messages_r->chat->chat_id) {
         get_messages_r->chat->f_unread_msg_id = -1;
         if (get_messages_r->chat->last_msg_time != -1) {
@@ -25,7 +29,7 @@ void get_msg_request(GtkWidget *widget, gpointer data) {
         gtk_widget_hide(get_messages_r->client->m->unread_b_images[chat_index]);
 
     	get_messages_r->client->active_chat_id = get_messages_r->chat->chat_id;
-        gtk_button_set_label(chat_lbl, get_messages_r->chat->chat_name);
+        //gtk_button_set_label(chat_lbl, get_messages_r->chat->chat_name);
         gtk_label_set_text (chat_label, get_messages_r->chat->chat_name);
     	command cmd;
     	char buffer[BUFFER_SZ];
@@ -45,7 +49,10 @@ void new_chat_request(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
     gtk_widget_hide (chat_name_d);
     gtk_widget_hide(GTK_WIDGET(no_chat));
+    gtk_widget_show(GTK_WIDGET(message_entry));
+    gtk_widget_show(GTK_WIDGET(send_b));
     new_chat_request_s *new_chat_r = (new_chat_request_s *)data;
+    gtk_widget_show(GTK_WIDGET(new_chat_r->client->m->box_message));
     static int counter = 0;
     printf("index new_chat_request: %d\n", counter);
     counter++;
@@ -123,7 +130,7 @@ void edit_msg_request(GtkWidget *widget, gpointer data) {
 	bzero(buffer, BUFFER_SZ);
     gtk_entry_set_placeholder_text(GTK_ENTRY(message_entry), "");
     gtk_widget_hide(GTK_WIDGET(edit_b));
-    gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), TRUE);
+    //gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), TRUE);
     message_clear();
 }
 

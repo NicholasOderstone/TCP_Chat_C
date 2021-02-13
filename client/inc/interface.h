@@ -18,6 +18,7 @@
 
 // GLOBAL VARIABLES
     GtkBuilder      *builder;
+    GObject *send_b;
     GtkWidget       *window, *chat_name_d, *chat_menu_wind, *add_memwind;
     char username_str [32], passoword_str[32], message_str[2048], port_str[5],
                 ipv_str[16], username_str_s[32], nick_str_s[32], pass_str_s[32],

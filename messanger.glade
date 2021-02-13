@@ -609,7 +609,9 @@
             <property name="width-request">780</property>
             <property name="height-request">868</property>
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
+            <property name="can-focus">True</property>
+            <property name="has-focus">True</property>
+            <property name="is-focus">True</property>
             <property name="label" translatable="yes">CHOOSE THE CHAT</property>
           </object>
           <packing>

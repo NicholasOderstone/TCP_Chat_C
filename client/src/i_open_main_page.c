@@ -4,7 +4,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
 {
     UNUSED(widget);
 
-    GObject *send_b;
+    
     client_t *client = (client_t *)gp_client;
     GtkLabel *user_name;
     //GtkListBox *box;
@@ -45,9 +45,9 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     gtk_button_set_image(add_chat, add_chat_b_image);
     cancel_n  = GTK_BUTTON(gtk_builder_get_object(builder, "cancel_n"));
     cancel_u  = GTK_BUTTON(gtk_builder_get_object(builder, "cancel_u"));
-    chat_lbl = GTK_BUTTON(gtk_builder_get_object (builder, "chat_label"));
-    gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), FALSE);
-    gtk_button_set_label(chat_lbl, "");
+    //chat_lbl = GTK_BUTTON(gtk_builder_get_object (builder, "chat_label"));
+    //gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), FALSE);
+    //gtk_button_set_label(chat_lbl, "");
     send_b = gtk_builder_get_object (builder, "send_buttom");
     gtk_button_set_image (GTK_BUTTON (send_b), send_b_image);
     client->m->box_message = GTK_LIST_BOX(gtk_builder_get_object(builder, "message_list"));
@@ -55,6 +55,9 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     //gtk_text_buffer_create_tag(message_s->buffer, "gray_bg", "background","gray", NULL);
     //gtk_text_buffer_insert_with_tags_by_name (message_s->buffer, &message_s->end, "name", -1, "gray_bg", NULL);
     message_entry = GTK_ENTRY(gtk_builder_get_object(builder, "message_entry"));
+    gtk_widget_hide(GTK_WIDGET(message_entry));
+    gtk_widget_hide(GTK_WIDGET(client->m->box_message));
+    gtk_widget_hide(GTK_WIDGET(send_b));
     adduser_entry = GTK_ENTRY(gtk_builder_get_object(builder, "search_user"));
     //g_signal_connect(send_b, "clicked", G_CALLBACK(show_my_msg), (gpointer)message_s);
     //gtk_binding_entry_add_signall()

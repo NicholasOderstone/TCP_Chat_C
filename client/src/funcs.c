@@ -58,15 +58,19 @@ void func_register(GtkWidget *widget, gpointer data) {
         case 0:
             client->login = strdup(p_login);
             client->pass = strdup(p_pass);
+			gtk_widget_hide(GTK_WIDGET(diff_p));
+			gtk_widget_hide(GTK_WIDGET(username_e));
             open_main_page(NULL, data);
             sw_register = -1;
             break;
         case 1:
             printf("## USERNAME_EXIST\n");
+			gtk_widget_show(GTK_WIDGET(username_e));
             sw_register = -1;
             break;
         case 2:
             printf("## PASS_NOT_MATCH\n");
+			gtk_widget_show(GTK_WIDGET(diff_p));
             sw_register = -1;
             break;
         default:

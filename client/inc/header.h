@@ -45,6 +45,7 @@
 		GtkListBox *box_message;
 		GtkListBox *box_chat_list;
 		GtkWidget *chat[MAX_CHATS];
+	    GtkWidget *unread_b_images[MAX_CHATS];
 		GtkButtonBox *b_box;
 		GtkWidget *cancel_b;
 		GtkWidget *edit_b;
@@ -268,6 +269,9 @@
 
 	void send_cmd(command cmd, client_t *client);
 	void analyse_cmd(command fst_cmd, cmd_func function, client_t *client);
+
+	void sort_listbox(chat_info_t **chat_list_head, client_t *client);
+	chat_info_t *get_chat_p_by_index(chat_info_t **chat_list_head, int index);
 
 //////////////////////////
 

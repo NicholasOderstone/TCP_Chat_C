@@ -141,7 +141,6 @@ gboolean clean_listbox(gpointer data){
 void cancel_ch(GtkWidget *widget, gpointer data){
     UNUSED(widget);
     client_t *client = (client_t *)data;
-    gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), TRUE);
     gtk_list_box_unselect_all(client->m->box_message);
 }
 
@@ -184,7 +183,7 @@ gboolean chat_show(gpointer m) {
 
     if (new_chat_index > last_added_chat_index) {
         //printf("adding new chat %d with index %d\n", chat_show_info->chat->chat_id, new_chat_index);
-        if (chat_show_info->chat->last_msg_time != -1) {
+        /*if (chat_show_info->chat->last_msg_time != -1) {
             time_t time = (time_t)chat_show_info->chat->last_msg_time;
             struct tm *ptm = localtime(&time);
             if (ptm == NULL) {
@@ -221,7 +220,8 @@ gboolean chat_show(gpointer m) {
         get_messages_request_s *get_msg_buf = get_messages_request;
 
         gtk_widget_set_name(GTK_WIDGET(chat_show_info->client->m->chat[new_chat_index]), "chat_b");
-        g_signal_connect(chat_show_info->client->m->chat[new_chat_index], "clicked", G_CALLBACK(get_msg_request), (gpointer)get_msg_buf);
+        g_signal_connect(chat_show_info->client->m->chat[new_chat_index], "clicked", G_CALLBACK(get_msg_request), (gpointer)get_msg_buf);*/
+        sort_listbox(&chat_show_info->client->chat_list_head, chat_show_info->client);
         last_added_chat_index = new_chat_index;
         bzero(last_msg_time_buf, BUFFER_SZ);
     }

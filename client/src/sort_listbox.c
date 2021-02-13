@@ -5,11 +5,6 @@ void swap_chats(chat_info_t *chat1,chat_info_t *chat2) {
     chat1->chat_id = chat2->chat_id;
     chat2->chat_id = temp_id;
 
-    /*char *temp_name = (char *)malloc((strlen(chat1->chat_name) + 1) * sizeof(char));
-    strcpy(temp_name, chat1->chat_name);
-    strcpy(chat1->chat_name, chat2->chat_name);
-    strcpy(chat2->chat_name, temp_name);
-    free(temp_name);*/
     char *temp = chat1->chat_name;
     chat1->chat_name = chat2->chat_name;
     chat2->chat_name = temp;

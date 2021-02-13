@@ -44,7 +44,6 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     cancel_n  = GTK_BUTTON(gtk_builder_get_object(builder, "cancel_n"));
     cancel_u  = GTK_BUTTON(gtk_builder_get_object(builder, "cancel_u"));
     chat_lbl = GTK_BUTTON(gtk_builder_get_object (builder, "chat_label"));
-    gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), FALSE);
     gtk_button_set_label(chat_lbl, "");
     send_b = gtk_builder_get_object (builder, "send_buttom");
     gtk_button_set_image (GTK_BUTTON (send_b), send_b_image);

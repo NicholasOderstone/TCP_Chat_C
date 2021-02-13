@@ -3,7 +3,7 @@
 // ---- CHAT_MSG ----
 void get_msg_request(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
-    char last_msg_time_buf[BUFFER_SZ];
+    //char last_msg_time_buf[BUFFER_SZ];
     gtk_widget_hide(GTK_WIDGET(no_chat));
     gtk_widget_show(GTK_WIDGET(message_entry));
 

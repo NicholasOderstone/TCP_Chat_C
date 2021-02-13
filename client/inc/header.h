@@ -66,6 +66,12 @@
 // --- MSG_ID_QUEUE ---
 	typedef struct msg_id_q_s {
 		int msg_id;
+		int chat_id;
+		char message[BUFFER_SZ];
+		char time[BUFFER_SZ];
+		char sender_name[NAME_SZ];
+		char sender_login[NAME_SZ];
+		char is_special[2];
 		struct msg_id_q_s *next;
 	} msg_id_q;
 
@@ -130,6 +136,7 @@
 		char sender_name[NAME_SZ];
 		char sender_login[NAME_SZ];
 		char is_special[2];
+		int is_edit;
 	}	received_messages;
 
 	typedef struct {
@@ -219,7 +226,7 @@
 // --- QUEUES ---
 	void to_msg_q(char *data, struct msg_q **msg_q_front, pthread_mutex_t msg_lock);
 	void to_cmd_q(command data, struct cmd_q **cmd_q_front, pthread_mutex_t cmd_lock);
-	void to_msg_id_q(int msg_id, msg_id_q **msg_id_q_head);
+	void to_msg_id_q(received_messages *new_msg, msg_id_q **msg_id_q_head);
 	void clear_msg_id_q(msg_id_q **msg_id_q_head);
 	void display_msg_id_q(msg_id_q **msg_id_q_head);
 	void del_elem_msg_id_q(msg_id_q **msg_id_q_head, int msg_id);
@@ -272,6 +279,9 @@
 
 	void sort_listbox(chat_info_t **chat_list_head, client_t *client);
 	chat_info_t *get_chat_p_by_index(chat_info_t **chat_list_head, int index);
+	int msg_id_q_size(msg_id_q **msg_id_q_head);
+	msg_id_q *get_msg_p_by_msg_id(msg_id_q **msg_id_q_head, int msg_id);
+	msg_id_q *get_msg_p_by_msg_index(msg_id_q **msg_id_q_head, int index);
 
 //////////////////////////
 

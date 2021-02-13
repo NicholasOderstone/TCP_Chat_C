@@ -345,7 +345,7 @@ void f_edit_msg(char *params, buff_t *Info) {
 	char *p_chat_id = take_param(params, 2);
 	char *p_new_text = take_param(params, 3);
 	updateTextMessage(atoi(p_msg_id), p_new_text);
-	snprintf(send_to_client, BUFFER_SZ, " <%s>", p_chat_id);
+	snprintf(send_to_client, BUFFER_SZ, " <%s> <%s> <%s>", p_chat_id, p_msg_id, p_new_text);
 	cmd.params = send_to_client;
 
 	send_to_all_members(p_chat_id, cmd, Info);

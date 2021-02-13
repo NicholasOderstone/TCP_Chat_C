@@ -86,6 +86,25 @@ sql = "CREATE TABLE IF NOT EXISTS CHATS("  \
    return 0;
 }
 
+
+char* getMsgText(int id, char* rez){
+   sqlite3 *db;
+    sqlite3_stmt *res;
+    int rc = sqlite3_open("data.db", &db);
+    rc = sqlite3_prepare_v2(db, "select MESSAGE from MESSAGES WHERE ID = ?;", -1, &res, 0);
+    sqlite3_bind_int(res, 1, id);
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return "-1";
+    }
+    rc = sqlite3_step(res);
+    sprintf(rez, "%s", sqlite3_column_text(res, 0));
+    sqlite3_finalize(res);
+    sqlite3_close(db);
+    return rez;
+}
+
 void setUNREAD(int chat_id, int user_id, int unread){
     char sql[500];
     sprintf (sql,"UPDATE USER_IN_CHAT SET UNREAD = %d WHERE CHAT_ID = %d and USER_ID = %d;", unread, chat_id, user_id);

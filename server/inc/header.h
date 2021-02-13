@@ -235,7 +235,6 @@
     void send_to_all_members_send_special(char *p_chat_id, int msg_id,struct command cmd, buff_t *Info); // special edition for command send
     void setUNREAD(int chat_id, int user_id, int unread);
     int getUNREAD(int chat_id, int user_id);
-    char* getMsgText(int id, char* rez); // get message text by message id
 
     // --- Daemonize ---
     void daemonize();

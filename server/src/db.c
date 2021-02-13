@@ -87,24 +87,6 @@ sql = "CREATE TABLE IF NOT EXISTS CHATS("  \
 }
 
 
-char* getMsgText(int id, char* rez){
-   sqlite3 *db;
-    sqlite3_stmt *res;
-    int rc = sqlite3_open("data.db", &db);
-    rc = sqlite3_prepare_v2(db, "select MESSAGE from MESSAGES WHERE ID = ?;", -1, &res, 0);
-    sqlite3_bind_int(res, 1, id);
-    if (rc != SQLITE_OK) {
-        fprintf(stderr, "Failed to fetch data: %s\n", sqlite3_errmsg(db));
-        sqlite3_close(db);
-        return "-1";
-    }
-    rc = sqlite3_step(res);
-    sprintf(rez, "%s", sqlite3_column_text(res, 0));
-    sqlite3_finalize(res);
-    sqlite3_close(db);
-    return rez;
-}
-
 void setUNREAD(int chat_id, int user_id, int unread){
     char sql[500];
     sprintf (sql,"UPDATE USER_IN_CHAT SET UNREAD = %d WHERE CHAT_ID = %d and USER_ID = %d;", unread, chat_id, user_id);
@@ -161,9 +143,6 @@ char* getOwner_Id_By_Chat_Id(int id, char* rez){
 
     rc = sqlite3_step(res);
 
-     if (rc == SQLITE_ROW) {
-       // printf("%s\n", sqlite3_column_text(res, 0));
-     }
     sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
 
 
@@ -1381,9 +1360,7 @@ chat_t *pack_user_chats(int id){
         rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
         rc = sqlite3_step(res);
         if (sqlite3_column_text(res, 0) != NULL){
-            // printf("\"%s || %d\n", sqlite3_column_text(res, 0), sqlite3_column_int(res, 0));
             if (from == last_chat_from_user_id) {
-                // write(1,"8",1);
                 from = 0;
                 sprintf(buffer, "%s\n", sqlite3_column_text(res, 0));
                 sscanf(buffer, "%s , %s", new_chat->chat_id, new_chat->chat_name);
@@ -1423,10 +1400,6 @@ user_t *pack_chat_members(int id){
         return NULL;
     }
     int last_user_from_chat_id = sqlite3_column_int(res, 0);
-    // printf("last_chat_from_user_id: \"%d\"\n", last_chat_from_user_id);
-
-
-    //char sql_req[500];
     char buffer[4096];
     user_t *new_user = (user_t *)malloc(sizeof(user_t));
     static int from = 1;
@@ -1441,9 +1414,7 @@ user_t *pack_chat_members(int id){
         rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
         rc = sqlite3_step(res);
         if (sqlite3_column_text(res, 0) != NULL){
-            // printf("\"%s || %d\n", sqlite3_column_text(res, 0), sqlite3_column_int(res, 0));
             if (from == last_user_from_chat_id) {
-                // write(1,"8",1);
                 from = 0;
                 sprintf(buffer, "%s\n", sqlite3_column_text(res, 0));
                 sscanf(buffer, "%s , %s", new_user->user_id, new_user->user_name);

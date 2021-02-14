@@ -36,7 +36,7 @@ void message_edit(GtkWidget *widget, gpointer data){
         index--;
     }
 
-    gtk_entry_set_text(GTK_ENTRY(message_entry),current->text);
+    gtk_entry_set_text(GTK_ENTRY(message_entry),current->message);
     gtk_widget_show(GTK_WIDGET(edit_b));
 }
 
@@ -102,15 +102,17 @@ gboolean message_show(gpointer m) {
 
             //gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view_e));
             received_mess->client->m->row_num_list_gtk++;
-            gtk_widget_set_name(GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk)), "message");
+
             // to_msg_id_q(received_mess->msg_id, &received_mess->client->msg_id_q_head);
 
             gtk_widget_show (GTK_WIDGET(view));
 
-            adj= GTK_ADJUSTMENT(gtk_builder_get_object(builder,"scroll_messeges"));
-            gtk_adjustment_set_page_size (adj, 0);
-            double value = gtk_adjustment_get_upper(adj);
-            gtk_adjustment_set_value(adj, value);
+            if (!received_mess->is_edit){
+                adj= GTK_ADJUSTMENT(gtk_builder_get_object(builder,"scroll_messeges"));
+                gtk_adjustment_set_page_size (adj, 0);
+                double value = gtk_adjustment_get_upper(adj);
+                gtk_adjustment_set_value(adj, value);
+            }
             //gtk_container_set_focus_vadjustment(GTK_CONTAINER(received_mess->client->m->box_message),
             //                                    adj);
 
@@ -120,8 +122,10 @@ gboolean message_show(gpointer m) {
             if ( strcmp(received_mess->sender_login, received_mess->client->login) != 0){
                 gtk_list_box_row_set_activatable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk), FALSE);
                 gtk_list_box_row_set_selectable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk), FALSE);
+                gtk_widget_set_name(GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk)), "message_p");
             }
             else {
+                gtk_widget_set_name(GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk)), "message");
                 gtk_list_box_row_set_activatable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk), TRUE);
                 gtk_list_box_row_set_selectable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk), TRUE);
             }
@@ -140,11 +144,12 @@ gboolean message_show(gpointer m) {
             // to_msg_id_q(received_mess->msg_id, &received_mess->client->msg_id_q_head);
 
             gtk_widget_show (GTK_WIDGET(view));
-            adj = GTK_ADJUSTMENT(gtk_builder_get_object(builder,"scroll_messeges"));
-            //gtk_container_set_focus_vadjustment(GTK_CONTAINER(received_mess->client->m->box_message), adj);
-            gtk_adjustment_set_page_size (adj, 0);
-            double value = gtk_adjustment_get_upper(adj);
-            gtk_adjustment_set_value(adj, value);
+            if (!received_mess->is_edit){
+                adj= GTK_ADJUSTMENT(gtk_builder_get_object(builder,"scroll_messeges"));
+                gtk_adjustment_set_page_size (adj, 0);
+                double value = gtk_adjustment_get_upper(adj);
+                gtk_adjustment_set_value(adj, value);
+            }
             //ind =  gtk_list_box_row_get_index (gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk));
             gtk_widget_set_name(GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk)), "message_s");
             gtk_list_box_row_set_activatable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk), FALSE);

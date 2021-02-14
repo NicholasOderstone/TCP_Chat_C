@@ -210,6 +210,7 @@ void func_rpl_edit(char *params, void *p) {
         gtk_list_box_row_set_selectable(gtk_list_box_get_row_at_index (client->m->box_message, (gint)index), TRUE);
         gtk_list_box_select_row(client->m->box_message, gtk_list_box_get_row_at_index(client->m->box_message, (gint)index));
         gtk_container_remove(GTK_CONTAINER(client->m->box_message), GTK_WIDGET(gtk_list_box_get_selected_row (client->m->box_message)));
+        client->m->row_num_list_gtk--;
     }
 
     msg_id_q *edited_msg = get_msg_p_by_msg_id(&client->msg_id_q_head, msg_id);
@@ -232,7 +233,7 @@ void func_rpl_edit(char *params, void *p) {
         if (msg->chat_id == client->active_chat_id) {
             gdk_threads_add_idle(message_show, (gpointer)received_mess);
         }
-        client->m->row_num_list_gtk++;
+
     }
 
     /*while (clean_listbox((gpointer)client->m->box_message) == TRUE) {}

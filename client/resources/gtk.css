@@ -139,6 +139,7 @@ border-radius: 4px;
 #messages {
   background-color: #222629;
   border: 1px solid #222629;
+  border-left: 5px solid #222629;
 }
 #message:focus{
     background-color: #474b4f;
@@ -153,7 +154,16 @@ border-radius: 4px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
 }
+#message_p *{
+    color: white;
+    background-color: #222629;
+    border-bottom: 6px solid #222629;
+    border-top: 6px solid #222629;
+    border-left: 4px solid #474b4f;
 
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+}
 #add_chat_dialog{
   box-shadow: black;
   background-color: #252729;

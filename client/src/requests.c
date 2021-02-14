@@ -133,7 +133,7 @@ void edit_msg_request(GtkWidget *widget, gpointer data) {
     gtk_list_box_unselect_all(client->m->box_message);
 
     edit_msg->new_text = strdup(message_str);
-    printf("edit_msg->new_text %s", edit_msg->new_text);
+    printf("edit_msg->new_text \"%s\"", edit_msg->new_text);
 
 	snprintf(buffer, BUFFER_SZ, "<%d> <%d> <%s>", edit_msg->msg_id, edit_msg->client->active_chat_id, edit_msg->new_text);
 	cmd.command = "<EDIT_MSG>";

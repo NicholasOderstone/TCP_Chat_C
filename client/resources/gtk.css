@@ -140,6 +140,7 @@ border-radius: 4px;
   background-color: #222629;
   border: 1px solid #222629;
   border-left: 5px solid #222629;
+   border-bottom: : 5px solid #222629;
 }
 #message:focus{
     background-color: #474b4f;

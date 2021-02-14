@@ -107,12 +107,6 @@ gboolean message_show(gpointer m) {
 
             gtk_widget_show (GTK_WIDGET(view));
 
-            if (!received_mess->is_edit){
-                adj= GTK_ADJUSTMENT(gtk_builder_get_object(builder,"scroll_messeges"));
-                gtk_adjustment_set_page_size (adj, 0);
-                double value = gtk_adjustment_get_upper(adj);
-                gtk_adjustment_set_value(adj, value);
-            }
             //gtk_container_set_focus_vadjustment(GTK_CONTAINER(received_mess->client->m->box_message),
             //                                    adj);
 
@@ -144,12 +138,6 @@ gboolean message_show(gpointer m) {
             // to_msg_id_q(received_mess->msg_id, &received_mess->client->msg_id_q_head);
 
             gtk_widget_show (GTK_WIDGET(view));
-            if (!received_mess->is_edit){
-                adj= GTK_ADJUSTMENT(gtk_builder_get_object(builder,"scroll_messeges"));
-                gtk_adjustment_set_page_size (adj, 0);
-                double value = gtk_adjustment_get_upper(adj);
-                gtk_adjustment_set_value(adj, value);
-            }
             //ind =  gtk_list_box_row_get_index (gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk));
             gtk_widget_set_name(GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk)), "message_s");
             gtk_list_box_row_set_activatable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk), FALSE);
@@ -158,6 +146,13 @@ gboolean message_show(gpointer m) {
             //                           GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk-2)));
             //gtk_container_remove(GTK_CONTAINER(received_mess->client->m->box_message),  GTK_WIDGET(gtk_list_box_get_row_at_index(received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk)));
             //received_mess->client->m->row_num_list_gtk--;
+        }
+        if (!received_mess->is_edit){
+            adj= GTK_ADJUSTMENT(gtk_builder_get_object(builder,"scroll_messeges"));
+            gtk_adjustment_set_page_size (adj, 0);
+            double upper = gtk_adjustment_get_upper(adj);
+            double page_size = gtk_adjustment_get_page_size(adj);
+            gtk_adjustment_set_value(adj, upper - page_size);
         }
         memset(received_mess->message, 0, sizeof(received_mess->message));
         memset(received_mess->sender_name, 0, sizeof(received_mess->sender_name));

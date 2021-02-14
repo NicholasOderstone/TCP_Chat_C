@@ -34,9 +34,25 @@ void sort_listbox(chat_info_t **chat_list_head, client_t *client) {
         gtk_list_box_select_row(client->m->box_chat_list, gtk_list_box_get_row_at_index(client->m->box_chat_list, (gint)0));
         gtk_container_remove(GTK_CONTAINER(client->m->box_chat_list), GTK_WIDGET(gtk_list_box_get_selected_row (client->m->box_chat_list)));
     }
+    char button_lbl[BUFFER_SZ];
     for (int index = 0; index < size; index++) {
         chat_info_t *chat = get_chat_p_by_index(chat_list_head, index);
-        client->m->chat[index] = gtk_button_new_with_label(chat->chat_name);
+        if (chat->last_msg_time != -1) {
+            time_t time = (time_t)chat->last_msg_time;
+            struct tm *ptm = localtime(&time);
+            if (ptm == NULL) {
+                puts("The localtime() function failed");
+                return;
+            }
+
+            snprintf(button_lbl, BUFFER_SZ, "%s\t%02d:%02d", chat->chat_name, ptm->tm_hour, ptm->tm_min);
+            // snprintf(last_msg_time_buf, BUFFER_SZ, "%s", chat_show_info->chat->chat_name);
+        }
+        else {
+            snprintf(button_lbl, BUFFER_SZ, "%s        ", chat->chat_name);
+        }
+
+        client->m->chat[index] = gtk_button_new_with_label(button_lbl);
         gtk_container_add(GTK_CONTAINER(client->m->box_chat_list), GTK_WIDGET(client->m->chat[index]));
         gtk_widget_show(GTK_WIDGET(client->m->chat[index]));
 

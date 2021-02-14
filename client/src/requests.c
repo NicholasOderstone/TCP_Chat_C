@@ -6,7 +6,6 @@ void get_msg_request(GtkWidget *widget, gpointer data) {
     //char last_msg_time_buf[BUFFER_SZ];
     gtk_widget_hide(GTK_WIDGET(no_chat));
     gtk_widget_show(GTK_WIDGET(message_entry));
-
     gtk_widget_show(GTK_WIDGET(send_b));
     //gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), TRUE);
     get_messages_request_s *get_messages_r = (get_messages_request_s *)data;
@@ -36,6 +35,9 @@ void get_msg_request(GtkWidget *widget, gpointer data) {
     	get_messages_r->client->active_chat_id = get_messages_r->chat->chat_id;
         //gtk_button_set_label(chat_lbl, get_messages_r->chat->chat_name);
         gtk_label_set_text (chat_label, get_messages_r->chat->chat_name);
+        gtk_widget_set_name(GTK_WIDGET(chat_label), "name_chat");
+        gtk_widget_set_sensitive(GTK_WIDGET(add_user), TRUE);
+        gtk_widget_set_sensitive(GTK_WIDGET(leave_chat), TRUE);
     	command cmd;
     	char buffer[BUFFER_SZ];
     	snprintf(buffer, BUFFER_SZ, "<%d>", get_messages_r->chat->chat_id);
@@ -83,10 +85,18 @@ void delete_msg_request(del_msg_request_s *delete_msg_r) {
 // ---- LEAVE_CHAT ----
 void leave_chat_request(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
-    gtk_widget_hide(chat_menu_wind);
+    gtk_label_set_text (chat_label, "");
+    gtk_widget_set_name(GTK_WIDGET(chat_label), "name_chat1");
+    gtk_widget_show(GTK_WIDGET(no_chat));
+    gtk_widget_set_sensitive(GTK_WIDGET(add_user), FALSE);
+    gtk_widget_set_sensitive(GTK_WIDGET(leave_chat), FALSE);
+    gtk_widget_hide(GTK_WIDGET(message_entry));
+
+    gtk_widget_hide(GTK_WIDGET(send_b));
 	command cmd;
 	char buffer[BUFFER_SZ];
     del_chat_request_s *leave_chat_r = (del_chat_request_s *)data;
+    //gtk_widget_hide(GTK_WIDGET(leave_chat_r->client->m->box_message));
     printf("leave_chat_r->chat_id %d\n", leave_chat_r->client->active_chat_id);
     snprintf(buffer, BUFFER_SZ, "<%d>", leave_chat_r->client->active_chat_id);
     cmd.command = "<LEAVE_CHAT>";

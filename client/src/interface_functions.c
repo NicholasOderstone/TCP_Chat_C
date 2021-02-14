@@ -37,6 +37,7 @@ void open_signup_page(GtkWidget *widget, gpointer gp_client)
     GObject *login_p;
     GObject *signup_b;
     UNUSED(widget);
+    GtkImage *logo;
     client_t *client = (client_t *)gp_client;
 
     gtk_window_get_position (GTK_WINDOW(window), &client->m->root_x, &client->m->root_y);
@@ -49,6 +50,9 @@ void open_signup_page(GtkWidget *widget, gpointer gp_client)
                                GTK_STYLE_PROVIDER(cssProvider),
                                GTK_STYLE_PROVIDER_PRIORITY_USER);
     window = GTK_WIDGET(gtk_builder_get_object(builder, "signup_window"));
+    gtk_window_set_title (GTK_WINDOW(window), "PLACE");
+    logo = GTK_IMAGE(gtk_builder_get_object(builder, "logo_1"));
+    gtk_image_set_from_file(logo, "client/resources/logo_1.png");
     gtk_window_move(GTK_WINDOW(window), client->m->root_x, client->m->root_y);
     gtk_builder_connect_signals(builder, NULL);
     connection_spin = GTK_SPINNER(gtk_builder_get_object(builder, "connection_spinner_s"));
@@ -70,6 +74,7 @@ void open_login_page(GtkWidget *widget, gpointer gp_client)
     GObject *login_b;
     GObject *login;
     GtkEntry *password;
+    GtkImage *logo;
     //client_t *client = (client_t *)gp_client;
 
     //gtk_window_get_position (GTK_WINDOW(window), &client->m->root_x, &client->m->root_y);
@@ -82,6 +87,9 @@ void open_login_page(GtkWidget *widget, gpointer gp_client)
                                GTK_STYLE_PROVIDER(cssProvider),
                                GTK_STYLE_PROVIDER_PRIORITY_USER);
     window = GTK_WIDGET(gtk_builder_get_object(builder, "login_window"));
+    gtk_window_set_title (GTK_WINDOW(window), "PLACE");
+    logo = GTK_IMAGE(gtk_builder_get_object(builder, "logo_2"));
+    gtk_image_set_from_file(logo, "client/resources/logo_2.png");
     //gtk_window_move(GTK_WINDOW(window), client->m->root_x, client->m->root_y);
     gtk_builder_connect_signals(builder, NULL);
     connection_spin = GTK_SPINNER(gtk_builder_get_object(builder, "connection_spinner_l"));
@@ -142,6 +150,8 @@ void cancel_ch(GtkWidget *widget, gpointer data){
     UNUSED(widget);
     client_t *client = (client_t *)data;
     gtk_list_box_unselect_all(client->m->box_message);
+    gtk_entry_set_placeholder_text(GTK_ENTRY(message_entry), "");
+    gtk_widget_hide(GTK_WIDGET(edit_b));
 }
 
 void new_chat(GtkWidget *widget, gpointer data) {
@@ -153,7 +163,7 @@ void new_chat(GtkWidget *widget, gpointer data) {
     i++;
     gtk_window_get_position (GTK_WINDOW(window), &client->m->root_x, &client->m->root_y);
     chat_name_d  = GTK_WIDGET(gtk_builder_get_object(builder, "chat_name"));
-    gtk_window_move(GTK_WINDOW(chat_name_d), client->m->root_x+2, client->m->root_y+675);
+    gtk_window_move(GTK_WINDOW(chat_name_d), client->m->root_x, client->m->root_y+398);
     gtk_widget_show(chat_name_d);
     chat_name = GTK_WIDGET(gtk_builder_get_object(builder, "name"));
     chatname_entry = GTK_ENTRY(gtk_builder_get_object(builder, "name"));
@@ -239,7 +249,7 @@ void add_mem_wind(GtkWidget *widget, gpointer data){
     gtk_widget_set_sensitive(GTK_WIDGET(entr), TRUE);
     gtk_window_get_position (GTK_WINDOW(window), &client->m->root_x, &client->m->root_y);
     add_memwind = GTK_WIDGET(gtk_builder_get_object(builder, "add_user_chat"));
-    gtk_window_move(GTK_WINDOW(add_memwind), client->m->root_x+900, client->m->root_y+45);
+    gtk_window_move(GTK_WINDOW(add_memwind), client->m->root_x+600, client->m->root_y+52);
     gtk_widget_show(add_memwind);
 }
 void clean_adduser() {

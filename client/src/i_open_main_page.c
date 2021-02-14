@@ -4,11 +4,11 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
 {
     UNUSED(widget);
 
-    
+
     client_t *client = (client_t *)gp_client;
     GtkLabel *user_name;
     //GtkListBox *box;
-
+    GtkImage *avatar;
     GtkCssProvider *cssProvider = gtk_css_provider_new();
     //client->m = (gtk_utils_t *)malloc(sizeof(gtk_utils_t));
     //client->m = message_s;
@@ -27,6 +27,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     builder = gtk_builder_new();
     gtk_builder_add_from_file (builder, "messanger.glade", NULL);
     window = GTK_WIDGET(gtk_builder_get_object(builder, "main_window"));
+    gtk_window_set_title (GTK_WINDOW(window), "PLACE");
     gtk_window_move(GTK_WINDOW(window), client->m->root_x, client->m->root_y);
     gtk_builder_connect_signals(builder, NULL);
     gtk_widget_show(window);
@@ -37,6 +38,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     gtk_button_set_image (edit_b, edit_b_image);
     gtk_widget_hide(GTK_WIDGET(edit_b));
     chat_label  = GTK_LABEL(gtk_builder_get_object(builder, "name_chat"));
+    gtk_widget_set_name(GTK_WIDGET(chat_label), "name_chat1");
     user_name  = GTK_LABEL(gtk_builder_get_object(builder, "name_user"));
     no_chat  = GTK_LABEL(gtk_builder_get_object(builder, "not_chat"));
     gtk_widget_show(GTK_WIDGET(no_chat));
@@ -45,6 +47,8 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     gtk_button_set_image(add_chat, add_chat_b_image);
     cancel_n  = GTK_BUTTON(gtk_builder_get_object(builder, "cancel_n"));
     cancel_u  = GTK_BUTTON(gtk_builder_get_object(builder, "cancel_u"));
+    avatar = GTK_IMAGE(gtk_builder_get_object(builder, "avatar"));
+    gtk_image_set_from_file(avatar, "client/resources/avatar.jpg");
     //chat_lbl = GTK_BUTTON(gtk_builder_get_object (builder, "chat_label"));
     //gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), FALSE);
     //gtk_button_set_label(chat_lbl, "");
@@ -59,6 +63,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     gtk_widget_hide(GTK_WIDGET(client->m->box_message));
     gtk_widget_hide(GTK_WIDGET(send_b));
     adduser_entry = GTK_ENTRY(gtk_builder_get_object(builder, "search_user"));
+    gtk_widget_show(GTK_WIDGET(user_name));
     //g_signal_connect(send_b, "clicked", G_CALLBACK(show_my_msg), (gpointer)message_s);
     //gtk_binding_entry_add_signall()
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_send), gp_client);
@@ -88,6 +93,8 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     ch_b = GTK_BUTTON(gtk_builder_get_object(builder, "confirm"));
     add_mem = GTK_BUTTON(gtk_builder_get_object(builder, "add_user"));
     leave_chat = GTK_BUTTON(gtk_builder_get_object(builder, "delete_chat"));
+    gtk_widget_set_sensitive(GTK_WIDGET(add_user), FALSE);
+    gtk_widget_set_sensitive(GTK_WIDGET(leave_chat), FALSE);
     g_signal_connect(message_entry, "activate", G_CALLBACK(message_send), gp_client);
     g_signal_connect(message_entry, "activate", G_CALLBACK(message_clear), NULL);
     g_signal_connect(add_user, "clicked", G_CALLBACK(add_mem_wind), gp_client);

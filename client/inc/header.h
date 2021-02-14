@@ -21,6 +21,7 @@
 	#include <sqlite3.h>
 	#include <time.h>
 	#include <ctype.h>
+	#include <semaphore.h>
     #include "interface.h"
 
 //////////////////////////
@@ -291,6 +292,11 @@
 	pthread_mutex_t chat_lock;
 	pthread_mutex_t add_chat_lock;
 	pthread_mutex_t msg_id_lock;
+
+	sem_t *sem_exit;
+	sem_t *sem_msg_q;
+	sem_t *sem_cmd_q;
+	sem_t *sem_reconnect;
 
 //////////////////////////
 

@@ -25,20 +25,38 @@ int main(int argc, char **argv) {
       printf("Mutex initialization failed.\n");
       return EXIT_FAILURE;
     }
+	sem_exit = sem_open("uchat_sem_exit", O_CREAT, 0666, 0);
+	sem_msg_q = sem_open("uchat_sem_msg_q", O_CREAT, 0666, 0);
+	sem_cmd_q = sem_open("uchat_sem_cmd_q", O_CREAT, 0666, 0);
+	sem_reconnect = sem_open("uchat_sem_reconnect", O_CREAT, 0666, 0);
 
     pthread_t init_threads_thread;
-	if(pthread_create(&init_threads_thread, NULL, init_threads, (void*)p_client) != 0){
-		perror("ERROR: pthread\n");
-		return EXIT_FAILURE;
-	}
-
-    gtk_main();
+    if(pthread_create(&init_threads_thread, NULL, init_threads, (void*)p_client) != 0){
+      perror("ERROR: pthread\n");
+      return EXIT_FAILURE;
+    }
+    sleep(100);
+    // gtk_main();
 
     client.exit = 1;
+    sem_post(sem_exit);
+    sem_post(sem_exit);
 	close(client.sockfd);
     pthread_join(init_threads_thread, NULL);
 	pthread_mutex_destroy(&client.mutex);
 
-	exit(0);
-	return EXIT_SUCCESS;
+    sem_close(sem_exit);
+    sem_unlink("uchat_sem_exit");
+
+    sem_close(sem_msg_q);
+    sem_unlink("uchat_sem_msg_q");
+
+    sem_close(sem_cmd_q);
+    sem_unlink("uchat_sem_cmd_q");
+    
+    sem_close(sem_reconnect);
+    sem_unlink("uchat_sem_reconnect");
+	
+    exit(0);
+    return EXIT_SUCCESS;
 }

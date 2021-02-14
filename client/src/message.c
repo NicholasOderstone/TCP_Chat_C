@@ -18,13 +18,19 @@ void *recv_msg_handler(void *arg) {
 	pthread_create(&th_make_cmd, NULL, make_cmd, (void *)make_cmd_info);
 
 	while (1) {
+		printf("-- Recv message");
+		sem_wait(sem_exit);
 		if (Info->client->exit == 1) {
+			
+			pthread_cancel(th_read_msg);
+			printf("-- Recv message -- th_read_msg");
+			pthread_cancel(th_make_cmd);
+			printf("-- Recv message -- th_make_cmd");
 			break;
 		}
 	}
 
-	pthread_join(th_read_msg, NULL);
-	pthread_join(th_make_cmd, NULL);
+	
 
 	int ret_val = 1;
 	printf("-- Recv message thread terminated --\n");

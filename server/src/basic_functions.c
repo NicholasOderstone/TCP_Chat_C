@@ -54,7 +54,7 @@ void send_to_all_members_send_special(char *p_chat_id, int msg_id, struct comman
 			break;
 		}
 	}
-	
+
 	int is_online;
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
 	for(int j = 0; j < num_of_memb; j++) {
@@ -63,7 +63,7 @@ void send_to_all_members_send_special(char *p_chat_id, int msg_id, struct comman
 		printf("Sending msg to %s: %d\n", user[j]->user_name, user_id);
 
 		for(int i=0; i<MAX_CLIENTS; ++i) { //общий массив пользователей онлайн
-			if(Info->serv_inf->clients[i] != NULL && user[j] != NULL){ 
+			if(Info->serv_inf->clients[i] != NULL && user[j] != NULL){
 
 				if(strcmp(user[j]->user_name, Info->serv_inf->clients[i]->name) == 0) { // Если имена совпадают
 					is_online = 1;
@@ -160,7 +160,7 @@ void f_chat_msg(char *params, buff_t *Info) {
 	int uid = Info->client->uid;
 
 	Info->serv_inf->clients[uid]->active_id_chat = ch_id;
-	
+
 	setUNREAD(ch_id, getIdUserByUserName(Info->client->name), -1);
 
 	while(1) {
@@ -316,7 +316,7 @@ void f_register(char *params, buff_t *Info) {
 	}
 	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
 }
-// 
+//
 void f_del_msg(char *params, buff_t *Info) {
 	char send_to_client[BUFFER_SZ];
 	struct command cmd;
@@ -333,19 +333,17 @@ void f_del_msg(char *params, buff_t *Info) {
 }
 
 void f_edit_msg(char *params, buff_t *Info) {
-	char send_to_client[BUFFER_SZ];
-	struct command cmd;
-	cmd.command = "<EDIT_MSG>";
-	char *p_msg_id = take_param(params, 1);
-	char *p_chat_id = take_param(params, 2);
-	char *p_new_text = take_param(params, 3);
-	updateTextMessage(atoi(p_msg_id), p_new_text);
-	snprintf(send_to_client, BUFFER_SZ, " <%s>", p_chat_id);
-	cmd.params = send_to_client;
-
-	send_to_all_members(p_chat_id, cmd, Info);
-
-	bzero(send_to_client, BUFFER_SZ);
+    char send_to_client[BUFFER_SZ];
+    struct command cmd;
+    cmd.command = "<EDIT_MSG>";
+    char *p_msg_id = take_param(params, 1);
+    char *p_chat_id = take_param(params, 2);
+    char *p_new_text = take_param(params, 3);
+    updateTextMessage(atoi(p_msg_id), p_new_text);
+    snprintf(send_to_client, BUFFER_SZ, " <%s> <%s> <%s>", p_chat_id, p_msg_id, p_new_text);
+    cmd.params = send_to_client;
+    send_to_all_members(p_chat_id, cmd, Info);
+    bzero(send_to_client, BUFFER_SZ);
 }
 
 void f_new_chat(char *params, buff_t *Info) {
@@ -407,7 +405,7 @@ void f_add_user_to_chat(char *params, buff_t *Info) {
 			return;
 		}
 	}
-	
+
 
 
 	insertUSER_TO_CHAT(getIdUserByUserName(p_username), atoi(p_chat_id));
@@ -439,7 +437,7 @@ void f_add_user_to_chat(char *params, buff_t *Info) {
 	strcat(nick_to_add, " joined chat");
 	snprintf(send_to_client, BUFFER_SZ, "<%s> <%s> <%d> <2>", p_chat_id, nick_to_add, ((int)time(NULL)));
 	f_send(send_to_client, Info);
-	
+
 	bzero(nick_to_add, BUFFER_SZ);
 	bzero(send_to_client, BUFFER_SZ);
 	bzero(chat_name, BUFFER_SZ);

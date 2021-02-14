@@ -69,7 +69,11 @@ gboolean message_show(gpointer m) {
                         "foreground", "grey", NULL);
     gtk_text_buffer_get_iter_at_offset(buffer, &end, 0);
     char time_buf[BUFFER_SZ];
+
     if (received_mess->message[0] != 0) {
+        if (!received_mess->is_edit) {
+            to_msg_id_q(received_mess, &received_mess->client->msg_id_q_head);
+        }
         if (strcmp(received_mess->is_special, "0") == 0) {
             time_t time = (time_t)(atoi(received_mess->time));
             struct tm *ptm = localtime(&time);
@@ -99,7 +103,7 @@ gboolean message_show(gpointer m) {
             //gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view_e));
             received_mess->client->m->row_num_list_gtk++;
             gtk_widget_set_name(GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk)), "message");
-            to_msg_id_q(received_mess->msg_id, &received_mess->client->msg_id_q_head);
+            // to_msg_id_q(received_mess->msg_id, &received_mess->client->msg_id_q_head);
 
             gtk_widget_show (GTK_WIDGET(view));
 
@@ -133,8 +137,7 @@ gboolean message_show(gpointer m) {
 
             //    gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view_e));
             received_mess->client->m->row_num_list_gtk++;
-
-            to_msg_id_q(received_mess->msg_id, &received_mess->client->msg_id_q_head);
+            // to_msg_id_q(received_mess->msg_id, &received_mess->client->msg_id_q_head);
 
             gtk_widget_show (GTK_WIDGET(view));
             adj = GTK_ADJUSTMENT(gtk_builder_get_object(builder,"scroll_messeges"));

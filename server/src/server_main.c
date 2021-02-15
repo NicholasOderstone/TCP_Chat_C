@@ -49,9 +49,6 @@ int main(int argc, char **argv){
 		perror("ERROR: Socket listening failed");
 		return EXIT_FAILURE;
 	}
-
-	printf("=== WELCOME TO THE CHATROOM ===\n");
-
 	/* Data Base */
 	initDB();
 

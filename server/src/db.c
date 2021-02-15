@@ -248,9 +248,6 @@ char* getAllChats(){
 
     rc = sqlite3_step(res);
 
-     if (rc == SQLITE_ROW) {
-       // printf("%s\n", sqlite3_column_text(res, 0));
-     }
     sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
 
 
@@ -288,9 +285,7 @@ char* getOneUser(int id, char* rez){
 
     rc = sqlite3_step(res);
 
-     if (rc == SQLITE_ROW) {
-       // printf("%s\n", sqlite3_column_text(res, 0));
-     }
+
     sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
 
 
@@ -327,9 +322,7 @@ char* getUserName(int id, char* rez){
 
     rc = sqlite3_step(res);
 
-     if (rc == SQLITE_ROW) {
-       // printf("%s\n", sqlite3_column_text(res, 0));
-     }
+
     sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
 
 
@@ -366,9 +359,7 @@ char* getUserPassword(int id, char* rez){
 
     rc = sqlite3_step(res);
 
-     if (rc == SQLITE_ROW) {
-       // printf("%s\n", sqlite3_column_text(res, 0));
-     }
+
     sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
 
 
@@ -440,9 +431,7 @@ char* getIdUserByNick(char* nick, char* rez){
 
     rc = sqlite3_step(res);
 
-     if (rc == SQLITE_ROW) {
-       // printf("%s\n", sqlite3_column_text(res, 0));
-     }
+
     sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
 
 
@@ -516,9 +505,6 @@ char* getOneChats(int id, char* rez){
 
     rc = sqlite3_step(res);
 
-     if (rc == SQLITE_ROW) {
-       // printf("%s\n", sqlite3_column_text(res, 0));
-     }
     sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
 
 
@@ -583,9 +569,7 @@ char* getOneMessage(int id, char* rez){
 
     rc = sqlite3_step(res);
 
-     if (rc == SQLITE_ROW) {
-       // printf("%s\n", sqlite3_column_text(res, 0));
-     }
+
     sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
 
 
@@ -1087,9 +1071,7 @@ char* getBlockList(int id, char* rez){
 
     rc = sqlite3_step(res);
 
-     if (rc == SQLITE_ROW) {
-       // printf("%s\n", sqlite3_column_text(res, 0));
-     }
+
     sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
 
 

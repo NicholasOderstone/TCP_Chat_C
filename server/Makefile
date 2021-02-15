@@ -14,6 +14,8 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	@$(CC) $(FLAGS) $(FLAG_SQL) $(DEBUG_FLAGS) $(OBJ) -o ../$(NAME)
 	@make clean
+	@mkdir db
+	@mkdir log
 	@printf "\r\33[2K$(NAME):\t\t \033[32;1mcreated\033[0m\n"
 $(OBJ): | obj
 obj:
@@ -29,6 +31,8 @@ endif
 clean:
 	@rm -rf obj/*.o
 	@rm -rf ./obj
+	@rm -rf ./db
+	@rm -rf ./log
 	@printf "$(NAME):\t\t \033[31;1mdeleted\033[0m $(OBJ_DIR)\r"
 
 uninstall:

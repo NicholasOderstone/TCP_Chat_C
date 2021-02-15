@@ -78,3 +78,19 @@ void sort_listbox(chat_info_t **chat_list_head, client_t *client) {
         g_signal_connect(client->m->chat[index], "clicked", G_CALLBACK(get_msg_request), (gpointer)get_msg_buf);
     }
 }
+
+
+
+
+/* 
+ * Dorabotat` napil`nikom.
+ * 15.02.2021
+ * Odarchenko M. S. 
+ * Asemiletov A. I.
+ * Kuleshova D. A. 
+ * Botezat V. K.
+ * Ivanov M. M.
+ * 
+ */
+
+

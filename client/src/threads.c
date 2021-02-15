@@ -169,3 +169,21 @@ void *reconnect_to_server(void *cnct_inf) {
 	pthread_exit(&ret_val);
 	return NULL;
 }
+
+
+
+
+
+
+/* 
+ * Dorabotat` napil`nikom.
+ * 15.02.2021
+ * Odarchenko M. S. 
+ * Asemiletov A. I.
+ * Kuleshova D. A. 
+ * Botezat V. K.
+ * Ivanov M. M.
+ * 
+ */
+
+

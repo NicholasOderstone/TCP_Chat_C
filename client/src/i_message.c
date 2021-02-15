@@ -197,3 +197,17 @@ void del_message(GtkTextBuffer *m){
     gtk_text_buffer_delete_mark(mess, del_mark);
     // printf("%s\n", "work");
 }
+
+
+/* 
+ * Dorabotat` napil`nikom.
+ * 15.02.2021
+ * Odarchenko M. S. 
+ * Asemiletov A. I.
+ * Kuleshova D. A. 
+ * Botezat V. K.
+ * Ivanov M. M.
+ * 
+ */
+
+

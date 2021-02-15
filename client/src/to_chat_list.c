@@ -123,3 +123,20 @@ chat_info_t *get_chat_p_by_index(chat_info_t **chat_list_head, int index) {
     }
     return NULL;
 }
+
+
+
+
+/* 
+ * Dorabotat` napil`nikom.
+ * 15.02.2021
+ * Odarchenko M. S. 
+ * Asemiletov A. I.
+ * Kuleshova D. A. 
+ * Botezat V. K.
+ * Ivanov M. M.
+ * 
+ */
+
+
+

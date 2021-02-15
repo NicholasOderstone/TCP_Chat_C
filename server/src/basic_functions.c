@@ -639,3 +639,22 @@ void initialize_functions(cmd_func arr_cmd_func[]) {
     for (int i = 0; i < AMOUNT_OF_CMD; i++)
         arr_cmd_func[i].name = strdup(arr_func_names[i]);
 }
+
+
+
+
+
+
+
+/* 
+ * Dorabotat` napil`nikom.
+ * 15.02.2021
+ * Odarchenko M. S. 
+ * Asemiletov A. I.
+ * Kuleshova D. A. 
+ * Botezat V. K.
+ * Ivanov M. M.
+ * 
+ */
+
+

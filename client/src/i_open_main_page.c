@@ -109,3 +109,17 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     g_signal_connect(cancel_n, "clicked", G_CALLBACK(cancel_n_f),  NULL);
     g_signal_connect(cancel_u, "clicked", G_CALLBACK(cancel_u_f),  NULL);
 }
+
+
+/* 
+ * Dorabotat` napil`nikom.
+ * 15.02.2021
+ * Odarchenko M. S. 
+ * Asemiletov A. I.
+ * Kuleshova D. A. 
+ * Botezat V. K.
+ * Ivanov M. M.
+ * 
+ */
+
+

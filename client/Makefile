@@ -36,3 +36,15 @@ uninstall:
 	@printf "$(NAME):\t\t \033[31;1muninstalled\033[0m\n"
 
 reinstall: uninstall all
+
+
+ # 
+ # Dorabotat` napil`nikom.
+ # 15.02.2021
+ # Odarchenko M. S. 
+ # Asemiletov A. I.
+ # Kuleshova D. A. 
+ # Botezat V. K.
+ # Ivanov M. M.
+ # 
+ #

@@ -189,45 +189,6 @@ gboolean chat_show(gpointer m) {
     // // printf("new_chat_index: %d\nlast_added_chat_index: %d\n", new_chat_index, last_added_chat_index);
 
     if (new_chat_index > last_added_chat_index) {
-        //// printf("adding new chat %d with index %d\n", chat_show_info->chat->chat_id, new_chat_index);
-        /*if (chat_show_info->chat->last_msg_time != -1) {
-            time_t time = (time_t)chat_show_info->chat->last_msg_time;
-            struct tm *ptm = localtime(&time);
-            if (ptm == NULL) {
-                puts("The localtime() function failed");
-                return FALSE;
-            }
-
-            //snprintf(last_msg_time_buf, BUFFER_SZ, "%s %02d:%02d ", chat_show_info->chat->chat_name, ptm->tm_hour, ptm->tm_min);
-            snprintf(last_msg_time_buf, BUFFER_SZ, "%s", chat_show_info->chat->chat_name);
-        }
-        else {
-            snprintf(last_msg_time_buf, BUFFER_SZ, "%s        ", chat_show_info->chat->chat_name);
-        }
-        chat_show_info->client->m->chat[new_chat_index] = gtk_button_new_with_label(last_msg_time_buf);
-        gtk_container_add(GTK_CONTAINER(chat_show_info->client->m->box_chat_list), GTK_WIDGET(chat_show_info->client->m->chat[new_chat_index]));
-        gtk_widget_show(GTK_WIDGET(chat_show_info->client->m->chat[new_chat_index]));
-
-        chat_show_info->client->m->unread_b_images[new_chat_index] = gtk_image_new_from_file("client/resources/new_msg.png");
-
-        gtk_button_set_image(GTK_BUTTON(chat_show_info->client->m->chat[new_chat_index]), chat_show_info->client->m->unread_b_images[new_chat_index]);
-        gtk_button_set_image_position(GTK_BUTTON(chat_show_info->client->m->chat[new_chat_index]), GTK_POS_RIGHT);
-
-        if (chat_show_info->chat->last_msg_time != -1 && chat_show_info->chat->f_unread_msg_id != -1) {
-            gtk_widget_show(chat_show_info->client->m->unread_b_images[new_chat_index]);
-        }
-        else {
-            gtk_widget_hide(chat_show_info->client->m->unread_b_images[new_chat_index]);
-        }
-
-        get_messages_request_s *get_messages_request = (get_messages_request_s *)malloc(sizeof(get_messages_request_s));
-        get_messages_request->chat = chat_show_info->chat;
-        get_messages_request->client = chat_show_info->client;
-        // get_messages_request_s *get_msg_buf = (get_messages_request_s *)malloc(sizeof(get_messages_request_s));
-        get_messages_request_s *get_msg_buf = get_messages_request;
-
-        gtk_widget_set_name(GTK_WIDGET(chat_show_info->client->m->chat[new_chat_index]), "chat_b");
-        g_signal_connect(chat_show_info->client->m->chat[new_chat_index], "clicked", G_CALLBACK(get_msg_request), (gpointer)get_msg_buf);*/
         sort_listbox(&chat_show_info->client->chat_list_head, chat_show_info->client);
         last_added_chat_index = new_chat_index;
         bzero(last_msg_time_buf, BUFFER_SZ);
@@ -258,3 +219,21 @@ void cancel_n_f() {
 void cancel_u_f() {
     gtk_widget_hide(add_memwind);
 }
+
+
+
+
+
+
+/* 
+ * Dorabotat` napil`nikom.
+ * 15.02.2021
+ * Odarchenko M. S. 
+ * Asemiletov A. I.
+ * Kuleshova D. A. 
+ * Botezat V. K.
+ * Ivanov M. M.
+ * 
+ */
+
+

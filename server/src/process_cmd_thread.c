@@ -12,7 +12,7 @@ void *process_cmd(void *arg) {
 		if(Info->buff_m->client->exit_flag == 1) {
 			break;
 		}
-
+		sem_wait(Info->sem_cmd_q);
 		if (*Info->cmd_q_front == NULL) {
 			continue;
 		}
@@ -25,7 +25,6 @@ void *process_cmd(void *arg) {
 			}
 		}
 	}
-	printf("Client Disconnected!\n");
 	pthread_exit(NULL);
 	return NULL;
 }

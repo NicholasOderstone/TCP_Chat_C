@@ -35,8 +35,8 @@ int main(int argc, char **argv) {
       perror("ERROR: pthread\n");
       return EXIT_FAILURE;
     }
-    sleep(100);
-    // gtk_main();
+    // sleep(100);
+    gtk_main();
 
     client.exit = 1;
     sem_post(sem_exit);

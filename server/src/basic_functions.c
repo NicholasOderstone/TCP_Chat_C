@@ -156,10 +156,22 @@ void f_chat_msg(char *params, buff_t *Info) {
 
 	int ch_id = atoi(p_chat_id);
 	Info->client->active_id_chat = ch_id;
+	int cid = 0;
+	for (int i = 0; i < MAX_CLIENTS; i++) {
+		if (Info->serv_inf->clients[i] == NULL) {
+			continue;
+		}
+		if (Info->serv_inf->clients[i]->uid == Info->client->uid) {
+			cid = i;
+			break;
+		}
+	}
+	if (cid == -1) {
+		printf("User id error!\n");
+		exit(1);
+	}
 
-	int uid = Info->client->uid;
-
-	Info->serv_inf->clients[uid]->active_id_chat = ch_id;
+	Info->serv_inf->clients[cid]->active_id_chat = ch_id;
 
 	setUNREAD(ch_id, getIdUserByUserName(Info->client->name), -1);
 

@@ -3,6 +3,7 @@
 void *process_cmd(void *arg) {
 	struct process_cmd_info_s *Info = (struct process_cmd_info_s *)arg;
 	while(1) {
+		sem_wait(sem_cmd_q);
 		if (Info->client->exit == 1) {
 			break;
 		}

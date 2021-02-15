@@ -50,10 +50,12 @@ int main(int argc, char **argv){
 		return EXIT_FAILURE;
 	}
 
+	printf("=== WELCOME TO THE CHATROOM ===\n");
+
 	/* Data Base */
 	initDB();
-	/* Daemon */
-	//daemonize();
+
+	daemonize();
 
 	while(1){
 		socklen_t clilen = sizeof(cli_addr);
@@ -73,6 +75,10 @@ int main(int argc, char **argv){
 		client_t *cli = (client_t *)malloc(sizeof(client_t));
 		cli->address = cli_addr;
 		cli->sockfd = connfd;
+		// cli->uid = server.uid++;
+
+		
+		/* Add client to the client array and fork thread */
 		
 
 		/* Convert to the buff_t to transfer to the new thread*/

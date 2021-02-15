@@ -25,9 +25,18 @@ void message_delet(GtkWidget *widget, gpointer data){
 
 void message_edit(GtkWidget *widget, gpointer data){
     UNUSED(widget);
-    UNUSED(data);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(message_entry), "Insert edited text here...");
+    client_t *client = (client_t *)data;
 
+    int index = gtk_list_box_row_get_index(gtk_list_box_get_selected_row (client->m->box_message));
+
+    msg_id_q *current = client->msg_id_q_head;
+
+    while (index) {
+        current = current->next;
+        index--;
+    }
+
+    gtk_entry_set_text(GTK_ENTRY(message_entry),current->message);
     gtk_widget_show(GTK_WIDGET(edit_b));
 }
 
@@ -45,9 +54,26 @@ gboolean message_show(gpointer m) {
     buffer = gtk_text_buffer_new(NULL);
     gtk_text_view_set_wrap_mode ( view, GTK_WRAP_WORD_CHAR);
     gtk_text_view_set_buffer(view, buffer);
+    //gtk_text_buffer_create_tag(buffer, msg, )
+    gtk_text_buffer_create_tag (buffer, "big",
+                             /* points times the PANGO_SCALE factor */
+                             "size", 19 * PANGO_SCALE, NULL);
+     gtk_text_buffer_create_tag (buffer, "time",
+                              /* points times the PANGO_SCALE factor */
+                              "foreground", "grey", NULL);
+    gtk_text_buffer_create_tag (buffer, "nick1",
+                           /* points times the PANGO_SCALE factor */
+                           "foreground", "lightgreen", NULL);
+    gtk_text_buffer_create_tag (buffer, "nick2",
+                      /* points times the PANGO_SCALE factor */
+                        "foreground", "grey", NULL);
     gtk_text_buffer_get_iter_at_offset(buffer, &end, 0);
     char time_buf[BUFFER_SZ];
+
     if (received_mess->message[0] != 0) {
+        if (!received_mess->is_edit) {
+            to_msg_id_q(received_mess, &received_mess->client->msg_id_q_head);
+        }
         if (strcmp(received_mess->is_special, "0") == 0) {
             time_t time = (time_t)(atoi(received_mess->time));
             struct tm *ptm = localtime(&time);
@@ -58,24 +84,29 @@ gboolean message_show(gpointer m) {
             //gtk_text_buffer_insert_interactive (buffer, &end, itoa(received_mess->msg_id, 10), -1, TRUE );
             //snprintf(time_buf, BUFFER_SZ, "  --  %02d:%02d:%02d", ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
             snprintf(time_buf, BUFFER_SZ, "  %02d:%02d", ptm->tm_hour, ptm->tm_min);
-            gtk_text_buffer_insert_interactive (buffer, &end, time_buf, -1, TRUE );
-            gtk_text_buffer_insert_interactive (buffer, &end, "   ", -1, TRUE );
-            gtk_text_buffer_insert_interactive (buffer, &end, received_mess->sender_name, -1, TRUE );
-            gtk_text_buffer_insert_interactive (buffer, &end, ": ", -1, TRUE );
-            gtk_text_buffer_insert_interactive (buffer, &end, received_mess->message, -1, TRUE );
+            //gtk_text_buffer_insert_interactive (buffer, &end, time_buf, -1, TRUE );
+            gtk_text_buffer_insert_with_tags_by_name (buffer, &end, time_buf, -1, "big","time", NULL);
+            //gtk_text_buffer_insert_interactive (buffer, &end, "   ", -1, TRUE );
+            gtk_text_buffer_insert_with_tags_by_name (buffer, &end, "   ", -1, "big", NULL);
+            //gtk_text_buffer_insert_interactive (buffer, &end, received_mess->sender_name, -1, TRUE );
+            if ( strcmp(received_mess->sender_login, received_mess->client->login) != 0)
+                gtk_text_buffer_insert_with_tags_by_name (buffer, &end, received_mess->sender_name, -1, "big","nick2", NULL);
+            else
+                gtk_text_buffer_insert_with_tags_by_name (buffer, &end, received_mess->sender_name, -1, "big","nick1", NULL);
+            //tk_text_buffer_insert_interactive (buffer, &end, ": ", -1, TRUE );
+            gtk_text_buffer_insert_with_tags_by_name (buffer, &end, "\n\t     ", -1, "big", NULL);
+            //gtk_text_buffer_insert_interactive (buffer, &end, received_mess->message, -1, TRUE );
+            gtk_text_buffer_insert_with_tags_by_name (buffer, &end, received_mess->message, -1, "big", NULL);
             bzero(time_buf, BUFFER_SZ);
-
             gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view));
+
             //gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view_e));
             received_mess->client->m->row_num_list_gtk++;
-            to_msg_id_q(received_mess->msg_id, &received_mess->client->msg_id_q_head);
+
+            // to_msg_id_q(received_mess->msg_id, &received_mess->client->msg_id_q_head);
 
             gtk_widget_show (GTK_WIDGET(view));
-            gtk_widget_set_name(GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk)), "message");
-            adj= GTK_ADJUSTMENT(gtk_builder_get_object(builder,"scroll_messeges"));
-            gtk_adjustment_set_page_size (adj, 0);
-            double value = gtk_adjustment_get_upper(adj);
-            gtk_adjustment_set_value(adj, value);
+
             //gtk_container_set_focus_vadjustment(GTK_CONTAINER(received_mess->client->m->box_message),
             //                                    adj);
 
@@ -85,8 +116,10 @@ gboolean message_show(gpointer m) {
             if ( strcmp(received_mess->sender_login, received_mess->client->login) != 0){
                 gtk_list_box_row_set_activatable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk), FALSE);
                 gtk_list_box_row_set_selectable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk), FALSE);
+                gtk_widget_set_name(GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk)), "message_p");
             }
             else {
+                gtk_widget_set_name(GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk)), "message");
                 gtk_list_box_row_set_activatable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk), TRUE);
                 gtk_list_box_row_set_selectable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk), TRUE);
             }
@@ -94,20 +127,19 @@ gboolean message_show(gpointer m) {
             //gtk_widget_grab_focus (GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk)));
         }
         else {
-            gtk_text_buffer_insert_interactive (buffer, &end, received_mess->message, -1, TRUE );
-            gtk_widget_set_name(GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk)), "message_s");
+            //gtk_text_buffer_insert_interactive (buffer, &end, received_mess->message, -1, TRUE );
+            gtk_text_buffer_insert_with_tags_by_name (buffer, &end, "  ", -1, "big", NULL);
+            gtk_text_buffer_insert_with_tags_by_name (buffer, &end, received_mess->message, -1, "big", NULL);
+
             gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view));
+
             //    gtk_container_add (GTK_CONTAINER(received_mess->client->m->box_message), GTK_WIDGET(view_e));
             received_mess->client->m->row_num_list_gtk++;
-            to_msg_id_q(received_mess->msg_id, &received_mess->client->msg_id_q_head);
+            // to_msg_id_q(received_mess->msg_id, &received_mess->client->msg_id_q_head);
 
             gtk_widget_show (GTK_WIDGET(view));
-            adj = GTK_ADJUSTMENT(gtk_builder_get_object(builder,"scroll_messeges"));
-            //gtk_container_set_focus_vadjustment(GTK_CONTAINER(received_mess->client->m->box_message), adj);
-            gtk_adjustment_set_page_size (adj, 0);
-            double value = gtk_adjustment_get_upper(adj);
-            gtk_adjustment_set_value(adj, value);
             //ind =  gtk_list_box_row_get_index (gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk));
+            gtk_widget_set_name(GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk)), "message_s");
             gtk_list_box_row_set_activatable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk), FALSE);
             gtk_list_box_row_set_selectable(gtk_list_box_get_row_at_index (received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk), FALSE);
             //gtk_container_set_focus_child(GTK_CONTAINER(received_mess->client->m->box_message),
@@ -115,13 +147,20 @@ gboolean message_show(gpointer m) {
             //gtk_container_remove(GTK_CONTAINER(received_mess->client->m->box_message),  GTK_WIDGET(gtk_list_box_get_row_at_index(received_mess->client->m->box_message,received_mess->client->m->row_num_list_gtk)));
             //received_mess->client->m->row_num_list_gtk--;
         }
+        if (!received_mess->is_edit){
+            adj= GTK_ADJUSTMENT(gtk_builder_get_object(builder,"scroll_messeges"));
+            gtk_adjustment_set_page_size (adj, 0);
+            double upper = gtk_adjustment_get_upper(adj);
+            double page_size = gtk_adjustment_get_page_size(adj);
+            gtk_adjustment_set_value(adj, upper - page_size);
+        }
         memset(received_mess->message, 0, sizeof(received_mess->message));
         memset(received_mess->sender_name, 0, sizeof(received_mess->sender_name));
     }
 
     if (received_mess->client->exit == 1)
         return FALSE;
-    return TRUE;
+    return FALSE;
 }
 void message_send(GtkWidget *widget, gpointer data) {
     UNUSED(widget);

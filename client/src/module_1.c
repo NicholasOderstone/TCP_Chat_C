@@ -11,6 +11,7 @@ void input_pump(struct read_msg_info_s *Info) {
 	ssize_t rv = recv(Info->client->sockfd, (void*)&inbuf[inbuf_used], inbuf_remain, MSG_DONTWAIT);
 	if (rv == 0) {
 		Info->client->is_connected = 0;
+		sem_post(sem_reconnect);
 		return;
 	}
 	if (rv < 0 && errno == EAGAIN) {
@@ -33,6 +34,7 @@ void input_pump(struct read_msg_info_s *Info) {
 		*line_end = 0;
 		printf("  > input: %s\n", line_start);
 		to_msg_q(line_start, Info->msg_q_front, Info->lock);
+		sem_post(sem_msg_q);
 		line_start = line_end + 1;
 	}
 	/* Shift buffer down so the unprocessed data is at the start */
@@ -56,6 +58,7 @@ void *read_msg(void *arg) {
 		if (Info->client->is_connected == 1) {
 			input_pump(Info);
 		}
+		usleep(5000);
 	}
 	int ret_val = 1;
 	printf("-- Read message thread terminated --\n");
@@ -73,6 +76,7 @@ void *make_cmd(void *arg) {
 	  return NULL;
 	}
 	while(1) {
+		sem_wait(sem_msg_q);
 		if (Info->client->exit == 1) {
 			break;
 		}
@@ -81,8 +85,10 @@ void *make_cmd(void *arg) {
 			move_msg_q(Info->msg_q_front, Info->lock);
 			command cmd = msg_to_cmd(fst_msg);
 			to_cmd_q(cmd, Info->cmd_q_front, Info->lock);
+			sem_post(sem_cmd_q);
 			free(fst_msg);
 		}
+		usleep(5000);
 	}
 	int ret_val = 1;
 	printf("-- Make command thread terminated --\n");

@@ -27,7 +27,7 @@ void to_msg_id_q(received_messages *new_msg, msg_id_q **msg_id_q_head) {
         }
         current->next = temp;
     }
-    //printf("now in msg_id_q: %d\n", current->msg_id);
+    //// printf("now in msg_id_q: %d\n", current->msg_id);
     pthread_mutex_unlock(&msg_id_lock);
     return;
 }
@@ -65,10 +65,10 @@ void display_msg_id_q(msg_id_q **msg_id_q_head) {
     msg_id_q *current = *msg_id_q_head;
     while (current != NULL)
     {
-        printf("## msg_id: %d\n", current->msg_id);
+        // printf("## msg_id: %d\n", current->msg_id);
         current = current->next;
     }
-    printf("\n");
+    // printf("\n");
 }
 
 int msg_id_q_size(msg_id_q **msg_id_q_head) {

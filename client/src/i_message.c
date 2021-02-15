@@ -12,7 +12,7 @@ void message_delet(GtkWidget *widget, gpointer data){
         current = current->next;
         index--;
     }
-    //printf("deleted: msd_id -- %d\n", current->msg_id);
+    //// printf("deleted: msd_id -- %d\n", current->msg_id);
     del_msg_request_s *delete_msg = (del_msg_request_s *)malloc(sizeof(del_msg_request_s));
     delete_msg->msg_id = current->msg_id;
     delete_msg->chat_id = client->active_chat_id;
@@ -110,7 +110,7 @@ gboolean message_show(gpointer m) {
             //gtk_container_set_focus_vadjustment(GTK_CONTAINER(received_mess->client->m->box_message),
             //                                    adj);
 
-            //printf("INDEX: %d\n", received_mess->client->m->row_num_list_gtk);
+            //// printf("INDEX: %d\n", received_mess->client->m->row_num_list_gtk);
             //gtk_container_set_focus_child(GTK_CONTAINER(received_mess->client->m->box_message),
             //                           GTK_WIDGET(gtk_list_box_get_row_at_index (received_mess->client->m->box_message, received_mess->client->m->row_num_list_gtk-2)));
             if ( strcmp(received_mess->sender_login, received_mess->client->login) != 0){
@@ -195,5 +195,5 @@ void del_message(GtkTextBuffer *m){
     GtkTextBuffer *mess = (GtkTextBuffer *)m;
     del_mark = gtk_text_buffer_get_selection_bound (mess);
     gtk_text_buffer_delete_mark(mess, del_mark);
-    printf("%s\n", "work");
+    // printf("%s\n", "work");
 }

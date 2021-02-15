@@ -14,10 +14,10 @@ void *read_msg(void *arg) {
 			}
 		} else if (receive == 0 || strcmp(buff_out, "exit") == 0){
 			Info->client->exit_flag = 1;
-			printf("Client Disconnected!\n");
+			// printf("Client Disconnected!\n");
 			break;
 		} else {
-			printf("ERROR: -1\n");
+			// printf("ERROR: -1\n");
 			Info->client->exit_flag = 1;
 			break;
 		}

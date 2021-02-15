@@ -19,7 +19,7 @@ void to_cmd_q(command data, struct cmd_q **cmd_q_front, pthread_mutex_t cmd_lock
         }
         current->link = temp;
     }
-    //printf("cmd: %s; params: %s", data.command, data.params);
+    //// printf("cmd: %s; params: %s", data.command, data.params);
     pthread_mutex_unlock(&cmd_lock);
 }
 

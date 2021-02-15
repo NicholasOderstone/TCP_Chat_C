@@ -60,29 +60,29 @@ void send_to_all_members_send_special(char *p_chat_id, int msg_id, struct comman
 	for(int j = 0; j < num_of_memb; j++) {
 		is_online = 0;
 		int user_id = atoi(user[j]->user_id);
-		printf("Sending msg to %s: %d\n", user[j]->user_name, user_id);
+		// printf("Sending msg to %s: %d\n", user[j]->user_name, user_id);
 
 		for(int i=0; i<MAX_CLIENTS; ++i) { //общий массив пользователей онлайн
 			if(Info->serv_inf->clients[i] != NULL && user[j] != NULL){
 
 				if(strcmp(user[j]->user_name, Info->serv_inf->clients[i]->name) == 0) { // Если имена совпадают
 					is_online = 1;
-					printf("%s is online\n", user[j]->user_name);
+					// printf("%s is online\n", user[j]->user_name);
 					if(Info->serv_inf->clients[i]->active_id_chat == chat_id) { // Если чат активный
-						printf("1\n");
+						// printf("1\n");
 						send_cmd(cmd, Info->serv_inf->clients[i]);
 						break;
 					}
 					else {
-						printf("2\n");
+						// printf("2\n");
 						send_cmd(cmd, Info->serv_inf->clients[i]);
 						if(getUNREAD(chat_id, user_id) == -1) {
-							printf("3\n");
+							// printf("3\n");
 							setUNREAD(chat_id, user_id, msg_id);
 							break;
 						}
 						else {
-							printf("4\n");
+							// printf("4\n");
 							break;
 						}
 					}
@@ -91,15 +91,15 @@ void send_to_all_members_send_special(char *p_chat_id, int msg_id, struct comman
 		}
 
 		if(is_online == 0) {
-			printf("%s is offline\n", user[j]->user_name);
-			printf("## getUNREAD: %d -- chat_id: %d, user_id: %d", getUNREAD(chat_id, user_id), chat_id, user_id);
+			// printf("%s is offline\n", user[j]->user_name);
+			// printf("## getUNREAD: %d -- chat_id: %d, user_id: %d", getUNREAD(chat_id, user_id), chat_id, user_id);
 			if(getUNREAD(chat_id, user_id) == -1) {
-				printf("5\n");
+				// printf("5\n");
 				setUNREAD(chat_id, user_id, msg_id);
 			}
 			else {
 				is_online = 0;
-				printf("6\n");
+				// printf("6\n");
 			}
 		}
 	}
@@ -133,7 +133,7 @@ void chat_list(char *p_login, buff_t *Info) {
 		itoa(mass_of_chats[j], users_chat, 10);
 		getChatName(mass_of_chats[j], chat_name);
 		str_trim_lf (chat_name, strlen(chat_name));
-		printf("chat_id: %d\n", mass_of_chats[j]);
+		// printf("chat_id: %d\n", mass_of_chats[j]);
 		snprintf(send_to_client, BUFFER_SZ, " <%s> <%s> <%d> <%d>", users_chat, chat_name, getUNREAD(mass_of_chats[j], getIdUserByUserName(p_login)), getLastMsgTime(mass_of_chats[j]));
 		arr_of_chats[j].params = send_to_client;
 
@@ -167,7 +167,7 @@ void f_chat_msg(char *params, buff_t *Info) {
 		}
 	}
 	if (cid == -1) {
-		printf("User id error!\n");
+		// printf("User id error!\n");
 		exit(1);
 	}
 
@@ -214,7 +214,7 @@ void f_login(char *params, buff_t *Info) {
     char *p_login = take_param(params, 1);
     char *p_pass = take_param(params, 2);
 	if(strlen(p_login) <= 2) {
-		printf("Не вводи логин <= 2\n");
+		// printf("Не вводи логин <= 2\n");
 		return;
 	}
 
@@ -222,7 +222,7 @@ void f_login(char *params, buff_t *Info) {
 	if(getIdUserByUserName(p_login) == 0){
 		//Oшибка: неправильный логин
 		pthread_mutex_lock(&Info->serv_inf->clients_mutex);
-		printf("Incorrect user_name\n");
+		// printf("Incorrect user_name\n");
 		cmd.params = " <ERROR> <INCORRECT_LOGIN>";
 		send_cmd(cmd, Info->client);
 		pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
@@ -233,7 +233,7 @@ void f_login(char *params, buff_t *Info) {
 	if(strcmp(user_pass, p_pass) != 0) {
 		//Ошибка: неправильный пароль
 		pthread_mutex_lock(&Info->serv_inf->clients_mutex);
-		printf("Incorrect password\n");
+		// printf("Incorrect password\n");
 		cmd.params = " <ERROR> <INCORRECT_PASS>";
 		send_cmd(cmd, Info->client);
 		pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
@@ -243,7 +243,7 @@ void f_login(char *params, buff_t *Info) {
     strcpy(Info->client->name, p_login);
 	// заджойнился (пусть живет)
     sprintf(client_join, "<JOIN> <%s>\n", Info->client->name);
-	printf("%s", client_join);
+	// printf("%s", client_join);
 
 	cmd.params = " <SUCCESS>";
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
@@ -296,7 +296,7 @@ void f_register(char *params, buff_t *Info) {
 	if(getIdUserByUserName(p_username) != 0){
 		//Oшибка: юзернейм уже существует
 		pthread_mutex_lock(&Info->serv_inf->clients_mutex);
-		printf("Username already exists\n");
+		// printf("Username already exists\n");
 		cmd.params = " <ERROR> <USERNAME_EXIST>";
 		send_cmd(cmd, Info->client);
 		pthread_mutex_unlock(&Info->serv_inf->clients_mutex);
@@ -304,18 +304,18 @@ void f_register(char *params, buff_t *Info) {
 	}
 	if(strcmp(password, rep_password) != 0) {
 		//Oшибка: пароли не равны
-		printf("Password is incorrect\n");
+		// printf("Password is incorrect\n");
 		cmd.params = " <ERROR> <PASS_NOT_MATCH>";
 		send_cmd(cmd, Info->client);
 		return;
 	}
 	insertUser(p_username, password, nickname, "");
-	printf("Insertion complete");
+	// printf("Insertion complete");
 	cmd.params = " <SUCCESS>";
 
 	strcpy(Info->client->name, p_username);
     sprintf(client_join, "<JOIN> <%s>\n", Info->client->name);
-	printf("%s", client_join);
+	// printf("%s", client_join);
 	bzero(client_join, BUFFER_SZ);
 
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
@@ -394,7 +394,7 @@ void f_add_user_to_chat(char *params, buff_t *Info) {
 	char *p_username = take_param(params, 2);
 	if(getIdUserByUserName(p_username) == 0) {
 		//Oшибка: такого пользователя нет
-		printf("Incorrect_username\n");
+		// printf("Incorrect_username\n");
 		cmd.params = " <INCORRECT_USERNAME>";
 		send_cmd(cmd, Info->client);
 		return;
@@ -413,7 +413,7 @@ void f_add_user_to_chat(char *params, buff_t *Info) {
 	}
 	for(int i = 0; i < num_of_memb; i++) {
 		if(strcmp(user[i]->user_name, p_username) == 0) {
-			printf("%s you're dolbaeb\n", p_username);
+			// printf("%s you're dolbaeb\n", p_username);
 			return;
 		}
 	}
@@ -592,7 +592,7 @@ void f_delete_user_from_chat(char *params, buff_t *Info) {
 	}
 
 	pthread_mutex_lock(&Info->serv_inf->clients_mutex);
-	printf("NOT_OWNER");
+	// printf("NOT_OWNER");
 	cmd.params = " <NOT_OWNER>";
 	send_cmd(cmd, Info->client);
 	pthread_mutex_unlock(&Info->serv_inf->clients_mutex);

@@ -2,7 +2,7 @@
 
 int main(int argc, char **argv){
 	if(argc != 3){
-		printf("Usage: %s <ip> <port>\n", argv[0]);
+		// printf("Usage: %s <ip> <port>\n", argv[0]);
 		return EXIT_FAILURE;
 	}
 	/* Server settings */
@@ -50,7 +50,7 @@ int main(int argc, char **argv){
 		return EXIT_FAILURE;
 	}
 
-	printf("=== WELCOME TO THE CHATROOM ===\n");
+	// printf("=== WELCOME TO THE CHATROOM ===\n");
 
 	/* Data Base */
 	initDB();
@@ -64,9 +64,9 @@ int main(int argc, char **argv){
 
 		/* Check if max clients is reached */
 		if((server.cli_count + 1) == MAX_CLIENTS){
-			printf("Max clients reached. Rejected: ");
-			print_client_addr(cli_addr);
-			printf(":%d\n", cli_addr.sin_port);
+			// printf("Max clients reached. Rejected: ");
+			// print_client_addr(cli_addr);
+			// printf(":%d\n", cli_addr.sin_port);
 			close(connfd);
 			continue;
 		}
@@ -89,7 +89,7 @@ int main(int argc, char **argv){
 		/* Reduce CPU usage */
 		sleep(1);
 	}
-	printf("1\n");
+	// printf("1\n");
 	free(server.clients);
 	close(server.listenfd);
 

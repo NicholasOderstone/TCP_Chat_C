@@ -171,7 +171,7 @@
     /* trim /n*/
     void str_trim_lf (char* arr, int length);
     /* Print client ipv4 address*/
-    void print_client_addr(struct sockaddr_in addr);
+    // void print_client_addr(struct sockaddr_in addr);
     /* CONBERT INT TO CHAR* */
     char* itoa(int num, char* buffer, int base);
     /* SEND TO ALL CHAT MEMBERS */

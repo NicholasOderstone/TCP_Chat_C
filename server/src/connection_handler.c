@@ -6,7 +6,7 @@ void *handle_client(void *arg){
 
 	if (pthread_mutex_init(&cmd_lock, NULL) != 0)
     {
-        printf("Mutex initialization failed.\n");
+        // printf("Mutex initialization failed.\n");
         return NULL;
     }
 	struct cmd_q *cmd_q_front = NULL;
@@ -22,7 +22,7 @@ void *handle_client(void *arg){
 		}
 	}
 	if (cid == -1) {
-		printf("User id error!\n");
+		// printf("User id error!\n");
 		exit(1);
 	}
 
@@ -33,7 +33,7 @@ void *handle_client(void *arg){
 	char sem_name[100] = "uchat_sem_client_";
 	char buff[BUFFER_SZ];
 	strcat(sem_name, itoa(inf->uid, buff, 10));
-	printf(" ## sem_name for %d: \"%s\"\n", inf->uid, sem_name);
+	// printf(" ## sem_name for %d: \"%s\"\n", inf->uid, sem_name);
 	sem_cmd_q = sem_open(sem_name, O_CREAT, 0666, 0);
 
 	// Поток чтения сообщений

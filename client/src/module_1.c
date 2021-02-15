@@ -19,7 +19,7 @@ void input_pump(struct read_msg_info_s *Info) {
 		return;
 	}
 	if (rv < 0) {
-		printf("\r-- Disconnected from server --\n");
+		// printf("\r-- Disconnected from server --\n");
 		return;
 	}
 	inbuf_used += rv;
@@ -32,7 +32,7 @@ void input_pump(struct read_msg_info_s *Info) {
 	{
 
 		*line_end = 0;
-		printf("  > input: %s\n", line_start);
+		// printf("  > input: %s\n", line_start);
 		to_msg_q(line_start, Info->msg_q_front, Info->lock);
 		sem_post(sem_msg_q);
 		line_start = line_end + 1;
@@ -47,7 +47,7 @@ void *read_msg(void *arg) {
 
 	if (pthread_mutex_init(&Info->lock, NULL) != 0)
 	{
-	  printf("Mutex initialization failed.\n");
+	  // printf("Mutex initialization failed.\n");
 	  return NULL;
 	}
 
@@ -61,7 +61,7 @@ void *read_msg(void *arg) {
 		usleep(5000);
 	}
 	int ret_val = 1;
-	printf("-- Read message thread terminated --\n");
+	// printf("-- Read message thread terminated --\n");
 	pthread_mutex_destroy(&Info->lock);
 	pthread_exit(&ret_val);
 	return NULL;
@@ -72,7 +72,7 @@ void *make_cmd(void *arg) {
 
 	if (pthread_mutex_init(&Info->lock, NULL) != 0)
 	{
-	  printf("Mutex initialization failed.\n");
+	  // printf("Mutex initialization failed.\n");
 	  return NULL;
 	}
 	while(1) {
@@ -91,7 +91,7 @@ void *make_cmd(void *arg) {
 		usleep(5000);
 	}
 	int ret_val = 1;
-	printf("-- Make command thread terminated --\n");
+	// printf("-- Make command thread terminated --\n");
 	pthread_mutex_destroy(&Info->lock);
 	pthread_exit(&ret_val);
 	return NULL;

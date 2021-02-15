@@ -58,7 +58,7 @@ void new_chat_request(GtkWidget *widget, gpointer data) {
 
     new_chat_request_s *new_chat_r = (new_chat_request_s *)data;
     static int counter = 0;
-    printf("index new_chat_request: %d\n", counter);
+    // printf("index new_chat_request: %d\n", counter);
     counter++;
 	command cmd;
 	char buffer[BUFFER_SZ];
@@ -97,7 +97,7 @@ void leave_chat_request(GtkWidget *widget, gpointer data) {
 	char buffer[BUFFER_SZ];
     del_chat_request_s *leave_chat_r = (del_chat_request_s *)data;
     //gtk_widget_hide(GTK_WIDGET(leave_chat_r->client->m->box_message));
-    printf("leave_chat_r->chat_id %d\n", leave_chat_r->client->active_chat_id);
+    // printf("leave_chat_r->chat_id %d\n", leave_chat_r->client->active_chat_id);
     snprintf(buffer, BUFFER_SZ, "<%d>", leave_chat_r->client->active_chat_id);
     cmd.command = "<LEAVE_CHAT>";
     cmd.params = strdup(buffer);
@@ -123,7 +123,7 @@ void edit_msg_request(GtkWidget *widget, gpointer data) {
         current = current->next;
         index--;
     }
-    printf("edited: msd_id -- %d\n", current->msg_id);
+    // printf("edited: msd_id -- %d\n", current->msg_id);
 
     edit_msg_request_s *edit_msg = (edit_msg_request_s *)malloc(sizeof(edit_msg_request_s));
     edit_msg->msg_id = current->msg_id;
@@ -133,7 +133,7 @@ void edit_msg_request(GtkWidget *widget, gpointer data) {
     gtk_list_box_unselect_all(client->m->box_message);
 
     edit_msg->new_text = strdup(message_str);
-    printf("edit_msg->new_text \"%s\"", edit_msg->new_text);
+    // printf("edit_msg->new_text \"%s\"", edit_msg->new_text);
 
 	snprintf(buffer, BUFFER_SZ, "<%d> <%d> <%s>", edit_msg->msg_id, edit_msg->client->active_chat_id, edit_msg->new_text);
 	cmd.command = "<EDIT_MSG>";

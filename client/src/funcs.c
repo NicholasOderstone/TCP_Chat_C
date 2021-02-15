@@ -28,13 +28,13 @@ void func_login(GtkWidget *widget, gpointer data) {
             sw_login = -1;
             break;
         case 1:
-            printf("## INCORRECT_LOGIN\n");
+            // printf("## INCORRECT_LOGIN\n");
 			gtk_widget_show(GTK_WIDGET(incorrect_l));
 			gtk_widget_hide(GTK_WIDGET(incorrect_p));
             sw_login = -1;
             break;
         case 2:
-            printf("## INCORRECT_PASS\n");
+            // printf("## INCORRECT_PASS\n");
 			gtk_widget_show(GTK_WIDGET(incorrect_p));
 			gtk_widget_hide(GTK_WIDGET(incorrect_l));
             sw_login = -1;
@@ -66,13 +66,13 @@ void func_register(GtkWidget *widget, gpointer data) {
             sw_register = -1;
             break;
         case 1:
-            printf("## USERNAME_EXIST\n");
+            // printf("## USERNAME_EXIST\n");
 			gtk_widget_show(GTK_WIDGET(username_e));
 			gtk_widget_hide(GTK_WIDGET(diff_p));
             sw_register = -1;
             break;
         case 2:
-            printf("## PASS_NOT_MATCH\n");
+            // printf("## PASS_NOT_MATCH\n");
 			gtk_widget_show(GTK_WIDGET(diff_p));
 			gtk_widget_hide(GTK_WIDGET(username_e));
             sw_register = -1;

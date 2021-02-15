@@ -5,7 +5,7 @@ void *process_cmd(void *arg) {
 
 	if (pthread_mutex_init(&send_cmd_lock, NULL) != 0)
 	{
-	  printf("Mutex initialization failed.\n");
+	  // printf("Mutex initialization failed.\n");
 	  return NULL;
 	}
 	while(1) {
@@ -20,7 +20,7 @@ void *process_cmd(void *arg) {
 		move_cmd_q(Info->cmd_q_front);
 		for (int j = 0; j < AMOUNT_OF_CMD; j++) {
 			if (strcmp(fst_cmd.command, Info->arr_cmd_func[j].name) == 0) {
-				printf("--- %s ---\n", Info->arr_cmd_func[j].name);
+				// printf("--- %s ---\n", Info->arr_cmd_func[j].name);
 				Info->arr_cmd_func[j].func(fst_cmd.params, Info->buff_m);
 			}
 		}

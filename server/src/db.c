@@ -143,7 +143,7 @@ char* getOwner_Id_By_Chat_Id(int id, char* rez){
     rc = sqlite3_step(res);
 
      if (rc == SQLITE_ROW) {
-       // printf("%s\n", sqlite3_column_text(res, 0));
+       // // printf("%s\n", sqlite3_column_text(res, 0));
      }
     sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
 
@@ -251,7 +251,7 @@ char* getAllChats(){
     rc = sqlite3_step(res);
 
      if (rc == SQLITE_ROW) {
-       // printf("%s\n", sqlite3_column_text(res, 0));
+       // // printf("%s\n", sqlite3_column_text(res, 0));
      }
     sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
 
@@ -291,7 +291,7 @@ char* getOneUser(int id, char* rez){
     rc = sqlite3_step(res);
 
      if (rc == SQLITE_ROW) {
-       // printf("%s\n", sqlite3_column_text(res, 0));
+       // // printf("%s\n", sqlite3_column_text(res, 0));
      }
     sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
 
@@ -330,7 +330,7 @@ char* getUserName(int id, char* rez){
     rc = sqlite3_step(res);
 
      if (rc == SQLITE_ROW) {
-       // printf("%s\n", sqlite3_column_text(res, 0));
+       // // printf("%s\n", sqlite3_column_text(res, 0));
      }
     sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
 
@@ -369,7 +369,7 @@ char* getUserPassword(int id, char* rez){
     rc = sqlite3_step(res);
 
      if (rc == SQLITE_ROW) {
-       // printf("%s\n", sqlite3_column_text(res, 0));
+       // // printf("%s\n", sqlite3_column_text(res, 0));
      }
     sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
 
@@ -443,7 +443,7 @@ char* getIdUserByNick(char* nick, char* rez){
     rc = sqlite3_step(res);
 
      if (rc == SQLITE_ROW) {
-       // printf("%s\n", sqlite3_column_text(res, 0));
+       // // printf("%s\n", sqlite3_column_text(res, 0));
      }
     sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
 
@@ -519,7 +519,7 @@ char* getOneChats(int id, char* rez){
     rc = sqlite3_step(res);
 
      if (rc == SQLITE_ROW) {
-       // printf("%s\n", sqlite3_column_text(res, 0));
+       // // printf("%s\n", sqlite3_column_text(res, 0));
      }
     sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
 
@@ -586,7 +586,7 @@ char* getOneMessage(int id, char* rez){
     rc = sqlite3_step(res);
 
      if (rc == SQLITE_ROW) {
-       // printf("%s\n", sqlite3_column_text(res, 0));
+       // // printf("%s\n", sqlite3_column_text(res, 0));
      }
     sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
 
@@ -798,13 +798,13 @@ int insertChat(char* name, int creator_id, char* description){
     if((rez = sqlite3_column_int(res, 0)) > 0) {
         sqlite3_finalize(res);
         sqlite3_close(db);
-        printf("insertChat -> %s chat already exists\n id = %d", name, rez);
+        // printf("insertChat -> %s chat already exists\n id = %d", name, rez);
         return rez;
     }
     sqlite3_finalize(res);
 
 
-    printf("Inserting new chat\n");
+    // printf("Inserting new chat\n");
     sprintf (sql,"INSERT INTO CHATS (name, description, owner_id) VALUES ('%s','%s', %d);",name,description,creator_id);
 
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
@@ -820,7 +820,7 @@ int insertChat(char* name, int creator_id, char* description){
     sqlite3_finalize(res);
     sqlite3_close(db);
     write(1, "1\n", 2);
-    printf("insertChat -> New chat inserted. Chat name: %s; chat id: %d\n", name, rez);
+    // printf("insertChat -> New chat inserted. Chat name: %s; chat id: %d\n", name, rez);
     return rez;
 }
 
@@ -1090,7 +1090,7 @@ char* getBlockList(int id, char* rez){
     rc = sqlite3_step(res);
 
      if (rc == SQLITE_ROW) {
-       // printf("%s\n", sqlite3_column_text(res, 0));
+       // // printf("%s\n", sqlite3_column_text(res, 0));
      }
     sprintf(rez, "%s\n", sqlite3_column_text(res, 0));
 
@@ -1238,7 +1238,7 @@ void insertUSER_TO_CHAT2(int user_id, char* login, int chat_id, char* name){
     char *err_msg = 0;
     int rc = sqlite3_open("server/db/data.db", &db);
     sprintf (sql,"INSERT INTO USER_IN_CHAT (USER_ID, LOGIN, CHAT_ID, NAME) VALUES ('%d','%s','%d','%s');",user_id,login,chat_id,name);
-    printf("%s", sql);
+    // printf("%s", sql);
     rc = sqlite3_exec(db, sql, 0, 0, &err_msg);
     sqlite3_close(db);
     return;
@@ -1258,7 +1258,7 @@ int createChat(int creator_id, char *name)  {
     if (sqlite3_column_int(res, 0) > 0){
         sqlite3_finalize(res);
         sqlite3_close_v2(db);
-        printf("createChat -> %s chat already exists\n", name);
+        // printf("createChat -> %s chat already exists\n", name);
         return -1;
     }
 
@@ -1362,7 +1362,7 @@ chat_t *pack_user_chats(int id){
         rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
         rc = sqlite3_step(res);
         if (sqlite3_column_text(res, 0) != NULL){
-            // printf("\"%s || %d\n", sqlite3_column_text(res, 0), sqlite3_column_int(res, 0));
+            // // printf("\"%s || %d\n", sqlite3_column_text(res, 0), sqlite3_column_int(res, 0));
             if (from == last_chat_from_user_id) {
                 // write(1,"8",1);
                 from = 0;
@@ -1404,7 +1404,7 @@ user_t *pack_chat_members(int id){
         return NULL;
     }
     int last_user_from_chat_id = sqlite3_column_int(res, 0);
-    // printf("last_chat_from_user_id: \"%d\"\n", last_chat_from_user_id);
+    // // printf("last_chat_from_user_id: \"%d\"\n", last_chat_from_user_id);
 
 
     //char sql_req[500];
@@ -1422,7 +1422,7 @@ user_t *pack_chat_members(int id){
         rc = sqlite3_prepare_v2(db, sql, -1, &res, 0);
         rc = sqlite3_step(res);
         if (sqlite3_column_text(res, 0) != NULL){
-            // printf("\"%s || %d\n", sqlite3_column_text(res, 0), sqlite3_column_int(res, 0));
+            // // printf("\"%s || %d\n", sqlite3_column_text(res, 0), sqlite3_column_int(res, 0));
             if (from == last_user_from_chat_id) {
                 // write(1,"8",1);
                 from = 0;

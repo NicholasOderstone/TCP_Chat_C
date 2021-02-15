@@ -1,7 +1,7 @@
 #include "../inc/header.h"
 
 void str_overwrite_stdout() {
-  printf("%s", "> ");
+  // printf("%s", "> ");
   fflush(stdout);
 }
 
@@ -20,14 +20,14 @@ void str_trim_lf(char* arr, int length) {
 
 
 void get_client_name(char *name) {
-	printf("Name must be less than 32 and more than 2 characters.\n");
+	// printf("Name must be less than 32 and more than 2 characters.\n");
 	while (1) {
-		printf("Please enter your name: ");
+		// printf("Please enter your name: ");
 		fflush(stdin);
 		fgets(name, NAME_SZ, stdin);
 		str_trim_lf(name, strlen(name));
 		if (strlen(name) < 2 || strlen(name) > NAME_SZ){
-			printf("Name must be less than 32 and more than 2 characters.\n");
+			// printf("Name must be less than 32 and more than 2 characters.\n");
 		}
 		else {
 			break;

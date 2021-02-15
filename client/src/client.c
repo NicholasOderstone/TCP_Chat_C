@@ -12,17 +12,17 @@ int main(int argc, char **argv) {
     init_switches();
 
     if (pthread_mutex_init(&chat_lock, NULL) != 0) {
-      printf("Mutex initialization failed.\n");
+      // printf("Mutex initialization failed.\n");
       return EXIT_FAILURE;
     }
 
     if (pthread_mutex_init(&msg_id_lock, NULL) != 0) {
-      printf("Mutex initialization failed.\n");
+      // printf("Mutex initialization failed.\n");
       return EXIT_FAILURE;
     }
 
     if (pthread_mutex_init(&add_chat_lock, NULL) != 0) {
-      printf("Mutex initialization failed.\n");
+      // printf("Mutex initialization failed.\n");
       return EXIT_FAILURE;
     }
 	sem_exit = sem_open("uchat_sem_exit", O_CREAT, 0666, 0);

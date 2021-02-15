@@ -4,7 +4,7 @@ int connect_to_server(client_t *info, int argc, char** argv) {
 // --- Init client --
 
 	if(argc != 3) {
-		printf("Usage: %s <ipv4> <port>\n", argv[0]);
+		// printf("Usage: %s <ipv4> <port>\n", argv[0]);
 		return 1;
 	}
 
@@ -12,12 +12,12 @@ int connect_to_server(client_t *info, int argc, char** argv) {
 	char *port = argv[2];
 
     if (validate_ip(ip) != 1) {
-		printf("<ipv4> \"%s\" is incorrect \n", ip);
+		// printf("<ipv4> \"%s\" is incorrect \n", ip);
 		return 1;
 	}
 
 	if (validate_port(port) != 1) {
-		printf("<port> \"%s\" is incorrect \n", port);
+		// printf("<port> \"%s\" is incorrect \n", port);
 		return 1;
 	}
 
@@ -30,16 +30,16 @@ int connect_to_server(client_t *info, int argc, char** argv) {
             // gtk_spinner_start(connection_spin);
 			close(info->sockfd);
 			info->sockfd = socket(AF_INET, SOCK_STREAM, 0);
-			printf("Trying to connect to server\n");
+			// printf("Trying to connect to server\n");
 			int err = connect(info->sockfd, (struct sockaddr *)&info->address, sizeof(info->address));
 			if (err == -1) {
-				printf("ERROR: connect\n");
+				// printf("ERROR: connect\n");
 				close(info->sockfd);
 				sleep(3);
 			}
 			else {
                 // gtk_spinner_stop (connection_spin);
-				printf("Connected!\n");
+				// printf("Connected!\n");
 				info->is_connected = 1;
 				break;
 			}
@@ -89,21 +89,21 @@ void *init_threads(void *data) {
 		return NULL;
 	}
 	while (1) {
-		printf("-- Init threads");
+		// printf("-- Init threads");
 		sem_wait(sem_exit);
 		if (client->exit == 1) {
 			pthread_cancel(th_process_cmd);
-			printf("-- Init threads -- th_process_cmd");
+			// printf("-- Init threads -- th_process_cmd");
 			pthread_cancel(server_connection_handler);
-			printf("-- Init threads -- server_connection_handler");
+			// printf("-- Init threads -- server_connection_handler");
 			pthread_join(recv_msg_thread, NULL);
-			printf("-- Init threads -- recv_msg_thread");
+			// printf("-- Init threads -- recv_msg_thread");
 			break;
 		}
 	}
 
 	int ret_val = 1;
-	printf("-- Init threads thread terminated --\n");
+	// printf("-- Init threads thread terminated --\n");
 	pthread_exit(&ret_val);
 	return NULL;
 }
@@ -112,7 +112,7 @@ void send_client_info_to_server(client_t *client) {
 	char buffer[BUFFER_SZ];
 	snprintf(buffer, BUFFER_SZ, "<LOGIN> <%s> <%s>", client->login, client->pass);
     send(client->sockfd, buffer, strlen(buffer), 0);
-	printf("%s\n", buffer);
+	// printf("%s\n", buffer);
     bzero(buffer, BUFFER_SZ);
     while (sw_login == -1) { }
     switch(sw_login) {
@@ -120,11 +120,11 @@ void send_client_info_to_server(client_t *client) {
             sw_login = -1;
             break;
         case 1:
-            printf("## INCORRECT_LOGIN\n");
+            // printf("## INCORRECT_LOGIN\n");
             sw_login = -1;
             break;
         case 2:
-            printf("## INCORRECT_PASS\n");
+            // printf("## INCORRECT_PASS\n");
             sw_login = -1;
             break;
         default:
@@ -134,7 +134,7 @@ void send_client_info_to_server(client_t *client) {
 
 void *reconnect_to_server(void *cnct_inf) {
 	client_t *info = (client_t *)cnct_inf;
-	printf("Reconnect is ready\n");
+	// printf("Reconnect is ready\n");
 	while(1) {
 		sem_wait(sem_reconnect);
         if(info->exit == 1) {
@@ -147,16 +147,16 @@ void *reconnect_to_server(void *cnct_inf) {
             gtk_spinner_start(connection_spin);
 			close(info->sockfd);
 			info->sockfd = socket(AF_INET, SOCK_STREAM, 0);
-			printf("Trying to reconnect to server\n");
+			// printf("Trying to reconnect to server\n");
 			int err = connect(info->sockfd, (struct sockaddr *)&info->address, sizeof(info->address));
 			if (err == -1) {
-				printf("ERROR: connect\n");
+				// printf("ERROR: connect\n");
 				close(info->sockfd);
 				sleep(3);
 			}
 			else {
                 gtk_spinner_stop (connection_spin);
-				printf("Connected!\n");
+				// printf("Connected!\n");
 				info->is_connected = 1;
 				send_client_info_to_server(info);
 			}
@@ -165,7 +165,7 @@ void *reconnect_to_server(void *cnct_inf) {
 		sleep(3);
 	}
     int ret_val = 1;
-	printf("-- Connect to server thread terminated --\n");
+	// printf("-- Connect to server thread terminated --\n");
 	pthread_exit(&ret_val);
 	return NULL;
 }

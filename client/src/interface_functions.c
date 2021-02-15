@@ -156,7 +156,7 @@ void new_chat(GtkWidget *widget, gpointer data) {
     client_t *client = (client_t *)data;
     GtkWidget  *chat_name;
     static int i = 0;
-    // printf("index new_chat: %d\n", i);
+    // // printf("index new_chat: %d\n", i);
     i++;
     gtk_window_get_position (GTK_WINDOW(window), &client->m->root_x, &client->m->root_y);
     chat_name_d  = GTK_WIDGET(gtk_builder_get_object(builder, "chat_name"));
@@ -186,10 +186,10 @@ gboolean chat_show(gpointer m) {
     char last_msg_time_buf[BUFFER_SZ];
     int new_chat_index = chat_show_info->counter;
 
-    // printf("new_chat_index: %d\nlast_added_chat_index: %d\n", new_chat_index, last_added_chat_index);
+    // // printf("new_chat_index: %d\nlast_added_chat_index: %d\n", new_chat_index, last_added_chat_index);
 
     if (new_chat_index > last_added_chat_index) {
-        //printf("adding new chat %d with index %d\n", chat_show_info->chat->chat_id, new_chat_index);
+        //// printf("adding new chat %d with index %d\n", chat_show_info->chat->chat_id, new_chat_index);
         /*if (chat_show_info->chat->last_msg_time != -1) {
             time_t time = (time_t)chat_show_info->chat->last_msg_time;
             struct tm *ptm = localtime(&time);

@@ -60,10 +60,10 @@ void func_rpl_send(char *params, void *p) {
     int rcv_time = atoi(received_mess->time);
     if (received_mess->chat_id != received_mess->client->active_chat_id) {
         if(rcv_time > chat->last_msg_time){
-            printf("f_unread_msg_id: %d -- msg_id: %d\n", chat->f_unread_msg_id, received_mess->msg_id);
+            // printf("f_unread_msg_id: %d -- msg_id: %d\n", chat->f_unread_msg_id, received_mess->msg_id);
             if (chat->f_unread_msg_id == -1) {
                 chat->f_unread_msg_id = received_mess->msg_id;
-                printf("new f_unread_msg_id: %d\n", chat->f_unread_msg_id);
+                // printf("new f_unread_msg_id: %d\n", chat->f_unread_msg_id);
             }
         }
     }
@@ -71,7 +71,7 @@ void func_rpl_send(char *params, void *p) {
     if (((rcv_time / 60) > (chat->last_msg_time / 60)) || old_unread_msg_id != chat->f_unread_msg_id) {
 
         chat->last_msg_time = rcv_time;
-        printf("%d\n", chat->last_msg_time);
+        // printf("%d\n", chat->last_msg_time);
         time_t time = (time_t)chat->last_msg_time;
 
         struct tm *ptm = localtime(&time);
@@ -114,7 +114,7 @@ void func_rpl_del_msg(char *params, void *p) {
     gtk_list_box_select_row(box, gtk_list_box_get_row_at_index(box, (gint)index));
     gtk_container_remove(GTK_CONTAINER(box), GTK_WIDGET(gtk_list_box_get_selected_row (box)));
     del_elem_msg_id_q(&client->msg_id_q_head, msg_id);
-    //printf("## index in rpl_delete: %d\n", index);
+    //// printf("## index in rpl_delete: %d\n", index);
 }
 
 // --- DELETE_CHAT ---
@@ -127,7 +127,7 @@ void func_rpl_del_chat(char *params, void *p) {
     //gtk_button_set_label(chat_lbl, "");
     //gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), FALSE);
     if (strcmp(p_rpl, "NOT_OWNER") == 0) {
-        printf("## NOT_OWNER\n");
+        // printf("## NOT_OWNER\n");
     }
     else {
         chat_id = atoi(p_rpl);
@@ -142,7 +142,7 @@ void func_rpl_del_chat(char *params, void *p) {
         while (clean_listbox((gpointer)client->m->box_message) == TRUE) {}
         clear_msg_id_q(&client->msg_id_q_head);
         client->m->row_num_list_gtk = -1;
-        //printf("## index in rpl_del_chat: %d\n", index);
+        //// printf("## index in rpl_del_chat: %d\n", index);
     }
 
 }
@@ -152,7 +152,7 @@ void func_rpl_add_chat(char *params, void *p) {
     client_t *client = (client_t *)p;
     char *p_frst_param = take_param(params, 1);
     if (strcmp(p_frst_param, "INCORRECT_USERNAME") == 0) {
-        printf(" ## INCORRECT_USERNAME\n");
+        // printf(" ## INCORRECT_USERNAME\n");
         return;
     }
     int p_chat_id = atoi(p_frst_param);
@@ -188,7 +188,7 @@ void func_rpl_add_chat(char *params, void *p) {
     chat_show_info->counter = ++client->last_chat_index;
 
     display_chat_list(&client->chat_list_head);
-    //printf("rpl #### counter: %d  client->last_chat_index: %d  chat: %s #####\n",
+    //// printf("rpl #### counter: %d  client->last_chat_index: %d  chat: %s #####\n",
     //    chat_show_info->counter, client->last_chat_index, chat_show_info->chat->chat_name);
 
     gdk_threads_add_idle(chat_show, (gpointer)chat_show_info);
@@ -205,7 +205,7 @@ void func_rpl_edit(char *params, void *p) {
     char buffer[BUFFER_SZ];
     int index = get_index_by_msg_id(&client->msg_id_q_head, msg_id);
     int size = msg_id_q_size(&client->msg_id_q_head);
-    printf(" ## index: %d\n ## size: %d\n", index, size);
+    // printf(" ## index: %d\n ## size: %d\n", index, size);
     for (int i = index; i < size; i++) {
         gtk_list_box_row_set_selectable(gtk_list_box_get_row_at_index (client->m->box_message, (gint)index), TRUE);
         gtk_list_box_select_row(client->m->box_message, gtk_list_box_get_row_at_index(client->m->box_message, (gint)index));

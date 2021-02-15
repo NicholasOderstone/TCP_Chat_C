@@ -17,14 +17,14 @@ void *process_cmd(void *arg) {
 		}
 	}
 	int ret_val = 1;
-	printf("-- Process command thread terminated --\n");
+	// printf("-- Process command thread terminated --\n");
 	pthread_exit(&ret_val);
 	return NULL;
 }
 
 void analyse_cmd(command fst_cmd, cmd_func function, client_t *client) {
 	if (strcmp(fst_cmd.command, function.name) == 0) {
-		//printf("  --- %s ---\n", function.name);
+		//// printf("  --- %s ---\n", function.name);
 		function.func(fst_cmd.params, client);
 	}
 }

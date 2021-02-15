@@ -14,7 +14,6 @@ void *read_msg(void *arg) {
 			}
 		} else if (receive == 0 || strcmp(buff_out, "exit") == 0){
 			Info->client->exit_flag = 1;
-			// printf("Client Disconnected!\n");
 			break;
 		} else {
 			// printf("ERROR: -1\n");
@@ -23,6 +22,7 @@ void *read_msg(void *arg) {
 		}
 		memset(buff_out, 0, sizeof(buff_out));
 	}
-	pthread_exit(NULL);
+	// printf("Client Disconnected!\n");
+	// pthread_exit(NULL);
 	return NULL;
 }

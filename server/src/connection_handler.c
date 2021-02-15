@@ -42,7 +42,7 @@ void *handle_client(void *arg){
 	struct read_msg_info_s *read_msg_info = (struct read_msg_info_s *)malloc(sizeof(struct read_msg_info_s));
 	read_msg_info->client = client;
 	read_msg_info->cmd_q_front = &cmd_q_front;
-	read_msg_info->sem_cmd_q = sem_cmd_q;
+	// read_msg_info->sem_cmd_q = sem_cmd_q;
 	pthread_create(&th_read_msg, NULL, read_msg, (void *)read_msg_info);
 
 	// Поток обработки комманд
@@ -52,20 +52,24 @@ void *handle_client(void *arg){
 	initialize_functions(process_cmd_info->arr_cmd_func);
 	process_cmd_info->buff_m = inf;
 	process_cmd_info->buff_m->client = client;
-	process_cmd_info->sem_cmd_q = sem_cmd_q;
+	// process_cmd_info->sem_cmd_q = sem_cmd_q;
 	pthread_create(&th_process_cmd, NULL, process_cmd, (void *)process_cmd_info);
 
-
+	
 	pthread_join(th_read_msg, NULL);
-	pthread_exit(th_process_cmd);
-	/* Delete client from queue and yield thread */
 	close(client->sockfd);
 	client_remove(client->uid, serv_inf);
-
+	pthread_cancel(th_process_cmd);
+	/* Delete client from queue and yield thread */
+	
+	write(1, "1\n", 2);
 	sem_close(sem_cmd_q);
+	write(1, "2\n", 2);
 	sem_unlink(sem_name);
+	write(1, "3\n", 2);
 
 	free(client);
+	write(1, "4\n", 2);
 	//free(read_msg_info);
 	//free(process_cmd_info); // Если ты раскомментируешь это у тебя будет вылетать сервер в 1 из 20 случаев при закрытии клиента
 	pthread_detach(pthread_self());

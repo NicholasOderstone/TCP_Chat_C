@@ -2,7 +2,7 @@
 
 void to_cmd_q(struct command data, struct cmd_q **cmd_q_front) {
     struct cmd_q *temp;
-    static int counter = 0;
+    // static int counter = 0;
     temp = (struct cmd_q *)malloc(sizeof(struct cmd_q));
     temp->data.command = strdup(data.command);
     temp->data.params = strdup(data.params);
@@ -20,9 +20,9 @@ void to_cmd_q(struct command data, struct cmd_q **cmd_q_front) {
         }
         current->link = temp;
     }
-    // printf("\t%d: cmd_q: command = %s", counter, current->data.command);
+    // printf("\t cmd_q: command = %s", current->data.command);
     // printf("; params = %s\n", current->data.params);
-    counter++;
+    // counter++;
     pthread_mutex_unlock(&cmd_lock);
 }
 

@@ -45,12 +45,10 @@ int main(int argc, char **argv){
 	}
 
  	/* Listen */
-	if (listen(server.listenfd, 10) < 0) {
+	if (listen(server.listenfd, 100) < 0) {
 		perror("ERROR: Socket listening failed");
 		return EXIT_FAILURE;
 	}
-
-	// printf("=== WELCOME TO THE CHATROOM ===\n");
 
 	/* Data Base */
 	initDB();
@@ -82,10 +80,10 @@ int main(int argc, char **argv){
 		
 
 		/* Convert to the buff_t to transfer to the new thread*/
-		buff_t *clnt = (buff_t *)malloc(sizeof(buff_t));
-		clnt->serv_inf = &server;
-		clnt->uid = client_add(cli, &server);
-		pthread_create(&tid, NULL, &handle_client, (void*)clnt);
+		buff_t *buff = (buff_t *)malloc(sizeof(buff_t));
+		buff->serv_inf = &server;
+		buff->uid = client_add(cli, &server);
+		pthread_create(&tid, NULL, &handle_client, (void*)buff);
 		/* Reduce CPU usage */
 		sleep(1);
 	}

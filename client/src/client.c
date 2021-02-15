@@ -35,8 +35,8 @@ int main(int argc, char **argv) {
       perror("ERROR: pthread\n");
       return EXIT_FAILURE;
     }
-    sleep(100);
-    // gtk_main();
+    //sleep(100);
+     gtk_main();
 
     client.exit = 1;
     sem_post(sem_exit);
@@ -53,10 +53,10 @@ int main(int argc, char **argv) {
 
     sem_close(sem_cmd_q);
     sem_unlink("uchat_sem_cmd_q");
-    
+
     sem_close(sem_reconnect);
     sem_unlink("uchat_sem_reconnect");
-	
+
     exit(0);
     return EXIT_SUCCESS;
 }

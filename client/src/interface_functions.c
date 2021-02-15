@@ -108,10 +108,10 @@ void open_login_page(GtkWidget *widget, gpointer gp_client)
     gtk_widget_show(window);
 }
 
-gboolean is_edit_delet(gpointer m) {
+void is_edit_delet( GtkListBox * box, gpointer m) {
     client_t *client = (client_t *)m;
 
-    if(gtk_list_box_get_selected_row (client->m->box_message)){
+    if(gtk_list_box_get_selected_row (box)){
         gtk_widget_show(GTK_WIDGET(client->m->b_box));
         gtk_widget_show(client->m->cancel_b);
         gtk_widget_show(client->m->edit_b);
@@ -129,9 +129,6 @@ gboolean is_edit_delet(gpointer m) {
         gtk_widget_show(GTK_WIDGET(leave_chat));
 
     }
-    if (client-> exit == 1)
-        return FALSE;
-    return TRUE;
 }
 
 gboolean clean_listbox(gpointer data){
@@ -238,7 +235,7 @@ gboolean chat_show(gpointer m) {
 
     if (chat_show_info->client->exit == 1)
         return FALSE;
-    return TRUE;
+    return FALSE;
 }
 void add_mem_wind(GtkWidget *widget, gpointer data){
     UNUSED(widget);

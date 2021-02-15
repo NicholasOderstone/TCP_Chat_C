@@ -160,7 +160,7 @@ gboolean message_show(gpointer m) {
 
     if (received_mess->client->exit == 1)
         return FALSE;
-    return TRUE;
+    return FALSE;
 }
 void message_send(GtkWidget *widget, gpointer data) {
     UNUSED(widget);

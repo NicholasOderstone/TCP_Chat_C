@@ -2,6 +2,8 @@ all:
 	@make -C client
 	@make -C server
 
+install: all
+
 uninstall:
 	@make uninstall -C client
 	@make uninstall -C server

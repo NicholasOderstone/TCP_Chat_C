@@ -44,7 +44,7 @@ void daemonize() {
     close(STDIN_FILENO);
     close(STDOUT_FILENO);
     close(STDERR_FILENO);
-    fd = open("uchat_server.log", O_CREAT | O_WRONLY | O_TRUNC | O_APPEND, S_IRWXU);
+    fd = open("server/log/uchat_server.log", O_CREAT | O_WRONLY | O_TRUNC | O_APPEND, S_IRWXU);
     dup2(fd, 1);
     dup2(fd, 2);
     close(fd);

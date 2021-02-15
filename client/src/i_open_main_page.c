@@ -25,7 +25,7 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     gtk_window_get_position (GTK_WINDOW(window), &client->m->root_x, &client->m->root_y);
     gtk_widget_hide(window);
     builder = gtk_builder_new();
-    gtk_builder_add_from_file (builder, "messanger.glade", NULL);
+    gtk_builder_add_from_file (builder, "client/resources/messanger.glade", NULL);
     window = GTK_WIDGET(gtk_builder_get_object(builder, "main_window"));
     gtk_window_set_title (GTK_WINDOW(window), "PLACE");
     gtk_window_move(GTK_WINDOW(window), client->m->root_x, client->m->root_y);

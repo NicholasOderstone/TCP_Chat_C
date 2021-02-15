@@ -70,7 +70,8 @@ void open_main_page(GtkWidget *widget, gpointer gp_client)
     g_signal_connect(send_b, "clicked", G_CALLBACK(message_clear), NULL);
     gtk_list_box_set_selection_mode(client->m->box_message, GTK_SELECTION_SINGLE);
     gtk_list_box_set_activate_on_single_click (client->m->box_message, FALSE);
-    gdk_threads_add_idle(is_edit_delet, (gpointer)client);
+    //gdk_threads_add_idle(is_edit_delet, (gpointer)client);
+    g_signal_connect(client->m->box_message, "selected-rows-changed", G_CALLBACK(is_edit_delet),gp_client);
     client->m->cancel_b = GTK_WIDGET(gtk_builder_get_object (builder, "cancel_b"));
     client->m->edit_b = GTK_WIDGET(gtk_builder_get_object (builder, "ed_b"));
     client->m->delet_b = GTK_WIDGET(gtk_builder_get_object (builder, "del_b"));

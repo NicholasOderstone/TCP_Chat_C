@@ -52,7 +52,7 @@
     void del_message();
     gboolean message_show();
     gboolean chat_show();
-    gboolean is_edit_delet();
+    void is_edit_delet();
     void message_delet();
     void message_edit();
     void cancel_ch();

@@ -53,10 +53,10 @@ int main(int argc, char **argv) {
 
     sem_close(sem_cmd_q);
     sem_unlink("uchat_sem_cmd_q");
-    
+
     sem_close(sem_reconnect);
     sem_unlink("uchat_sem_reconnect");
-	
+
     exit(0);
     return EXIT_SUCCESS;
 }

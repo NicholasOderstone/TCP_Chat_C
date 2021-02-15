@@ -1,21 +1,5 @@
 #include "../inc/interface.h"
 
-void ipv_changed(GtkEntry *e){
-    gtk_entry_set_icon_from_icon_name(ipv_entry, GTK_ENTRY_ICON_SECONDARY,"gtk-no");
-    gtk_entry_set_icon_tooltip_text(ipv_entry, GTK_ENTRY_ICON_SECONDARY,"IP is incorrect");
-    sprintf(ipv_str,"%s", gtk_entry_get_text(e));
-    if (validate_ip(ipv_str) > 0)
-        gtk_entry_set_icon_from_icon_name(ipv_entry, GTK_ENTRY_ICON_SECONDARY, NULL);
-
-}
-void port_changed(GtkEntry *e){
-    gtk_entry_set_icon_from_icon_name(port_entry, GTK_ENTRY_ICON_SECONDARY,"gtk-no");
-    gtk_entry_set_icon_tooltip_text(port_entry, GTK_ENTRY_ICON_SECONDARY, "PORT is incorrect");
-    sprintf(port_str,"%s", gtk_entry_get_text(e));
-    if (validate_port(port_str) > 0)
-        gtk_entry_set_icon_from_icon_name(port_entry, GTK_ENTRY_ICON_SECONDARY, NULL);
-}
-
 void username_changed(GtkEntry *e){
     sprintf(username_str,"%s", gtk_entry_get_text(e));
 }

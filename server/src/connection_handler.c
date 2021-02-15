@@ -29,29 +29,45 @@ void *handle_client(void *arg){
 	client_t *client = serv_inf->clients[cid];
 	client->exit_flag = 0;
 
+	sem_t *sem_cmd_q;
+	char sem_name[100] = "uchat_sem_client_";
+	char buff[BUFFER_SZ];
+	strcat(sem_name, itoa(inf->uid, buff, 10));
+	printf(" ## sem_name for %d: \"%s\"\n", inf->uid, sem_name);
+	sem_cmd_q = sem_open(sem_name, O_CREAT, 0666, 0);
+
+	// Поток чтения сообщений
 	pthread_t th_read_msg;
+
 	struct read_msg_info_s *read_msg_info = (struct read_msg_info_s *)malloc(sizeof(struct read_msg_info_s));
 	read_msg_info->client = client;
 	read_msg_info->cmd_q_front = &cmd_q_front;
+	read_msg_info->sem_cmd_q = sem_cmd_q;
 	pthread_create(&th_read_msg, NULL, read_msg, (void *)read_msg_info);
 
+	// Поток обработки комманд
 	pthread_t th_process_cmd;
 	struct process_cmd_info_s *process_cmd_info = (struct process_cmd_info_s *)malloc(sizeof(struct process_cmd_info_s));
 	process_cmd_info->cmd_q_front = &cmd_q_front;
 	initialize_functions(process_cmd_info->arr_cmd_func);
 	process_cmd_info->buff_m = inf;
 	process_cmd_info->buff_m->client = client;
+	process_cmd_info->sem_cmd_q = sem_cmd_q;
 	pthread_create(&th_process_cmd, NULL, process_cmd, (void *)process_cmd_info);
 
 
 	pthread_join(th_read_msg, NULL);
-	pthread_join(th_process_cmd, NULL);
+	pthread_exit(th_process_cmd);
 	/* Delete client from queue and yield thread */
 	close(client->sockfd);
 	client_remove(client->uid, serv_inf);
+
+	sem_close(sem_cmd_q);
+	sem_unlink(sem_name);
+
 	free(client);
 	//free(read_msg_info);
-	//free(process_cmd_info);
+	//free(process_cmd_info); // Если ты раскомментируешь это у тебя будет вылетать сервер в 1 из 20 случаев при закрытии клиента
 	pthread_detach(pthread_self());
 
 	return NULL;

@@ -16,6 +16,7 @@
     #include <netdb.h>
     #include <fcntl.h>
     #include <sys/stat.h>
+	#include <semaphore.h>
 
 
     /* DATA_BASE */
@@ -50,7 +51,7 @@
         int port; /* Port in int format*/
         struct sockaddr_in address; /*Server IP, Port and ip format */
         int listenfd; /* Main server socket*/
-        int uid; /* Used to set id for new clients*/
+        // int uid; /* Used to set id for new clients*/
         client_t **clients; /* Array of clients*/
         pthread_mutex_t clients_mutex; /* Main server mutex*/
         pthread_t tid; /* Pthread to handle connections */
@@ -81,22 +82,25 @@
         struct cmd_q *link;
     };
 
-    //Structure to pass client and message queue for read_msg Thread
-	struct read_msg_info_s {
-		client_t *client;
-		//struct msg_q **msg_q_front;
-        struct cmd_q **cmd_q_front;
-	};
-
     //Structure that stores cmd function name and pointer to this function
     typedef struct {
 	    char *name;
 	    void (*func)(char *params, buff_t *serv_inf);
 	} cmd_func;
 
+
+    //Structure to pass client and message queue for read_msg Thread
+	struct read_msg_info_s {
+		client_t *client;
+		//struct msg_q **msg_q_front;
+        sem_t *sem_cmd_q;
+        struct cmd_q **cmd_q_front;
+	};
+
     //Structure to pass command queue and array of pointers to functions
     struct process_cmd_info_s {
 		struct cmd_q **cmd_q_front;
+        sem_t *sem_cmd_q;
 		cmd_func arr_cmd_func[AMOUNT_OF_CMD];
         buff_t *buff_m;
 	};
@@ -134,8 +138,6 @@
     int client_add(client_t *cl, server_info_t *serv_inf);
     /* Remove client from the clients array*/
     void client_remove(int uid, server_info_t *serv_inf);
-    /* Send message *s to all clients exept sender */
-    void send_message(char *s, int uid, server_info_t *serv_inf);
 
 
     // --- Thread functions ---
@@ -172,8 +174,6 @@
     void print_client_addr(struct sockaddr_in addr);
     /* CONBERT INT TO CHAR* */
     char* itoa(int num, char* buffer, int base);
-    /* DELETE EVERYONE FROM DB */
-    void Delete_From_DB();
     /* SEND TO ALL CHAT MEMBERS */
     void send_to_all_members(char *p_chat_id, struct command cmd, buff_t *Info);
 
@@ -194,16 +194,8 @@
 
     /* Initialize command functions */
     void initialize_functions();
-    /* Get parametr 1 */
-    char *param_1(char *params);
-    /* Get parametr 2 */
-	char *param_2(char *params);
-    /* Get parametr 3 */
-	char *param_3(char *params);
-    /* Get parametr 4 */
-	char *param_4(char *params);
-    /* Get parametr 5 */
-	char *param_5(char *params);
+    // Получить выбранный по номеру параметр
+    char *take_param(char *params, int number);
 
 
     // --- Data Base functions ---
@@ -254,5 +246,6 @@
     void daemonize();
 
     pthread_mutex_t send_cmd_lock;
+
 
 #endif

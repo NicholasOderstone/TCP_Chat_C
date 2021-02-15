@@ -46,12 +46,13 @@ void func_rpl_send(char *params, void *p) {
     strcpy(received_mess->sender_login, take_param(params, 3));
     received_mess->msg_id = atoi(take_param(params, 2));
     received_mess->chat_id = atoi(take_param(params, 1));
+    received_mess->is_edit = 0;
 
-    int chat_index = get_index_by_chat_id(&received_mess->client->chat_list_head, received_mess->chat_id);
-    write(1, "1\n", 2);
+    int chat_index;
+    //write(1, "1\n", 2);
     char last_msg_time_buf[BUFFER_SZ];
     chat_info_t *chat = get_chat_p_by_chat_id(&received_mess->client->chat_list_head, received_mess->chat_id);
-    write(1, "2\n", 2);
+    //write(1, "2\n", 2);
 
 
     int old_unread_msg_id = chat->f_unread_msg_id;
@@ -66,25 +67,32 @@ void func_rpl_send(char *params, void *p) {
             }
         }
     }
-    
+
     if (((rcv_time / 60) > (chat->last_msg_time / 60)) || old_unread_msg_id != chat->f_unread_msg_id) {
-         
+
         chat->last_msg_time = rcv_time;
         printf("%d\n", chat->last_msg_time);
         time_t time = (time_t)chat->last_msg_time;
-         
+
         struct tm *ptm = localtime(&time);
         if (ptm == NULL) {
             puts("The localtime() function failed");
             return;
         }
-         
-        snprintf(last_msg_time_buf, BUFFER_SZ, "%s  %02d:%02d unread_msg_id: %d", chat->chat_name, ptm->tm_hour, ptm->tm_min, chat->f_unread_msg_id);
+
+        //snprintf(last_msg_time_buf, BUFFER_SZ, "%s %02d:%02d ", chat->chat_name, ptm->tm_hour, ptm->tm_min);
+        snprintf(last_msg_time_buf, BUFFER_SZ, "%s", chat->chat_name);
+        chat_index = get_index_by_chat_id(&received_mess->client->chat_list_head, received_mess->chat_id);
         gtk_button_set_label(GTK_BUTTON(received_mess->client->m->chat[chat_index]), last_msg_time_buf);
-         
+        sort_listbox(&received_mess->client->chat_list_head, received_mess->client);
+        if (received_mess->chat_id == received_mess->client->active_chat_id) {
+            chat_index = get_index_by_chat_id(&received_mess->client->chat_list_head, received_mess->chat_id);
+            gtk_widget_hide(received_mess->client->m->unread_b_images[chat_index]);
+        }
+
     }
 
-   
+
    /*  if (chat->f_unread_msg_id == -1) {
         chat->f_unread_msg_id = received_mess->msg_id;
     } */
@@ -106,7 +114,6 @@ void func_rpl_del_msg(char *params, void *p) {
     gtk_list_box_select_row(box, gtk_list_box_get_row_at_index(box, (gint)index));
     gtk_container_remove(GTK_CONTAINER(box), GTK_WIDGET(gtk_list_box_get_selected_row (box)));
     del_elem_msg_id_q(&client->msg_id_q_head, msg_id);
-    gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), TRUE);
     //printf("## index in rpl_delete: %d\n", index);
 }
 
@@ -117,8 +124,8 @@ void func_rpl_del_chat(char *params, void *p) {
     int chat_id;
 
     char *p_rpl = take_param(params, 1);
-    gtk_button_set_label(chat_lbl, "");
-    gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), FALSE);
+    //gtk_button_set_label(chat_lbl, "");
+    //gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), FALSE);
     if (strcmp(p_rpl, "NOT_OWNER") == 0) {
         printf("## NOT_OWNER\n");
     }
@@ -143,7 +150,12 @@ void func_rpl_del_chat(char *params, void *p) {
 // --- ADD_CHAT ---
 void func_rpl_add_chat(char *params, void *p) {
     client_t *client = (client_t *)p;
-    int p_chat_id = atoi(take_param(params, 1));
+    char *p_frst_param = take_param(params, 1);
+    if (strcmp(p_frst_param, "INCORRECT_USERNAME") == 0) {
+        printf(" ## INCORRECT_USERNAME\n");
+        return;
+    }
+    int p_chat_id = atoi(p_frst_param);
     char *p_chat_name = take_param(params, 2);
     if (p_chat_id == -1) {
         return;
@@ -186,16 +198,51 @@ void func_rpl_add_chat(char *params, void *p) {
 // --- EDIT ---
 void func_rpl_edit(char *params, void *p) {
     client_t *client = (client_t *)p;
-    char *chat_id = take_param(params, 1);
-    command cmd;
+    //int chat_id = atoi(take_param(params, 1));
+    int msg_id = atoi(take_param(params, 2));
+    char *new_text = take_param(params, 3);
+    //command cmd;
     char buffer[BUFFER_SZ];
-    while (clean_listbox((gpointer)client->m->box_message) == TRUE) {}
+    int index = get_index_by_msg_id(&client->msg_id_q_head, msg_id);
+    int size = msg_id_q_size(&client->msg_id_q_head);
+    printf(" ## index: %d\n ## size: %d\n", index, size);
+    for (int i = index; i < size; i++) {
+        gtk_list_box_row_set_selectable(gtk_list_box_get_row_at_index (client->m->box_message, (gint)index), TRUE);
+        gtk_list_box_select_row(client->m->box_message, gtk_list_box_get_row_at_index(client->m->box_message, (gint)index));
+        gtk_container_remove(GTK_CONTAINER(client->m->box_message), GTK_WIDGET(gtk_list_box_get_selected_row (client->m->box_message)));
+        client->m->row_num_list_gtk--;
+    }
+
+    msg_id_q *edited_msg = get_msg_p_by_msg_id(&client->msg_id_q_head, msg_id);
+    strcpy(edited_msg->message, new_text);
+    client->m->row_num_list_gtk = index - 1;
+
+    for (int j = index; j < size; j++) {
+        msg_id_q* msg = get_msg_p_by_msg_index(&client->msg_id_q_head, j);
+        received_messages *received_mess = (received_messages *)malloc(sizeof(received_messages));
+        received_mess->client = client;
+        strcpy(received_mess->is_special, msg->is_special);
+        strcpy(received_mess->message, msg->message);
+        strcpy(received_mess->time, msg->time);
+        strcpy(received_mess->sender_name, msg->sender_name);
+        strcpy(received_mess->sender_login, msg->sender_login);
+        received_mess->msg_id = msg->msg_id;
+        received_mess->chat_id = msg->chat_id;
+        received_mess->is_edit = 1;
+
+        if (msg->chat_id == client->active_chat_id) {
+            gdk_threads_add_idle(message_show, (gpointer)received_mess);
+        }
+
+    }
+
+    /*while (clean_listbox((gpointer)client->m->box_message) == TRUE) {}
     clear_msg_id_q(&client->msg_id_q_head);
     client->m->row_num_list_gtk = -1;
-    snprintf(buffer, BUFFER_SZ, "<%s>", chat_id);
+    snprintf(buffer, BUFFER_SZ, "<%d>", chat_id);
     cmd.command = "<CHAT_MSG>";
     cmd.params = strdup(buffer);
-    send_cmd(cmd, client);
+    send_cmd(cmd, client);*/
 
     bzero(buffer, BUFFER_SZ);
 }

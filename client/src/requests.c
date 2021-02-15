@@ -3,26 +3,41 @@
 // ---- CHAT_MSG ----
 void get_msg_request(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
-    gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), TRUE);
+    //char last_msg_time_buf[BUFFER_SZ];
+    gtk_widget_hide(GTK_WIDGET(no_chat));
+    gtk_widget_show(GTK_WIDGET(message_entry));
+    gtk_widget_show(GTK_WIDGET(send_b));
+    //gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), TRUE);
     get_messages_request_s *get_messages_r = (get_messages_request_s *)data;
+    gtk_widget_show(GTK_WIDGET(get_messages_r->client->m->box_message));
     if (get_messages_r->client->active_chat_id != get_messages_r->chat->chat_id) {
         get_messages_r->chat->f_unread_msg_id = -1;
-        time_t time = (time_t)get_messages_r->chat->last_msg_time;
-        struct tm *ptm = localtime(&time);
-        if (ptm == NULL) {
-            puts("The localtime() function failed");
-            return;
+        /*if (get_messages_r->chat->last_msg_time != -1) {
+            time_t time = (time_t)get_messages_r->chat->last_msg_time;
+            struct tm *ptm = localtime(&time);
+            if (ptm == NULL) {
+                puts("The localtime() function failed");
+                return;
+            }
+
+
+            //snprintf(last_msg_time_buf, BUFFER_SZ, "%s %02d:%02d ", get_messages_r->chat->chat_name, ptm->tm_hour, ptm->tm_min);
+            snprintf(last_msg_time_buf, BUFFER_SZ, "%s", get_messages_r->chat->chat_name);
         }
-
-        char last_msg_time_buf[BUFFER_SZ];
-        snprintf(last_msg_time_buf, BUFFER_SZ, "%s  %02d:%02d unread_msg_id: %d", get_messages_r->chat->chat_name, ptm->tm_hour, ptm->tm_min, get_messages_r->chat->f_unread_msg_id);
-
         int chat_index = get_index_by_chat_id(&get_messages_r->client->chat_list_head, get_messages_r->chat->chat_id);
         gtk_button_set_label(GTK_BUTTON(get_messages_r->client->m->chat[chat_index]), last_msg_time_buf);
+        gtk_widget_hide(get_messages_r->client->m->unread_b_images[chat_index]);
+*/
+        sort_listbox(&get_messages_r->client->chat_list_head, get_messages_r->client);
+        int chat_index = get_index_by_chat_id(&get_messages_r->client->chat_list_head, get_messages_r->chat->chat_id);
+        gtk_widget_hide(get_messages_r->client->m->unread_b_images[chat_index]);
 
     	get_messages_r->client->active_chat_id = get_messages_r->chat->chat_id;
-        gtk_button_set_label(chat_lbl, get_messages_r->chat->chat_name);
+        //gtk_button_set_label(chat_lbl, get_messages_r->chat->chat_name);
         gtk_label_set_text (chat_label, get_messages_r->chat->chat_name);
+        gtk_widget_set_name(GTK_WIDGET(chat_label), "name_chat");
+        gtk_widget_set_sensitive(GTK_WIDGET(add_user), TRUE);
+        gtk_widget_set_sensitive(GTK_WIDGET(leave_chat), TRUE);
     	command cmd;
     	char buffer[BUFFER_SZ];
     	snprintf(buffer, BUFFER_SZ, "<%d>", get_messages_r->chat->chat_id);
@@ -40,6 +55,7 @@ void get_msg_request(GtkWidget *widget, gpointer data) {
 void new_chat_request(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
     gtk_widget_hide (chat_name_d);
+
     new_chat_request_s *new_chat_r = (new_chat_request_s *)data;
     static int counter = 0;
     printf("index new_chat_request: %d\n", counter);
@@ -69,10 +85,18 @@ void delete_msg_request(del_msg_request_s *delete_msg_r) {
 // ---- LEAVE_CHAT ----
 void leave_chat_request(GtkWidget *widget, gpointer data) {
     UNUSED(widget);
-    gtk_widget_hide(chat_menu_wind);
+    gtk_label_set_text (chat_label, "");
+    gtk_widget_set_name(GTK_WIDGET(chat_label), "name_chat1");
+    gtk_widget_show(GTK_WIDGET(no_chat));
+    gtk_widget_set_sensitive(GTK_WIDGET(add_user), FALSE);
+    gtk_widget_set_sensitive(GTK_WIDGET(leave_chat), FALSE);
+    gtk_widget_hide(GTK_WIDGET(message_entry));
+
+    gtk_widget_hide(GTK_WIDGET(send_b));
 	command cmd;
 	char buffer[BUFFER_SZ];
     del_chat_request_s *leave_chat_r = (del_chat_request_s *)data;
+    //gtk_widget_hide(GTK_WIDGET(leave_chat_r->client->m->box_message));
     printf("leave_chat_r->chat_id %d\n", leave_chat_r->client->active_chat_id);
     snprintf(buffer, BUFFER_SZ, "<%d>", leave_chat_r->client->active_chat_id);
     cmd.command = "<LEAVE_CHAT>";
@@ -109,7 +133,7 @@ void edit_msg_request(GtkWidget *widget, gpointer data) {
     gtk_list_box_unselect_all(client->m->box_message);
 
     edit_msg->new_text = strdup(message_str);
-    printf("edit_msg->new_text %s", edit_msg->new_text);
+    printf("edit_msg->new_text \"%s\"", edit_msg->new_text);
 
 	snprintf(buffer, BUFFER_SZ, "<%d> <%d> <%s>", edit_msg->msg_id, edit_msg->client->active_chat_id, edit_msg->new_text);
 	cmd.command = "<EDIT_MSG>";
@@ -118,7 +142,6 @@ void edit_msg_request(GtkWidget *widget, gpointer data) {
 	bzero(buffer, BUFFER_SZ);
     gtk_entry_set_placeholder_text(GTK_ENTRY(message_entry), "");
     gtk_widget_hide(GTK_WIDGET(edit_b));
-    gtk_widget_set_sensitive (GTK_WIDGET(chat_lbl), TRUE);
     message_clear();
 }
 

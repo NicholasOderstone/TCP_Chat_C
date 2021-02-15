@@ -10,10 +10,11 @@ void *read_msg(void *arg) {
 			if(strlen(buff_out) > 0){
 				struct command cmd = msg_to_cmd(buff_out);
 				to_cmd_q(cmd, Info->cmd_q_front);
+				sem_post(Info->sem_cmd_q);
 			}
 		} else if (receive == 0 || strcmp(buff_out, "exit") == 0){
-			// Комманда LEAVE;
 			Info->client->exit_flag = 1;
+			printf("Client Disconnected!\n");
 			break;
 		} else {
 			printf("ERROR: -1\n");

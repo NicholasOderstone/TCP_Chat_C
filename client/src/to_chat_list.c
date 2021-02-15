@@ -108,3 +108,18 @@ chat_info_t *get_chat_p_by_chat_id(chat_info_t **chat_list_head, int chat_id) {
     }
     return NULL;
 }
+
+chat_info_t *get_chat_p_by_index(chat_info_t **chat_list_head, int index) {
+    chat_info_t *current = (chat_info_t *)malloc(sizeof(chat_info_t));
+    current = *chat_list_head;
+    int i = 0;
+    while (current != NULL)
+    {
+        if (i == index) {
+            return current;
+        }
+        current = current->next;
+        i++;
+    }
+    return NULL;
+}

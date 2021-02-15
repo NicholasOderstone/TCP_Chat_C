@@ -20,7 +20,8 @@
 	#include <ctype.h>
 	#include <sqlite3.h>
 	#include <time.h>
-
+	#include <ctype.h>
+	#include <semaphore.h>
     #include "interface.h"
 
 //////////////////////////
@@ -45,6 +46,7 @@
 		GtkListBox *box_message;
 		GtkListBox *box_chat_list;
 		GtkWidget *chat[MAX_CHATS];
+	    GtkWidget *unread_b_images[MAX_CHATS];
 		GtkButtonBox *b_box;
 		GtkWidget *cancel_b;
 		GtkWidget *edit_b;
@@ -65,6 +67,12 @@
 // --- MSG_ID_QUEUE ---
 	typedef struct msg_id_q_s {
 		int msg_id;
+		int chat_id;
+		char message[BUFFER_SZ];
+		char time[BUFFER_SZ];
+		char sender_name[NAME_SZ];
+		char sender_login[NAME_SZ];
+		char is_special[2];
 		struct msg_id_q_s *next;
 	} msg_id_q;
 
@@ -129,6 +137,7 @@
 		char sender_name[NAME_SZ];
 		char sender_login[NAME_SZ];
 		char is_special[2];
+		int is_edit;
 	}	received_messages;
 
 	typedef struct {
@@ -218,7 +227,7 @@
 // --- QUEUES ---
 	void to_msg_q(char *data, struct msg_q **msg_q_front, pthread_mutex_t msg_lock);
 	void to_cmd_q(command data, struct cmd_q **cmd_q_front, pthread_mutex_t cmd_lock);
-	void to_msg_id_q(int msg_id, msg_id_q **msg_id_q_head);
+	void to_msg_id_q(received_messages *new_msg, msg_id_q **msg_id_q_head);
 	void clear_msg_id_q(msg_id_q **msg_id_q_head);
 	void display_msg_id_q(msg_id_q **msg_id_q_head);
 	void del_elem_msg_id_q(msg_id_q **msg_id_q_head, int msg_id);
@@ -265,9 +274,15 @@
 	char *cmd_to_msg(command cmd);
 	char *take_param(char *params, int number);
 	char *itoa(int val, int base);
-
+	char *mx_strtrim(const char *str);
 	void send_cmd(command cmd, client_t *client);
 	void analyse_cmd(command fst_cmd, cmd_func function, client_t *client);
+
+	void sort_listbox(chat_info_t **chat_list_head, client_t *client);
+	chat_info_t *get_chat_p_by_index(chat_info_t **chat_list_head, int index);
+	int msg_id_q_size(msg_id_q **msg_id_q_head);
+	msg_id_q *get_msg_p_by_msg_id(msg_id_q **msg_id_q_head, int msg_id);
+	msg_id_q *get_msg_p_by_msg_index(msg_id_q **msg_id_q_head, int index);
 
 //////////////////////////
 
@@ -277,6 +292,11 @@
 	pthread_mutex_t chat_lock;
 	pthread_mutex_t add_chat_lock;
 	pthread_mutex_t msg_id_lock;
+
+	sem_t *sem_exit;
+	sem_t *sem_msg_q;
+	sem_t *sem_cmd_q;
+	sem_t *sem_reconnect;
 
 //////////////////////////
 

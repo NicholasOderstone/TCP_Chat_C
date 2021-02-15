@@ -4,7 +4,7 @@ int connect_to_server(client_t *info, int argc, char** argv) {
 // --- Init client --
 
 	if(argc != 3) {
-		// printf("Usage: %s <ipv4> <port>\n", argv[0]);
+		printf("Usage: %s <ipv4> <port>\n", argv[0]);
 		return 1;
 	}
 
@@ -12,12 +12,12 @@ int connect_to_server(client_t *info, int argc, char** argv) {
 	char *port = argv[2];
 
     if (validate_ip(ip) != 1) {
-		// printf("<ipv4> \"%s\" is incorrect \n", ip);
+		printf("<ipv4> \"%s\" is incorrect \n", ip);
 		return 1;
 	}
 
 	if (validate_port(port) != 1) {
-		// printf("<port> \"%s\" is incorrect \n", port);
+		printf("<port> \"%s\" is incorrect \n", port);
 		return 1;
 	}
 

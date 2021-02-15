@@ -1,65 +1,39 @@
 #include "../inc/header.h"
 
-void *send_msg_handler(void *arg) {
-	client_t *client = (client_t *)arg;
-  	char message[LENGTH];
-	char buffer[LENGTH + 32];
-
-	while(1) {
-		if(ctrl_c_and_exit_flag) {
-			break;
-		}
-
-		str_overwrite_stdout();
-		fgets(message, LENGTH, stdin);
-		str_trim_lf(message, LENGTH);
-
-		if (strcmp(message, "exit") == 0) {
-			catch_ctrl_c_and_exit(2);
-		}
-		else {
-		  pthread_mutex_lock(&client->mutex);
-		  snprintf(buffer, BUFFER_SZ, "%s: %s\n", client->name, message);
-		  send(client->sockfd, buffer, strlen(buffer), 0);
-		  pthread_mutex_unlock(&client->mutex);
-		}
-
-		bzero(message, LENGTH);
-		bzero(buffer, LENGTH + 32);
-	}
-
-	int ret_val = 1;
-	printf("\nSend message thread terminated\n");
-	pthread_exit(&ret_val);
-	return NULL;
-}
-
 void *recv_msg_handler(void *arg) {
-	client_t *client = (client_t *)arg;
-	char message[LENGTH];
+	struct recv_msg_info_s *Info = (struct recv_msg_info_s *)arg;
+	struct read_msg_info_s *read_msg_info = (struct read_msg_info_s *)malloc(sizeof(struct read_msg_info_s));
+	read_msg_info->client = Info->client;
+	read_msg_info->msg_q_front = Info->msg_q_front;
+
+	pthread_t th_read_msg;
+	pthread_create(&th_read_msg, NULL, read_msg, (void *)read_msg_info);
+
+	struct make_cmd_info_s *make_cmd_info = (struct make_cmd_info_s *)malloc(sizeof(struct make_cmd_info_s));
+	make_cmd_info->client = Info->client;
+	make_cmd_info->cmd_q_front = Info->cmd_q_front;
+	make_cmd_info->msg_q_front = Info->msg_q_front;
+
+	pthread_t th_make_cmd;
+	pthread_create(&th_make_cmd, NULL, make_cmd, (void *)make_cmd_info);
 
 	while (1) {
-		if(ctrl_c_and_exit_flag) {
+		// printf("-- Recv message");
+		sem_wait(sem_exit);
+		if (Info->client->exit == 1) {
+			
+			pthread_cancel(th_read_msg);
+			// printf("-- Recv message -- th_read_msg");
+			pthread_cancel(th_make_cmd);
+			// printf("-- Recv message -- th_make_cmd");
 			break;
 		}
-
-		int receive = recv(client->sockfd, message, LENGTH, 0);
-		if (receive > 0) {
-		  printf("%s", message);
-		  str_overwrite_stdout();
-		}
-		else if (receive == 0) {
-				break;
-		}
-		else {
-			printf("Server disconnected\n");
-			break;
-		}
-		memset(message, 0, sizeof(message));
 	}
+
 	
+
 	int ret_val = 1;
-	printf("\nRecv message thread terminated\n");
+	// printf("-- Recv message thread terminated --\n");
     pthread_exit(&ret_val);
   	return NULL;
 }

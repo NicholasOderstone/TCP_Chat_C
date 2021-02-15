@@ -2,7 +2,7 @@
 
 int main(int argc, char **argv){
 	if(argc != 3){
-		printf("Usage: %s <ip> <port>\n", argv[0]);
+		// printf("Usage: %s <ip> <port>\n", argv[0]);
 		return EXIT_FAILURE;
 	}
 	/* Server settings */
@@ -18,7 +18,6 @@ int main(int argc, char **argv){
 		server.clients[i] = NULL;
 	}
 	
-
 	int option = 1;
 	int connfd = 0;
   	struct sockaddr_in cli_addr;
@@ -49,9 +48,14 @@ int main(int argc, char **argv){
 	if (listen(server.listenfd, 10) < 0) {
 		perror("ERROR: Socket listening failed");
 		return EXIT_FAILURE;
-		}
+	}
 
-	printf("=== WELCOME TO THE CHATROOM ===\n");
+	// printf("=== WELCOME TO THE CHATROOM ===\n");
+
+	/* Data Base */
+	initDB();
+
+	daemonize();
 
 	while(1){
 		socklen_t clilen = sizeof(cli_addr);
@@ -60,9 +64,9 @@ int main(int argc, char **argv){
 
 		/* Check if max clients is reached */
 		if((server.cli_count + 1) == MAX_CLIENTS){
-			printf("Max clients reached. Rejected: ");
-			print_client_addr(cli_addr);
-			printf(":%d\n", cli_addr.sin_port);
+			// printf("Max clients reached. Rejected: ");
+			// print_client_addr(cli_addr);
+			// printf(":%d\n", cli_addr.sin_port);
 			close(connfd);
 			continue;
 		}
@@ -71,20 +75,21 @@ int main(int argc, char **argv){
 		client_t *cli = (client_t *)malloc(sizeof(client_t));
 		cli->address = cli_addr;
 		cli->sockfd = connfd;
-		cli->uid = server.uid++;
+		// cli->uid = server.uid++;
+
+		
+		/* Add client to the client array and fork thread */
+		
 
 		/* Convert to the buff_t to transfer to the new thread*/
 		buff_t *clnt = (buff_t *)malloc(sizeof(buff_t));
 		clnt->serv_inf = &server;
-		clnt->uid = cli->uid;
-		/* Add client to the client array and fork thread */
-		client_add(cli, &server);
-
+		clnt->uid = client_add(cli, &server);
 		pthread_create(&tid, NULL, &handle_client, (void*)clnt);
-
 		/* Reduce CPU usage */
 		sleep(1);
 	}
+	// printf("1\n");
 	free(server.clients);
 	close(server.listenfd);
 
